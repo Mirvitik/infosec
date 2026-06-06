@@ -21,9 +21,22 @@ jobs:
       - name: Grant permission
         run: chmod +x ./gradlew
       - name: Build APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --stacktrace
+
       - name: Build AAB
-        run: ./gradlew bundleRelease
+        run: ./gradlew bundleRelease --stacktrace
+
+      - name: List project structure
+        if: always()
+        run: |
+          echo "=== Root ==="
+          ls -la
+          echo "=== app/ ==="
+          ls -la app/ 2>/dev/null || echo "no app dir"
+          echo "=== app/build/ ==="
+          ls -la app/build/ 2>/dev/null || echo "no build dir"
+          echo "=== Gradle version ==="
+          ./gradlew --version
 
       - name: List build outputs
         if: always()
