@@ -6,6 +6,13 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  KEY_NAME: ${{secrets.SIGNING_KEY_ALIAS}}
+  KEY_PASS: ${{secrets.SIGNING_KEY_PASSWORD}}
+  STORE_BASE64: ${{secrets.SIGNING_STORE_BASE64}}
+  STORE_PASS: ${{secrets.SIGNING_STORE_PASSWORD}}
+  STORE_NAME: "keystore.jks"
+
 jobs:
   build:
     runs-on: ubuntu-latest
