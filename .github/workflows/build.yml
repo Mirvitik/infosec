@@ -6,6 +6,9 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,11 +19,16 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
       - name: Grant permission
-        run: chmod -R 777 ./gradlew
+        run: chmod +x ./gradlew
       - name: Build APK
         run: ./gradlew assembleRelease
       - name: Build AAB
         run: ./gradlew bundleRelease
+
+      - name: List build outputs
+        if: always()
+        run: find app/build/outputs -type f 2>/dev/null || echo "outputs dir not found"
+
       - uses: actions/upload-artifact@v4
         with:
           name: builds
