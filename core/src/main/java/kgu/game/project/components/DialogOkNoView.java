@@ -1,17 +1,14 @@
 package kgu.game.project.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
 
 import kgu.game.project.FontBuilder;
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.LocalizationManager;
 
 public class DialogOkNoView extends View {
     Texture fon;
@@ -27,8 +24,8 @@ public class DialogOkNoView extends View {
         this.width = width;
         this.height = height;
         this.text = text;
-        this.okButton = new ButtonView(width + 160, y + 20, 80, 30, new BitmapFont(), GameResources.PASSWORD_IMG_PATH, "Ok");
-        this.noButton = new ButtonView(x + 20, y + 20, 80, 30, new BitmapFont(), GameResources.PASSWORD_IMG_PATH, "No");
+        this.okButton = new ButtonView(width + 160, y + 20, 80, 30,  myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.yes"));
+        this.noButton = new ButtonView(x + 20, y + 20, 80, 30, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
         // Инициализируем шрифт
         this.bitmapFont = FontBuilder.generate(20, Color.GRAY, "fonts/arialmt.ttf");
         this.myGdxGame = myGdxGame;

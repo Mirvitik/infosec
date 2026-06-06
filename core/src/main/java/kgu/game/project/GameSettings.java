@@ -33,6 +33,7 @@ public class GameSettings {
     public static final short DOOR_BIT = 0x0008;
     public static final short SENSOR_MINUS_BIT = 0x0009;
     public static final short SENSOR_PLUS_BIT = 0x0010;
+    public static final short MAIL_BIT = 0x0011;
 
 
     // Object sizes

@@ -100,6 +100,14 @@ public class LoadGameScreen extends ScreenAdapter {
                     float y = Float.parseFloat(array.get(2).toString());
                     if (level == 1) {
                         myGdxGame.setScreen(new LevelOneScreen(myGdxGame, x, y));
+                    } else if (level == 2) {
+                        myGdxGame.setScreen(new LevelTwoScreen(myGdxGame, x, y));
+                    } else if (level == 3) {
+                        myGdxGame.setScreen(new LevelThreeScreen(myGdxGame, x, y));
+                    } else if (level == 4) {
+                        myGdxGame.setScreen(new LevelFourScreen(myGdxGame, x, y));
+                    } else if (level == 5) {
+                        myGdxGame.setScreen(new LevelFiveScreen(myGdxGame, x, y));
                     }
                 }
             }

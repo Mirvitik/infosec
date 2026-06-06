@@ -38,7 +38,6 @@ public class InfoWindow extends View {
     private static final float WINDOW_HEIGHT = 600;
     private static final float TITLE_BAR_HEIGHT = 40;
     private static final float PADDING = 80;
-    private ButtonView clickButton;
 
     public InfoWindow(Game myGdxGame, float x, float y, String title, String content,
                            String backgroundPath, String closeButtonPath) {
@@ -48,11 +47,10 @@ public class InfoWindow extends View {
 
         this.title = title;
         this.content = content;
-        this.font = new BitmapFont();
+        this.font = MyGdxGame.arialFont;
 
         backgroundTexture = new Texture(backgroundPath);
         closeButtonTexture = new Texture(closeButtonPath);
-        clickButton = new ButtonView(x + 120, y + 200, GameResources.PRIZE_IMG_PATH);
 
         updateCloseButtonPosition();
     }
@@ -82,14 +80,7 @@ public class InfoWindow extends View {
     public boolean handleTouch(Vector3 touch, boolean isTouched) {
         if (!isVisible) return false;
 
-        // Проверяем клик по clickButton (только в момент касания)
-        if (isTouched && clickButton != null &&
-            touch.x >= clickButton.getX() && touch.x <= clickButton.getX() + clickButton.getWidth() &&
-            touch.y >= clickButton.getY() && touch.y <= clickButton.getY() + clickButton.getHeight()) {
-            myGdxGame.setScreen(gameScreen);
-            // Здесь можно добавить любую другую логику
-            return true; // Возвращаем true, чтобы событие не ушло дальше
-        }
+
 
         // Проверяем нажатие на кнопку закрытия
         if (isTouched &&
@@ -173,10 +164,6 @@ public class InfoWindow extends View {
         // Рисуем кнопку закрытия
         batch.draw(closeButtonTexture, closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
 
-        // Рисуем clickButton
-        if (clickButton != null) {
-            clickButton.draw(batch);
-        }
     }
 
     @Override

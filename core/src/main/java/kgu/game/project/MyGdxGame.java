@@ -49,6 +49,8 @@ public class MyGdxGame extends Game {
     public LevelOneScreen levelOneScreen;
     public LevelThreeScreen levelThreeScreen;
     public LevelFourScreen levelFourScreen;
+    public LevelFiveScreen levelFiveScreen;
+    public EndScreen endScreen;
     public Box2DDebugRenderer debugRenderer;
     public static BitmapFont arialWhiteFont;
     public boolean debugMode = false;

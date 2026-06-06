@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -33,14 +34,12 @@ import kgu.game.project.objects.TrashObject;
 import kgu.game.project.managers.ContactManager;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
-import kgu.game.project.objects.BulletObject;
 
 public class GameScreen extends ScreenAdapter {
 
     MyGdxGame myGdxGame;
     GameSession gameSession;
     HeroObject heroObject;
-
 
     ContactManager contactManager;
     ComputerObject computer;
@@ -72,9 +71,10 @@ public class GameScreen extends ScreenAdapter {
     private Vector3 touch2;
     public boolean isNearComputer = false;
 
-    // Track if touch is on UI elements
     private boolean isTouchingUI = false;
+    boolean isDesktop;
     TextView text;
+    private boolean wasKKeyPressed = false;
 
     public GameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
@@ -104,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
                     System.out.println("Left computer area");
                 }
             });
-
+        isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
 
         heroObject = new AnimatedHeroObject(
             GameSettings.SCREEN_WIDTH / 2 - 600, 150,
@@ -133,7 +133,12 @@ public class GameScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.home")
         );
-        text = new TextView(myGdxGame.commonPixelFontText, 325, 110, LocalizationManager.get("game.login_hint"));
+        if (isDesktop){
+            text = new TextView(myGdxGame.commonPixelFontText, 325, 110, LocalizationManager.get("game.login2_hint"));
+
+        } else{
+            text = new TextView(myGdxGame.commonPixelFontText, 325, 110, LocalizationManager.get("game.login_hint"));
+        }
         continueButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 550, 300,
             200, 35,
@@ -152,7 +157,6 @@ public class GameScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.home")
         );
-
     }
 
     @Override
@@ -162,7 +166,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
@@ -189,6 +192,59 @@ public class GameScreen extends ScreenAdapter {
         draw();
     }
 
+    private void handleKeyboardInput() {
+        Vector2 direction = new Vector2(0, 0);
+        float strength = 0;
+
+        // WASD или стрелки для управления
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
+            direction.y = 1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
+            direction.y = -1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
+            direction.x = -1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
+            direction.x = 1;
+            strength = 1;
+        }
+
+        // Нормализуем диагональное движение
+        if (direction.x != 0 && direction.y != 0) {
+            direction.nor();
+        }
+
+        // Применяем движение если есть ввод
+        if (strength > 0) {
+            heroObject.moveWithTouchpad(direction, strength);
+        } else {
+            heroObject.stop();
+        }
+    }
+
+    private void handleDesktopAction() {
+        // Обработка клавиши K для взаимодействия с компьютером
+        boolean isKKeyPressed = Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.K);
+
+        // Используем флаг для однократного срабатывания при нажатии
+        if (isKKeyPressed && !wasKKeyPressed && isNearComputer) {
+            this.dispose();
+            myGdxGame.loginScreen = new LoginScreen(myGdxGame);
+            myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+            myGdxGame.setScreen(myGdxGame.loginScreen);
+        }
+        wasKKeyPressed = isKKeyPressed;
+    }
+
     private void handleInput() {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
@@ -202,22 +258,9 @@ public class GameScreen extends ScreenAdapter {
 
         switch (gameSession.state) {
             case PLAYING:
-                if (isTouched) {
-                    isTouchingUI = false;
+                if (isDesktop) {
+                    handleKeyboardInput();
 
-                    // Check UI buttons first
-                    if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                        isTouchingUI = true;
-                        gameSession.pauseGame();
-                    }
-                    if (actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && isNearComputer) {
-                        this.dispose();
-                        myGdxGame.loginScreen = new LoginScreen(myGdxGame);
-                        myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
-                        myGdxGame.setScreen(myGdxGame.loginScreen);
-                    }
-
-                    // Для проверки компьютера используем только мировые координаты
                     if (isNearComputer) {
                         actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                         computer.onClick();
@@ -225,23 +268,55 @@ public class GameScreen extends ScreenAdapter {
                         actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_IMG_PATH);
                     }
 
-                    // Update touchpad and move ship if not touching UI
-                    if (!isTouchingUI) {
-                        touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
+                    handleDesktopAction();
 
-                        // Move ship using touchpad
+                    if (isTouched && !isTouchingUI) {
+                        touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
                         if (touchpadView.isActive()) {
                             heroObject.moveWithTouchpad(
                                 touchpadView.getDirection(),
                                 touchpadView.getStrength()
                             );
                         }
-                    } else {
-                        touchpadView.reset();
                     }
                 } else {
-                    touchpadView.reset();
-                    heroObject.stop();
+                    if (isTouched) {
+                        isTouchingUI = false;
+
+                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            isTouchingUI = true;
+                            gameSession.pauseGame();
+                        }
+                        if (actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && isNearComputer) {
+                            this.dispose();
+                            myGdxGame.loginScreen = new LoginScreen(myGdxGame);
+                            myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+                            myGdxGame.setScreen(myGdxGame.loginScreen);
+                        }
+
+                        if (isNearComputer) {
+                            actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+                            computer.onClick();
+                        } else {
+                            actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_IMG_PATH);
+                        }
+
+                        if (!isTouchingUI) {
+                            touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
+
+                            if (touchpadView.isActive()) {
+                                heroObject.moveWithTouchpad(
+                                    touchpadView.getDirection(),
+                                    touchpadView.getStrength()
+                                );
+                            }
+                        } else {
+                            touchpadView.reset();
+                        }
+                    } else {
+                        touchpadView.reset();
+                        heroObject.stop();
+                    }
                 }
                 break;
 
@@ -254,6 +329,9 @@ public class GameScreen extends ScreenAdapter {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
                     }
                 }
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    gameSession.resumeGame();
+                }
                 break;
 
             case ENDED:
@@ -261,6 +339,9 @@ public class GameScreen extends ScreenAdapter {
                     if (homeButton2.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
                     }
+                }
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    myGdxGame.setScreen(myGdxGame.menuScreen);
                 }
                 break;
         }
@@ -293,15 +374,18 @@ public class GameScreen extends ScreenAdapter {
             recordsListView.draw(myGdxGame.batch);
             homeButton2.draw(myGdxGame.batch);
         } else if (gameSession.state == GameState.PLAYING) {
-            touchpadView.draw(myGdxGame.batch);
+            if (!isDesktop) {
+                touchpadView.draw(myGdxGame.batch);
+            }
             if (isNearComputer && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
-
             }
         }
         topBlackoutView.draw(myGdxGame.batch);
-        actionButton.draw(myGdxGame.batch);
-        pauseButton.draw(myGdxGame.batch);
+        if (!isDesktop) {
+            actionButton.draw(myGdxGame.batch);
+            pauseButton.draw(myGdxGame.batch);
+        }
 
         myGdxGame.batch.end();
     }
@@ -335,6 +419,8 @@ public class GameScreen extends ScreenAdapter {
         computer = new ComputerObject(5, 5, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
         createMapBorders();
         gameSession.startGame();
+
+        wasKKeyPressed = false;
     }
 
     @Override
@@ -366,10 +452,8 @@ public class GameScreen extends ScreenAdapter {
         float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
 
-        // Увеличим толщину стен, чтобы игрок не мог проскочить
-        float wallThickness = 1f;  // Увеличено с 1f до 10f
+        float wallThickness = 1f;
 
-        // Нижняя стена
         low_wall = createWall(
             mapWidth / 2,
             -wallThickness / 2 + 1.5f,
@@ -383,7 +467,6 @@ public class GameScreen extends ScreenAdapter {
             wallThickness
         );
 
-        // Левая стена
         left_wall = createWall(
             -wallThickness / 2 + 0.8f,
             mapHeight / 2,
@@ -391,7 +474,6 @@ public class GameScreen extends ScreenAdapter {
             mapHeight
         );
 
-        // Правая стена
         right_wall = createWall(
             -wallThickness / 2 + 32.2f,
             mapHeight / 2,
@@ -406,7 +488,6 @@ public class GameScreen extends ScreenAdapter {
         float width,
         float height
     ) {
-
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
@@ -414,20 +495,16 @@ public class GameScreen extends ScreenAdapter {
         Body body = myGdxGame.world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / 2f, height / 2f);
 
-        shape.setAsBox(
-            width / 2f,
-            height / 2f
-        );
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = GameSettings.WALL_BIT;
-        fixtureDef.filter.maskBits = GameSettings.SHIP_BIT; // Столкновение только с игроком
+        fixtureDef.filter.maskBits = GameSettings.SHIP_BIT;
         fixtureDef.isSensor = false;
         body.createFixture(fixtureDef);
 
         shape.dispose();
         return body;
     }
-
 }

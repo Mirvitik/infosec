@@ -14,6 +14,7 @@ public class GameResources {
     public static final String SAVE_BACKGROUND_IMG_PATH = "textures/savebackground.png";
     public static final String DOOR_DOWN_IMG_PATH = "textures/doordown.png";
     public static final String DOOR_IMG_PATH = "textures/door.png";
+    public static final String END_DOOR_IMG_PATH = "textures/enddoor.png";
     public static final String FRENCH_DOOR_IMG_PATH = "textures/frenchdoor.png";
     public static final String ROME_DOOR_IMG_PATH = "textures/romedoor.png";
     public static final String ACTION_BUTTON_ACTIVE_IMG_PATH = "textures/actionbuttonactive.png";
@@ -51,13 +52,16 @@ public class GameResources {
     public static final String MASK_IMG_PATH = "textures/mask.png";
     public static final String TMX_MAP_PATH = "maps/map.tmx";
     public static final String TMX_MAP_LEVEL_ONE_PATH = "maps/level1.tmx";
+    public static final String TMX_MAP_LEVEL_FIVE_PATH = "maps/level5.tmx";
     public static final String TMX_MAP_LEVEL_THREE_PATH = "maps/france.tmx";
     public static final String TMX_MAP_LEVEL_FOUR_PATH = "maps/class.tmx";
     public static final String TMX_MAP_LEVEL_TWO_PATH = "maps/caeser.tmx";
+    public static final String TMX_MAP_LEVEL_END_PATH = "maps/finalmap.tmx";
     public static final String CAESER_ANTIVIRUS_IMG_PATH = "textures/antivirusCaeser.png";
     public static final String FILE_IMG_PATH = "textures/file.png";
     public static final String IMAGE_FON_PATH = "textures/oboyi.png";
     public static final String ANTIVIRUS_TEXTURE_PATH = "textures/antivirus1.png";
+    public static final String VIRUS_TEXTURE_PATH = "textures/virus.png";
     public static final String ANTIVIRUS_FIVE_TEXTURE_PATH = "textures/antivirus5.png";
     public static final String ANTIVIRUS_NAPOLEON_TEXTURE_PATH = "textures/napoleon.png";
     public static final String MAIL_ICON_PATH = "textures/mail-icon.png";
@@ -66,7 +70,9 @@ public class GameResources {
 
     public static final String BACKGROUND_MUSIC_PATH = "sounds/music.wav";
     public static final String DESTROY_SOUND_PATH = "sounds/destroy.mp3";
+    public static final String SAVE_SOUND_PATH = "sounds/save.mp3";
     public static final String SHOOT_SOUND_PATH = "sounds/shoot.mp3";
+    public static final String SCROLL_SOUND_PATH = "sounds/scroll.wav";
 
     // Fonts for text
 
@@ -82,4 +88,5 @@ public class GameResources {
     public static final String TOUCHPAD_BG_IMG_PATH = "textures/background_touch.png";
     public static final String TOUCHPAD_KNOB_IMG_PATH = "textures/stick.png";
     public static final String PRIZE_IMG_PATH = "textures/prize.png";
+    public static final String PRIZE_RUS_IMG_PATH = "textures/prizerus.png";
 }

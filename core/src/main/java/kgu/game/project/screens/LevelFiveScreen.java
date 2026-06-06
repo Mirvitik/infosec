@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.awt.Desktop;
 import java.util.ArrayList;
 
 import kgu.game.project.GameResources;
@@ -25,8 +27,8 @@ import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
-import kgu.game.project.components.NetworkLogView;   // <-- новый компонент с логами
-import kgu.game.project.components.IpInputView;       // <-- новый компонент ввода IP
+import kgu.game.project.components.NetworkLogView;
+import kgu.game.project.components.IpInputView;
 import kgu.game.project.components.PasswordInputView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
@@ -45,27 +47,7 @@ import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
 import kgu.game.project.objects.BulletObject;
 
-/**
- * LevelFiveScreen — уровень "Сети".
- * <p>
- * Сюжет: игрок оказывается внутри заражённой системы. Ему нужно подойти к
- * компьютеру, изучить сетевые логи и определить IP-адрес злоумышленника,
- * который проводит атаку (серия подозрительных запросов). Найдя нужный IP,
- * игрок вводит его в специальное поле — дверь открывается, уровень пройден.
- * <p>
- * Ключевые изменения по сравнению с оригиналом:
- * - toDraw теперь показывает NetworkLogView (список поддельных сетевых логов)
- * вместо ASCII-таблицы.
- * - Добавлен IpInputView — поле ввода IP-адреса. Открывается кнопкой "Ввести IP"
- * внутри NetworkLogView.
- * - Правильный ответ задаётся константой ATTACKER_IP. В логах он встречается
- * чаще всего с паттернами "SYN flood", "port scan", "REFUSED" и т.д.
- * - AntivirusObject заменён на RouterObject (визуально — роутер/маршрутизатор).
- * - При приближении к роутеру появляется подсказка о подозрительном трафике.
- * - PasswordInputView для двери заменён на IpInputView с той же логикой перехода.
- */
 public class LevelFiveScreen extends ScreenAdapter {
-
 
     private static final String ATTACKER_IP = "192.168.1.47";
 
@@ -76,26 +58,24 @@ public class LevelFiveScreen extends ScreenAdapter {
     ArrayList<TrashObject> trashArray;
     ArrayList<BulletObject> bulletArray;
 
-
     ImageView topBlackoutView;
     LiveView liveView;
     ButtonView pauseButton;
     TouchpadView touchpadView;
 
-
     TextView pauseTextView;
     ButtonView homeButton;
     ButtonView continueButton;
-
 
     TextView recordsTextView;
     RecordsListView recordsListView;
     ButtonView homeButton2;
     ButtonView actionButton;
+    ButtonView actionButtonActive;
+    ButtonView actionButtonRed;
 
     Texture heroSpriteSheet;
     TextureRegion[][] heroFrames;
-
 
     AntivirusObject routerObject;
     ImageView routerMessage;
@@ -106,8 +86,6 @@ public class LevelFiveScreen extends ScreenAdapter {
     private TiledMapManager tiledMapManager;
 
     DialogView dialog;
-    DialogView dialogNo;
-    DialogOkNoView dialogOkNoView;
 
     NetworkLogView networkLogView;
     IpInputView ipInputView;
@@ -118,8 +96,6 @@ public class LevelFiveScreen extends ScreenAdapter {
     boolean toDrawSave = false;
 
     Array<String> talks;
-    Array<String> talks2;
-    int ok_times = 1;
 
     boolean isNearComputer = false;
     Boolean isNearRouter = false;
@@ -129,12 +105,13 @@ public class LevelFiveScreen extends ScreenAdapter {
     float heroX = -1f;
     float heroY = -1f;
 
-    // Прочее
     ContactManager contactManager;
     TextView hintText;
     TextView networkHintText;
     private Vector3 touch2;
     private boolean isTouchingUI = false;
+    private boolean isDesktop;
+    private boolean wasKKeyPressed = false;
 
     public LevelFiveScreen(MyGdxGame myGdxGame) {
         this(myGdxGame, -1f, -1f);
@@ -145,7 +122,8 @@ public class LevelFiveScreen extends ScreenAdapter {
         this.heroX = x;
         this.heroY = y;
 
-        // Очищаем Box2D мир от старых тел
+        isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
+
         Array<Body> bodies = new Array<>();
         myGdxGame.world.getBodies(bodies);
         for (Body body : bodies) {
@@ -157,10 +135,6 @@ public class LevelFiveScreen extends ScreenAdapter {
         for (int i = 0; i <= 15; i++) {
             talks.add(LocalizationManager.get("network.talk." + i));
         }
-        talks2 = new Array<>();
-        for (int i = 0; i <= 7; i++) {
-            talks2.add(LocalizationManager.get("network.talk2." + i));
-        }
 
         gameSession = new GameSession();
         heroSpriteSheet = new Texture(GameResources.SPRITE_SHEET);
@@ -170,7 +144,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         bulletArray = new ArrayList<>();
 
         tiledMapManager = new TiledMapManager(
-            GameResources.TMX_MAP_LEVEL_ONE_PATH,
+            GameResources.TMX_MAP_LEVEL_FIVE_PATH,
             myGdxGame.camera, myGdxGame.batch, 2
         );
 
@@ -178,7 +152,10 @@ public class LevelFiveScreen extends ScreenAdapter {
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
         touchpadView = new TouchpadView(100, 100);
+
         actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_IMG_PATH);
+        actionButtonActive = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+        actionButtonRed = new ButtonView(1100, 70, 70, 70, GameResources.RED_ACTION_BUTTON_IMG_PATH);
 
         pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont,
@@ -191,10 +168,13 @@ public class LevelFiveScreen extends ScreenAdapter {
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
-        hintText = new TextView(myGdxGame.commonPixelFontText, 250, 150,
-            "Нажми зелёную кнопку, чтобы взаимодействовать");
-        networkHintText = new TextView(myGdxGame.commonPixelFontText, 250, 100,
-            "Найди IP атакующего в логах и введи его у двери!");
+        if (isDesktop) {
+            hintText = new TextView(myGdxGame.commonPixelFontText, 250, 150, "Press K to interact");
+            networkHintText = new TextView(myGdxGame.commonPixelFontText, 250, 100, "Find attacker IP in logs and press K at door!");
+        } else {
+            hintText = new TextView(myGdxGame.commonPixelFontText, 250, 150, "Нажми зелёную кнопку, чтобы взаимодействовать");
+            networkHintText = new TextView(myGdxGame.commonPixelFontText, 250, 100, "Найди IP атакующего в логах и введи его у двери!");
+        }
 
         routerObject = new AntivirusObject(
             GameResources.ANTIVIRUS_FIVE_TEXTURE_PATH,
@@ -202,60 +182,47 @@ public class LevelFiveScreen extends ScreenAdapter {
             GameSettings.ANTIVIRUS_BIT, myGdxGame.world
         );
         networkComputer = new ComputerObject(
-            14, 9,
+            14, 6,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.ASCII_SPRITE_PATH,
             myGdxGame.world
         );
 
-        // Иконка сообщения над роутером
         routerMessage = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
 
-        // Батарейка (сохранение)
         batteryObject = new BatteryObject(
-            10, 9,
+            10, 6,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world
         );
 
-        // Дверь в следующий уровень
         doorDown = new BatteryObject(
-            18, 9,
+            18, 6,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2,
             GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT
         );
 
-        // ── NetworkLogView — сердце уровня ───────────────────────────────────
-        // Генерируем поддельные сетевые логи; ATTACKER_IP будет встречаться
-        // чаще всего и с тревожными паттернами.
         networkLogView = new NetworkLogView(
             myGdxGame,
             180, 0, 1028, 720,
             ATTACKER_IP,
             () -> {
-                // Колбэк: игрок нажал «Ввести IP» внутри NetworkLogView
                 ipInputActive = true;
                 ipInputView.show();
             }
         );
 
-        // ── IpInputView — поле ввода IP злоумышленника ───────────────────────
-        // Правильный ответ = ATTACKER_IP. При успехе — переход на следующий уровень.
         ipInputView = new IpInputView(
             myGdxGame,
             ATTACKER_IP,
             () -> {
-                // Успех: правильный IP введён — открываем дверь / переходим
                 gameSession.resumeGame();
                 myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
             },
             () -> {
-                // Неудача: неверный IP — показываем подсказку, не закрываем
-                // (можно добавить штраф или встряхнуть экран)
             }
         );
 
-        // ── ContactManager ───────────────────────────────────────────────────
         contactManager = new ContactManager(myGdxGame.world,
             (GameObject object) -> {
                 String cls = object.getClass().getSimpleName();
@@ -277,14 +244,77 @@ public class LevelFiveScreen extends ScreenAdapter {
         );
     }
 
-    // ─────────────────────────────── show ────────────────────────────────────
+
+    private void handleKeyboardInput() {
+        Vector2 direction = new Vector2(0, 0);
+        float strength = 0;
+
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
+            direction.y = 1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
+            direction.y = -1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
+            direction.x = -1;
+            strength = 1;
+        }
+        if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D) ||
+            Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
+            direction.x = 1;
+            strength = 1;
+        }
+
+        if (direction.x != 0 && direction.y != 0) {
+            direction.nor();
+        }
+
+        if (strength > 0) {
+            heroObject.moveWithTouchpad(direction, strength);
+        } else {
+            heroObject.stop();
+        }
+    }
+
+    private void handleDesktopAction() {
+        boolean isKKeyPressed = Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.K);
+        isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
+        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+            gameSession.pauseGame();
+        }
+
+        if (isKKeyPressed && !wasKKeyPressed) {
+            if (isNearRouter && dialog == null) {
+                dialog = new DialogView(myGdxGame,
+                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                    GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
+                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+            } else if (isNearComputer) {
+                toDrawNetworkLogs = !toDrawNetworkLogs;
+            } else if (isNearDoor && !ipInputActive && dialog == null) {
+                ipInputActive = true;
+                ipInputView.show();
+                gameSession.pauseGame();
+            } else if (isNearBattery && !toDrawSave && dialog == null) {
+                toDrawSave = true;
+            } else if (isNearBattery && toDrawSave && dialog == null) {
+                toDrawSave = false;
+            }
+        }
+        wasKKeyPressed = isKKeyPressed;
+    }
+
     @Override
     public void show() {
         restartGame();
         Gdx.input.setInputProcessor(null);
     }
 
-    // ─────────────────────────────── render ──────────────────────────────────
     @Override
     public void render(float delta) {
         if (gameSession.state == GameState.PLAYING) {
@@ -311,6 +341,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
     private void handleInput(float delta) {
         boolean isTouched = Gdx.input.isTouched();
+
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(
                 new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -320,123 +351,85 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         switch (gameSession.state) {
             case PLAYING:
-                if (isTouched) {
-                    isTouchingUI = false;
-
-                    // Диалог Да/Нет с роутером
-                    if (dialogOkNoView != null) {
-                        if (dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            dialogOkNoView.dispose();
-                            dialogOkNoView = null;
-                            if (dialog != null) dialog.nextButton.show();
-                        } else if (dialogOkNoView.noButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            dialogNo = new DialogView(myGdxGame,
-                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, talks2);
-                            dialogOkNoView = null;
-                        }
-                    }
-                    if (dialogNo != null) {
-                        if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            dialog = null;
-                            dialogOkNoView = null;
-                            dialogNo = null;
-                        }
-                    }
-
-                    if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                        isTouchingUI = true;
+                if (isDesktop) {
+                    handleKeyboardInput();
+                    if (isTouched && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         gameSession.pauseGame();
                     }
-                    boolean nearSomething = isNearRouter || isNearComputer || isNearBattery || isNearDoor;
-                    if (nearSomething && !toDrawNetworkLogs) {
-                        actionButton = new ButtonView(1100, 70, 70, 70,
-                            GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-                    } else if (!toDrawNetworkLogs) {
-                        actionButton = new ButtonView(1100, 70, 70, 70,
-                            GameResources.ACTION_BUTTON_IMG_PATH);
-                    }
-                    if (isNearRouter && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                        dialog = new DialogView(myGdxGame,
-                            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                            GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
-                            GameSettings.SCREEN_HEIGHT / 4f, talks);
-                    }
+                    handleDesktopAction();
 
-                    if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                        && Gdx.input.justTouched()) {
-                        if (toDrawNetworkLogs) {
-                            toDrawNetworkLogs = false;
-                            actionButton = new ButtonView(1100, 70, 70, 70,
-                                GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-                        } else {
-                            toDrawNetworkLogs = true;
-                            actionButton = new ButtonView(1100, 70, 70, 70,
-                                GameResources.RED_ACTION_BUTTON_IMG_PATH);
-                        }
-                    }
-
-                    if (isNearDoor && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                        && Gdx.input.justTouched()) {
-                        ipInputActive = true;
-                        ipInputView.show();
-                        gameSession.pauseGame();
-                    }
-
-                    // Взаимодействие с БАТАРЕЙКОЙ → сохранение
-                    if (isNearBattery && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                        && Gdx.input.justTouched()) {
-                        toDrawSave = true;
-                    } else if (!isNearBattery
-                        || saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                        toDrawSave = false;
-                    }
-                    if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                        && Gdx.input.justTouched()) {
+                    if (toDrawSave && isTouched && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
                         toDrawSave = false;
                     }
 
-                    // Диалог роутера: на 6-й реплике появляется выбор Да/Нет
-                    if (dialog != null && dialog.getCnt() == 6) {
-                        dialogOkNoView = new DialogOkNoView(myGdxGame,
-                            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                            GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
-                            GameSettings.SCREEN_HEIGHT / 4f,
-                            LocalizationManager.get("network.talk2.6"));
-                        dialog.nextButton.hide();
-                        dialog.addCnt();
-                    }
                     if (!isNearRouter) {
                         dialog = null;
                     }
+                } else {
+                    if (isTouched) {
+                        isTouchingUI = false;
 
-                    // Обновляем джойстик
-                    if (!isTouchingUI) {
-                        touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                        if (touchpadView.isActive()) {
-                            heroObject.moveWithTouchpad(touchpadView.getDirection(),
-                                touchpadView.getStrength());
+                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            isTouchingUI = true;
+                            gameSession.pauseGame();
+                        }
+
+                        if (isNearRouter && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            dialog = new DialogView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                        }
+
+                        if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            toDrawNetworkLogs = !toDrawNetworkLogs;
+                        }
+
+                        if (isNearDoor && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            ipInputActive = true;
+                            ipInputView.show();
+                            gameSession.pauseGame();
+                        }
+
+                        if (isNearBattery && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            toDrawSave = true;
+                        } else if (!isNearBattery || saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            toDrawSave = false;
+                        }
+
+                        if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            toDrawSave = false;
+                        }
+
+                        if (!isNearRouter) {
+                            dialog = null;
+                        }
+
+                        if (!isTouchingUI) {
+                            touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
+                            if (touchpadView.isActive()) {
+                                heroObject.moveWithTouchpad(touchpadView.getDirection(),
+                                    touchpadView.getStrength());
+                            }
+                        } else {
+                            touchpadView.reset();
                         }
                     } else {
                         touchpadView.reset();
+                        heroObject.stop();
                     }
-                } else {
-                    touchpadView.reset();
-                    heroObject.stop();
                 }
                 break;
 
-            // ── PAUSED ────────────────────────────────────────────────────────
             case PAUSED:
                 if (ipInputActive) {
                     ipInputView.update(delta);
                     ipInputView.handleTouch();
                 }
-                if (!ipInputView.isVisible()) {
+                if (ipInputView != null && !ipInputView.isVisible() && ipInputActive) {
+                    ipInputActive = false;
                     gameSession.resumeGame();
                 }
                 if (isTouched) {
@@ -447,27 +440,35 @@ public class LevelFiveScreen extends ScreenAdapter {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
                     }
                 }
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    if (!ipInputActive) {
+                        gameSession.resumeGame();
+                    }
+                }
                 break;
 
-            // ── ENDED ─────────────────────────────────────────────────────────
             case ENDED:
                 if (isTouched) {
                     if (homeButton2.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
                     }
                 }
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    myGdxGame.setScreen(myGdxGame.menuScreen);
+                }
                 break;
         }
     }
 
-    // ─────────────────────────────── draw ────────────────────────────────────
     private void draw() {
+        if (myGdxGame.touch == null) {
+            myGdxGame.touch = new Vector3();
+        }
         myGdxGame.camera.update();
         myGdxGame.batch.setProjectionMatrix(myGdxGame.camera.combined);
         ScreenUtils.clear(Color.CLEAR);
         tiledMapManager.render();
 
-        // ── Мировые объекты (camera.combined) ────────────────────────────────
         myGdxGame.batch.begin();
         routerObject.draw(myGdxGame.batch);
         heroObject.draw(myGdxGame.batch);
@@ -481,22 +482,18 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
         myGdxGame.batch.end();
 
-        // ── UI (uiCamera.combined) ────────────────────────────────────────────
         myGdxGame.uiCamera.update();
         myGdxGame.batch.setProjectionMatrix(myGdxGame.uiCamera.combined);
         myGdxGame.batch.begin();
 
-        // Диалог роутера
         if (dialog != null) {
             dialog.draw(myGdxGame.batch);
         }
 
-        // ─── Сетевые логи ────────────────────────────────────────────────────
         if (toDrawNetworkLogs) {
             networkLogView.draw(myGdxGame.batch);
         }
 
-        // ─── Состояния игры ──────────────────────────────────────────────────
         if (gameSession.state == GameState.PAUSED) {
             if (!ipInputActive) {
                 pauseTextView.draw(myGdxGame.batch);
@@ -510,27 +507,35 @@ public class LevelFiveScreen extends ScreenAdapter {
             recordsListView.draw(myGdxGame.batch);
             homeButton2.draw(myGdxGame.batch);
         } else if (gameSession.state == GameState.PLAYING) {
-            touchpadView.draw(myGdxGame.batch);
-
-            // Подсказка рядом с роутером
-            if (isNearRouter && dialog == null && dialogOkNoView == null
-                && MemoryManager.loadAreSubtitlesOn()) {
-                hintText.draw(myGdxGame.batch);
+            if (!isDesktop) {
+                touchpadView.draw(myGdxGame.batch);
             }
-            // Глобальная подсказка об IP (показываем всегда или только после компьютера)
+
+            ButtonView currentButton = actionButton;
+            if (!isDesktop) {
+                boolean nearSomething = isNearRouter || isNearComputer || isNearBattery || isNearDoor;
+                if (nearSomething && !toDrawNetworkLogs) {
+                    currentButton = actionButtonActive;
+                } else if (toDrawNetworkLogs) {
+                    currentButton = actionButtonRed;
+                }
+                currentButton.draw(myGdxGame.batch);
+            }
+
             if (toDrawNetworkLogs) {
                 networkHintText.draw(myGdxGame.batch);
             }
         }
 
         topBlackoutView.draw(myGdxGame.batch);
-        actionButton.draw(myGdxGame.batch);
-        pauseButton.draw(myGdxGame.batch);
+        if (!isDesktop) {
+            pauseButton.draw(myGdxGame.batch);
+        }
         liveView.draw(myGdxGame.batch);
 
-        if (dialogNo != null) dialogNo.draw(myGdxGame.batch);
-        if (dialogOkNoView != null) dialogOkNoView.draw(myGdxGame.batch);
-        if (toDrawSave) saveView.draw(myGdxGame.batch);
+        if (toDrawSave) {
+            saveView.draw(myGdxGame.batch);
+        }
 
         myGdxGame.batch.end();
 
@@ -539,7 +544,6 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
     }
 
-    // ─────────────────────────────── вспомогательные ─────────────────────────
     private void updateTrash() {
         for (int i = 0; i < trashArray.size(); i++) {
             boolean destroy = !trashArray.get(i).isAlive() || !trashArray.get(i).isInFrame();
@@ -579,6 +583,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         bulletArray.clear();
         createMapBorders();
         gameSession.startGame();
+        wasKKeyPressed = false;
     }
 
     @Override
@@ -586,14 +591,17 @@ public class LevelFiveScreen extends ScreenAdapter {
         heroSpriteSheet.dispose();
         touchpadView.dispose();
         tiledMapManager.dispose();
+        if (actionButton != null) actionButton.dispose();
+        if (actionButtonActive != null) actionButtonActive.dispose();
+        if (actionButtonRed != null) actionButtonRed.dispose();
     }
 
     private void createMapBorders() {
         float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
         float t = 1f;
-        createWall(mapWidth / 2, -t / 2 + 1.5f, mapWidth, t);
-        createWall(mapWidth / 2, -t / 2 + 16, mapWidth, t);
+        createWall(mapWidth / 2, -t / 2 + 0.5f, mapWidth, t);
+        createWall(mapWidth / 2, -t / 2 + 12, mapWidth, t);
         createWall(-t / 2 + 0.8f, mapHeight / 2, t, mapHeight);
         createWall(-t / 2 + 32.2f, mapHeight / 2, t, mapHeight);
     }

@@ -114,14 +114,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     }
 
     private void drawInputField() {
-        // Draw background
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.LIGHT_GRAY);
-        shapeRenderer.rect(inputFieldX, inputFieldY, inputFieldWidth, inputFieldHeight);
-        shapeRenderer.setColor(Color.DARK_GRAY);
-        shapeRenderer.rect(inputFieldX + 2, inputFieldY + 2, inputFieldWidth - 4, inputFieldHeight - 4);
-        shapeRenderer.end();
-
         // Draw text
         myGdxGame.batch.begin();
         String displayText = inputText.toString();

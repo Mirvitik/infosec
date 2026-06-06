@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.LocalizationManager;
+import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.screens.LevelOneScreen;
 
 public class DraggableWindow extends View {
@@ -52,7 +54,11 @@ public class DraggableWindow extends View {
 
         backgroundTexture = new Texture(backgroundPath);
         closeButtonTexture = new Texture(closeButtonPath);
-        clickButton = new ButtonView(x + 120, y + 200, GameResources.PRIZE_IMG_PATH);
+        if (LocalizationManager.getLanguage() == LocalizationManager.Language.EN) {
+            clickButton = new ButtonView(x + 120, y + 200, GameResources.PRIZE_IMG_PATH);
+        } else {
+            clickButton = new ButtonView(x + 120, y + 200, GameResources.PRIZE_RUS_IMG_PATH);
+        }
 
         updateCloseButtonPosition();
     }

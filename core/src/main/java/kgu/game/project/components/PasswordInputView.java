@@ -2,8 +2,6 @@ package kgu.game.project.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,21 +10,22 @@ import com.badlogic.gdx.math.Vector3;
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.LocalizationManager;
 
 public class PasswordInputView extends View implements InputProcessor {
 
-    private MyGdxGame myGdxGame;
+    private final MyGdxGame myGdxGame;
 
-    private ImageView loginForm;
-    private ButtonView confirmButton;
+    private final ImageView loginForm;
+    private final ButtonView confirmButton;
     String answer;
 
-    private StringBuilder inputText = new StringBuilder();
-    private BitmapFont font;
-    private BitmapFont fontRed;
-    private GlyphLayout glyphLayout;
+    private final StringBuilder inputText = new StringBuilder();
+    private final BitmapFont font;
+    private final BitmapFont fontRed;
+    GlyphLayout glyphLayout;
 
-    private float inputFieldX;
+    private final float inputFieldX;
     private float inputFieldY;
     private float inputFieldWidth = 170;
     private float inputFieldHeight = 25;
@@ -61,10 +60,8 @@ public class PasswordInputView extends View implements InputProcessor {
         confirmButton = new ButtonView(centerX + 90, inputFieldY, 50, 25,
             new BitmapFont(), GameResources.PASSWORD_IMG_PATH, "OK");
 
-        font = new BitmapFont();
-        font.setColor(Color.BLACK);
-        fontRed = new BitmapFont();
-        fontRed.setColor(Color.RED);
+        font = myGdxGame.arialFont;
+        fontRed = myGdxGame.arialFontRed;
         glyphLayout = new GlyphLayout();
         closeButton = new ButtonView(centerX + 210, inputFieldY + 50, 32, 32, GameResources.CLOSE_BUTTON_PATH);
         dismissedByUser = false;
@@ -150,26 +147,23 @@ public class PasswordInputView extends View implements InputProcessor {
 
         // Input field background using a plain white pixel drawn via font
         // (no ShapeRenderer to avoid batch conflicts)
-        font.setColor(Color.LIGHT_GRAY);
         font.draw(batch, "________________", inputFieldX, inputFieldY + inputFieldHeight);
-        font.setColor(Color.BLACK);
+
 
         // Input text
         String display = inputText.toString();
         if (isActive && showCursor) display += "|";
 
         if (inputText.length() == 0 && !isActive) {
-            font.setColor(Color.GRAY);
-            font.draw(batch, "Enter answer", inputFieldX + 5, inputFieldY + inputFieldHeight - 5);
-            font.setColor(Color.BLACK);
+            font.draw(batch, LocalizationManager.get("passwoidInput.answer"), inputFieldX + 5, inputFieldY + inputFieldHeight - 5);
         } else {
             font.draw(batch, display, inputFieldX + 5, inputFieldY + inputFieldHeight - 5);
         }
         closeButton.draw(myGdxGame.batch);
-        font.draw(batch, "DOOR TO THE NEXT LEVEL", GameSettings.SCREEN_WIDTH / 2f - 20, 580);
+        font.draw(batch, LocalizationManager.get("passwoidInput.door"), GameSettings.SCREEN_WIDTH / 2f - 80, 580);
 
         if (showError) {
-            fontRed.draw(batch, "Incorrect password",
+            fontRed.draw(batch, LocalizationManager.get("Incorrect password"),
                 inputFieldX, inputFieldY + inputFieldHeight + 20);
         }
     }
@@ -178,8 +172,6 @@ public class PasswordInputView extends View implements InputProcessor {
     public void dispose() {
         loginForm.dispose();
         confirmButton.dispose();
-        font.dispose();
-        fontRed.dispose();
         closeButton.dispose();
         isDisposed = true;
     }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import kgu.game.project.FontBuilder;
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.LocalizationManager;
 
 public class DialogView extends View {
     String text;
@@ -28,10 +29,10 @@ public class DialogView extends View {
         this.width = width;
         this.height = height;
         this.text = talks.get(cnt).toString();
-        this.nextButton = new ButtonView(width + 160, y + 20, 80, 30, new BitmapFont(), GameResources.PASSWORD_IMG_PATH, "Next");
+        this.nextButton = new ButtonView(width + 160, y + 20, 80, 30, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
 
         // Инициализируем шрифт
-        this.bitmapFont = FontBuilder.generate(20, Color.GRAY, "fonts/arialmt.ttf");
+        this.bitmapFont = myGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
         this.talks = talks;
     }
@@ -57,7 +58,7 @@ public class DialogView extends View {
         }
     }
 
-    public boolean isToDispose(){
+    public boolean isToDispose() {
         return cnt >= talks.size;
     }
 
@@ -66,10 +67,6 @@ public class DialogView extends View {
         if (fon != null) {
             fon.dispose();
             fon = null;
-        }
-        if (bitmapFont != null) {
-            bitmapFont.dispose();
-            bitmapFont = null;
         }
         if (nextButton != null) {
             nextButton.dispose();
