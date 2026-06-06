@@ -83,6 +83,11 @@ public class ComputerScreen extends ScreenAdapter {
         });
     }
 
+    @Override
+    public void show() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+    }
+
     // Вспомогательный метод для проверки наличия иконки mail
     private boolean hasMailIcon() {
         for (IconView icon : iconsArray) {

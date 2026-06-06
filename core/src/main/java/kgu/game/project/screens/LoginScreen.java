@@ -66,7 +66,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         forgotButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f - 230 / 2f, 250, 230, 25, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.forgot"), 1f);
         error = new TextView(myGdxGame.arialFont, GameSettings.SCREEN_WIDTH / 2f - 85, 538, LocalizationManager.get("login.error"));
         infoWindow = new InfoWindow(myGdxGame, 120, 120, LocalizationManager.get("login.incorrect"), LocalizationManager.get("login.hint"), GameResources.WINDOW_PATH, GameResources.CLOSE_BUTTON_PATH);
-        tornOffButton = new ButtonView(0, 0, 64, 64, GameResources.TURN_OFF_IMG_PATH);
+        tornOffButton = new ButtonView(20, 20, 128, 128, GameResources.TURN_OFF_IMG_PATH);
         Gdx.input.setInputProcessor(this);
     }
 

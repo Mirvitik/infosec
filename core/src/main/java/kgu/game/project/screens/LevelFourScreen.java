@@ -235,8 +235,8 @@ public class LevelFourScreen extends ScreenAdapter {
             }
         },
             (GameObject object) -> {
-                if (object.getClass().getSimpleName().equals("AntivirusObject") ||
-                    object.getClass().getSimpleName().equals("ComputerObject") || object.getClass().getSimpleName().equals("BatteryObject")) {
+                if (object instanceof AntivirusObject ||
+                    object instanceof ComputerObject || object instanceof BatteryObject) {
                     isNearComputer = false;
                     isNearAntivirus = false;
                     isNearBattery = false;

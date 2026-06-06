@@ -89,7 +89,7 @@ public class GameScreen extends ScreenAdapter {
             if (object instanceof AntivirusObject) {
                 isNearComputer = true;
                 System.out.println("Touched ANTIVIRUS (computer)");
-            } else if (object.getClass().getSimpleName().equals("ComputerObject")) {
+            } else if (object instanceof  ComputerObject) {
                 isNearComputer = true;
                 System.out.println("Touched COMPUTER");
             } else if (object instanceof TrashObject) {

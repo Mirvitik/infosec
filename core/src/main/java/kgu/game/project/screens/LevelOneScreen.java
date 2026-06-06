@@ -35,6 +35,7 @@ import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.BatteryObject;
 import kgu.game.project.objects.ComputerObject;
+import kgu.game.project.objects.DoorObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
 import kgu.game.project.objects.TrashObject;
@@ -91,7 +92,7 @@ public class LevelOneScreen extends ScreenAdapter {
     float heroY = -1f;
     ImageView image;
     BatteryObject batteryObject;
-    BatteryObject doorDown;
+    DoorObject doorDown;
     SaveView saveView = new SaveView(350, 50, 500, 600);
     boolean isNearDoor;
     Boolean toDrawPassword = false;
@@ -157,19 +158,19 @@ public class LevelOneScreen extends ScreenAdapter {
         antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, 200, 200, 64, 64, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
-            if (object.getClass().getSimpleName().equals("AntivirusObject")) {
+            if (object instanceof AntivirusObject) {
                 isNearAntivirus = true;
-            } else if (object.getClass().getSimpleName().equals("ComputerObject")) {
-                isNearComputer = true;
-            } else if (object.getBit() == GameSettings.BATTERY_BIT) {
-                isNearBattery = true;
-            } else if (object.getBit() == GameSettings.DOOR_BIT) {
+            } else if (object instanceof DoorObject) {
                 isNearDoor = true;
+            } else if (object instanceof BatteryObject) {
+                isNearBattery = true;
+            } else if (object instanceof ComputerObject) {
+                isNearComputer = true;
             }
         },
             (GameObject object) -> {
-                if (object.getClass().getSimpleName().equals("AntivirusObject") ||
-                    object.getClass().getSimpleName().equals("ComputerObject") || object.getClass().getSimpleName().equals("BatteryObject")) {
+                if (object instanceof AntivirusObject ||
+                    object instanceof ComputerObject || object instanceof BatteryObject) {
                     isNearComputer = false;
                     isNearAntivirus = false;
                     isNearBattery = false;
@@ -180,7 +181,7 @@ public class LevelOneScreen extends ScreenAdapter {
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         image = new ImageView(180, 0, 1028, 720, GameResources.ASCII_PATH);
         batteryObject = new BatteryObject(10, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
-        doorDown = new BatteryObject(18, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
+        doorDown = new DoorObject(18, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
     }
 
     public LevelOneScreen(MyGdxGame myGdxGame, float x, float y) {
@@ -342,7 +343,6 @@ public class LevelOneScreen extends ScreenAdapter {
                         }
                     }
                 } else {
-                    // мобильная версия (без изменений)
                     if (isTouched) {
                         isTouchingUI = false;
                         if (dialogOkNoView != null) {

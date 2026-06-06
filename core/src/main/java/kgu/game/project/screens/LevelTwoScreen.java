@@ -170,13 +170,13 @@ public class LevelTwoScreen extends ScreenAdapter {
         antiVirus = new AntivirusObject(GameResources.CAESER_ANTIVIRUS_IMG_PATH, 200, 200, 64, 64, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
-            if (object.getClass().getSimpleName().equals("AntivirusObject")) {
+            if (object instanceof AntivirusObject) {
                 isNearAntivirus = true;
-            } else if (object.getClass().getSimpleName().equals("ComputerObject")) {
+            } else if (object  instanceof ComputerObject) {
                 isNearComputer = true;
             } else if (object.getBit() == GameSettings.BATTERY_BIT) {
                 isNearBattery = true;
-            } else if (object.getClass().getSimpleName().equals("HelloTrigger")) {
+            } else if (object instanceof HelloTrigger) {
                 isNearHello = true;
                 if (object.getBit() == GameSettings.SENSOR_PLUS_BIT) {
                     if (cnt == 0 || cnt == -2 || cnt == -1) {
@@ -196,8 +196,8 @@ public class LevelTwoScreen extends ScreenAdapter {
             }
         },
             (GameObject object) -> {
-                if (object.getClass().getSimpleName().equals("AntivirusObject") ||
-                    object.getClass().getSimpleName().equals("ComputerObject") || object.getClass().getSimpleName().equals("BatteryObject") || object.getClass().getSimpleName().equals("HelloTrigger")) {
+                if (object instanceof AntivirusObject ||
+                    object instanceof ComputerObject || object instanceof BatteryObject || object instanceof HelloTrigger) {
                     isNearComputer = false;
                     isNearAntivirus = false;
                     isNearBattery = false;

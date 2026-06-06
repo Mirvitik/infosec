@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.awt.Desktop;
+import java.lang.annotation.Documented;
 import java.util.ArrayList;
 
 import kgu.game.project.GameResources;
@@ -39,6 +40,7 @@ import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.BatteryObject;
 import kgu.game.project.objects.ComputerObject;
+import kgu.game.project.objects.DoorObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
 import kgu.game.project.objects.TrashObject;
@@ -225,16 +227,15 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         contactManager = new ContactManager(myGdxGame.world,
             (GameObject object) -> {
-                String cls = object.getClass().getSimpleName();
-                if (cls.equals("AntivirusObject")) isNearRouter = true;
-                else if (cls.equals("ComputerObject")) isNearComputer = true;
-                else if (object.getBit() == GameSettings.BATTERY_BIT) isNearBattery = true;
-                else if (object.getBit() == GameSettings.DOOR_BIT) isNearDoor = true;
+                if (object instanceof AntivirusObject) isNearRouter = true;
+                else if (object instanceof ComputerObject) isNearComputer = true;
+                else if (object instanceof DoorObject) isNearDoor = true;
+                else if (object instanceof BatteryObject) isNearBattery = true;
             },
             (GameObject object) -> {
                 String cls = object.getClass().getSimpleName();
-                if (cls.equals("AntivirusObject") || cls.equals("ComputerObject")
-                    || cls.equals("BatteryObject")) {
+                if (object instanceof AntivirusObject || object instanceof ComputerObject
+                    || object instanceof BatteryObject) {
                     isNearComputer = false;
                     isNearRouter = false;
                     isNearBattery = false;

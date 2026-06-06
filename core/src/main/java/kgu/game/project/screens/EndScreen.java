@@ -161,9 +161,9 @@ public class EndScreen extends ScreenAdapter {
         antiVirus = new AntivirusObject(GameResources.VIRUS_TEXTURE_PATH, 200, 180, 64, 64, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
-            if (object.getClass().getSimpleName().equals("AntivirusObject")) {
+            if (object instanceof AntivirusObject) {
                 isNearAntivirus = true;
-            } else if (object.getClass().getSimpleName().equals("ComputerObject")) {
+            } else if (object instanceof ComputerObject) {
                 isNearComputer = true;
             } else if (object.getBit() == GameSettings.BATTERY_BIT) {
                 isNearBattery = true;
@@ -176,8 +176,8 @@ public class EndScreen extends ScreenAdapter {
             }
         },
             (GameObject object) -> {
-                if (object.getClass().getSimpleName().equals("AntivirusObject") ||
-                    object.getClass().getSimpleName().equals("ComputerObject") || object.getClass().getSimpleName().equals("BatteryObject")) {
+                if (object instanceof AntivirusObject ||
+                    object instanceof ComputerObject || object instanceof BatteryObject) {
                     isNearComputer = false;
                     isNearAntivirus = false;
                     isNearBattery = false;
