@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
@@ -70,14 +71,13 @@ public class EndScreen extends ScreenAdapter {
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
     ImageView message;
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
 
     DialogView dialog;
     DialogView dialogNo;
-    private Vector3 touch2;
+
     public boolean isNearComputer = false;
 
-    private boolean isTouchingUI = false;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
@@ -201,8 +201,8 @@ public class EndScreen extends ScreenAdapter {
             GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
         mail3 = new BatteryObject(11, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
-        mailTextView = new TextView(myGdxGame.arialFont, 200, 500, "");
-        mailCloseButton = new ButtonView(900, 150, 100, 40, myGdxGame.arialFont,
+        mailTextView = new TextView(MyGdxGame.arialFont, 200, 500, "");
+        mailCloseButton = new ButtonView(900, 150, 100, 40, MyGdxGame.arialFont,
             GameResources.PASSWORD_IMG_PATH, "Close");
     }
 
@@ -265,11 +265,7 @@ public class EndScreen extends ScreenAdapter {
                     myGdxGame.audioManager.saveSound.play();
                 }
             } else if (isNearComputer && dialog == null) {
-                if (toDraw) {
-                    toDraw = false;
-                } else {
-                    toDraw = true;
-                }
+                toDraw = !toDraw;
             } else if ((isNearMail1 || isNearMail2 || isNearMail3) && !toDrawMail) {
                 toDrawMail = true;
                 if (isNearMail1) {
@@ -279,7 +275,7 @@ public class EndScreen extends ScreenAdapter {
                 } else if (isNearMail3) {
                     currentMailText = "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]";
                 }
-                mailTextView = new TextView(myGdxGame.arialFont, 200, 500, currentMailText);
+                mailTextView = new TextView(MyGdxGame.arialFont, 200, 500, currentMailText);
             }
         }
         wasKKeyPressed = isKKeyPressed;
@@ -296,7 +292,7 @@ public class EndScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
             updateTrash();
             updateBullets();
@@ -318,7 +314,6 @@ public class EndScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
@@ -356,7 +351,7 @@ public class EndScreen extends ScreenAdapter {
                     }
                 } else {
                     if (isTouched) {
-                        isTouchingUI = false;
+                        boolean isTouchingUI = false;
 
                         if (dialogNo != null) {
                             if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {

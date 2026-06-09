@@ -17,11 +17,6 @@ public class MemoryManager {
         langPrefs.flush();
     }
 
-    public static LocalizationManager.Language loadLanguage() {
-        String val = langPrefs.getString(KEY_LANGUAGE, LocalizationManager.Language.EN.name());
-        return LocalizationManager.Language.valueOf(val);
-    }
-
 
     public static void saveSoundSettings(boolean isOn) {
         preferences.putBoolean("isSoundOn", isOn);
@@ -64,8 +59,7 @@ public class MemoryManager {
 
         String scores = preferences.getString("recordTable");
         Json json = new Json();
-        ArrayList<Integer> table = json.fromJson(ArrayList.class, scores);
-        return table;
+        return json.fromJson(ArrayList.class, scores);
     }
 
     public static void changeDifficulty() {
@@ -99,7 +93,7 @@ public class MemoryManager {
         Json json = new Json();
 
         String savesListJson = gameProgressPrefs.getString("savesList", "[]");
-        ArrayList<Long> savesDates = json.fromJson(ArrayList.class, savesListJson);
+        ArrayList savesDates = json.fromJson(ArrayList.class, savesListJson);
 
         if (savesDates == null) {
             savesDates = new ArrayList<>();
@@ -123,7 +117,7 @@ public class MemoryManager {
     public static ArrayList<Long> getAllSaveDates() {
         Json json = new Json();
         String savesListJson = gameProgressPrefs.getString("savesList", "[]");
-        ArrayList<Long> savesDates = json.fromJson(ArrayList.class, savesListJson);
+        ArrayList savesDates = json.fromJson(ArrayList.class, savesListJson);
 
         if (savesDates == null) {
             return new ArrayList<>();
