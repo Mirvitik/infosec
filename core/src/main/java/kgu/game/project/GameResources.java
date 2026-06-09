@@ -3,15 +3,12 @@ package kgu.game.project;
 public class GameResources {
 
     public static final String BACKGROUND_IMG_PATH = "textures/background.png";
-    public static final String WALL_TEXTURE_PATH = "textures/wall.png";
     public static final String BACKGROUND_WINDOW_IMG_PATH = "textures/backgroundlog.png";
 
-    public static final String BLACKOUT_FULL_IMG_PATH = "textures/blackout_full.png";
     public static final String ACTION_BUTTON_IMG_PATH = "textures/actionbutton.png";
     public static final String RED_ACTION_BUTTON_IMG_PATH = "textures/redactionbuttonactive.png";
     public static final String BATTERY_BUTTON_IMG_PATH = "textures/battery.png";
     public static final String SAVE_BACKGROUND_IMG_PATH = "textures/savebackground.png";
-    public static final String DOOR_DOWN_IMG_PATH = "textures/doordown.png";
     public static final String DOOR_IMG_PATH = "textures/door.png";
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
     public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
@@ -39,7 +36,6 @@ public class GameResources {
     public static final String STORY_TELLING_2_IMG_PATH = "textures/storytelling2.png";
     public static final String STORY_TELLING_3_IMG_PATH = "textures/storytelling3.png";
     public static final String SHINDOWS_LOGOTYPE_PATH = "textures/shindowslogotype.png";
-    public static final String BLACKOUT_MIDDLE_IMG_PATH = "textures/blackout_middle.png";
 
     public static final String BUTTON_SHORT_BG_IMG_PATH = "textures/button_background_short.png";
     public static final String BUTTON_LONG_BG_IMG_PATH = "textures/button_background_long.png";
@@ -47,18 +43,12 @@ public class GameResources {
     public static final String PAUSE_IMG_PATH = "textures/pause_icon.png";
     public static final String LIVE_IMG_PATH = "textures/life.png";
 
-    public static final String BULLET_IMG_PATH = "textures/bullet.png";
-    public static final String SHIP_IMG_PATH = "textures/fronthero.png";
-    public static final String TRASH_IMG_PATH = "textures/trash.png";
     public static final String SPRITE_SHEET = "textures/hero.png";
-
-    public static final String MONSTER_IMG_PATH = "textures/monster.png";
     public static final String COMPUTER_SPRITE_PATH = "textures/PC.png";
     public static final String ASCII_SPRITE_PATH = "textures/asciisprite.png";
     public static final String ASCII_PATH = "textures/ascii.png";
     public static final String WINDOW_PATH = "textures/window.png";
     public static final String CLOSE_BUTTON_PATH = "textures/close.png";
-    public static final String CURSOR_SPRITE_PATH = "textures/cursor.png";
     public static final String LOGIN_IMG_PATH = "textures/loginscreen.png";
     public static final String PASSWORD_IMG_PATH = "textures/passwordfield.png";
     public static final String INPUT_IMG_PATH = "textures/inputfield.png";
@@ -82,18 +72,14 @@ public class GameResources {
     public static final String ANTIVIRUS_NAPOLEON_TEXTURE_PATH = "textures/napoleon.png";
     public static final String MAIL_ICON_PATH = "textures/mail-icon.png";
 
-    public static final String BACKGROUND_MUSIC_PATH = "sounds/music.wav";
     public static final String BACKGROUND2_MUSIC_PATH = "sounds/background2.mp3";
     public static final String DESTROY_SOUND_PATH = "sounds/destroy.mp3";
     public static final String SAVE_SOUND_PATH = "sounds/save.mp3";
     public static final String STORY_SOUND_PATH = "sounds/storytellingsound.wav";
-    public static final String SHOOT_SOUND_PATH = "sounds/shoot.mp3";
     public static final String SCROLL_SOUND_PATH = "sounds/scroll.wav";
 
     public static final String FONT_PATH = "fonts/Big-font.ttf";
-    public static final String FONT_PATH_HACKED = "fonts/HACKED.ttf";
     public static final String FONT_PATH_PIXEL = "fonts/ArcadeJeu-Regular.otf";
-    public static final String MINIGAME_BACKGROUND_PATH_PIXEL = "textures/minigamebackground.png";
     public static final String HACKED_PATH = "sounds/hacked.ogg";
     public static final String ARIAL_FONT_PATH = "fonts/arialmt.ttf";
     public static final String CONSOLAS_FONT_PATH = "fonts/consolas.ttf";

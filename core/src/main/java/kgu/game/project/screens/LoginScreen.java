@@ -26,15 +26,14 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     ImageView blackoutImageView;
     ImageView titleTextView;
 
-    private StringBuilder inputText;
+    private final StringBuilder inputText;
 
-    private GlyphLayout glyphLayout;
+    private final GlyphLayout glyphLayout;
     private ShapeRenderer shapeRenderer;
 
-    private float inputFieldX = 550;
-    private float inputFieldY = 500;
-    private float inputFieldWidth = 480;
-    private float inputFieldHeight = 50;
+    private final float inputFieldX = 550;
+    private final float inputFieldY = 500;
+    private final float inputFieldHeight = 50;
     private ImageView loginForm;
     private ImageView avatar;
     ImageView image;
@@ -43,7 +42,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     InfoWindow infoWindow;
     TextView error;
     private boolean isActive = false;
-    private ButtonView tornOffButton;
+    private final ButtonView tornOffButton;
     private float blinkTimer = 0;
     private boolean showCursor = true;
 
@@ -59,9 +58,9 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         glyphLayout = new GlyphLayout();
         shapeRenderer = new ShapeRenderer();
         image = new ImageView(GameSettings.SCREEN_WIDTH / 2f - 170 / 2f, 510, 170, 25, GameResources.INPUT_IMG_PATH);
-        confirmButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f + 90, 510, 50, 25, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.confirm"));
-        forgotButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f - 230 / 2f, 250, 230, 25, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.forgot"), 1f);
-        error = new TextView(myGdxGame.arialFont, GameSettings.SCREEN_WIDTH / 2f - 85, 538, LocalizationManager.get("login.error"));
+        confirmButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f + 90, 510, 50, 25, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.confirm"));
+        forgotButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f - 230 / 2f, 250, 230, 25, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.forgot"), 1f);
+        error = new TextView(MyGdxGame.arialFont, GameSettings.SCREEN_WIDTH / 2f - 85, 538, LocalizationManager.get("login.error"));
         infoWindow = new InfoWindow(myGdxGame, 120, 120, LocalizationManager.get("login.incorrect"), LocalizationManager.get("login.hint"), GameResources.WINDOW_PATH, GameResources.CLOSE_BUTTON_PATH);
         tornOffButton = new ButtonView(20, 20, 128, 128, GameResources.TURN_OFF_IMG_PATH);
         Gdx.input.setInputProcessor(this);
@@ -86,8 +85,8 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         image.draw(myGdxGame.batch);
         confirmButton.draw(myGdxGame.batch);
         forgotButton.draw(myGdxGame.batch);
-        myGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.title"), 510, 670);
-        myGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.user"), 350, 750);
+        MyGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.title"), 510, 670);
+        MyGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.user"), 350, 750);
         error.draw(myGdxGame.batch);
         tornOffButton.draw(myGdxGame.batch);
         myGdxGame.batch.end();
@@ -117,16 +116,16 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             displayText += "|";
         }
 
-        glyphLayout.setText(myGdxGame.arialFont, displayText);
+        glyphLayout.setText(MyGdxGame.arialFont, displayText);
         float textX = inputFieldX + 10;
         float textY = inputFieldY + inputFieldHeight / 2 + glyphLayout.height / 2;
 
-        myGdxGame.arialFont.draw(myGdxGame.batch, displayText, textX, textY);
+        MyGdxGame.arialFont.draw(myGdxGame.batch, displayText, textX, textY);
 
         if (inputText.length() == 0 && !isActive) {
-            myGdxGame.arialFont.setColor(Color.GRAY);
-            myGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.password_hint"), textX, textY);
-            myGdxGame.arialFont.setColor(Color.BLACK);
+            MyGdxGame.arialFont.setColor(Color.GRAY);
+            MyGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.password_hint"), textX, textY);
+            MyGdxGame.arialFont.setColor(Color.BLACK);
         }
 
         myGdxGame.batch.end();
@@ -135,6 +134,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     private void handleTouchInput() {
         if (Gdx.input.justTouched()) {
             Vector3 touchPos = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            float inputFieldWidth = 480;
             if (touchPos.x >= inputFieldX && touchPos.x <= inputFieldX + inputFieldWidth &&
                 touchPos.y >= inputFieldY && touchPos.y <= inputFieldY + inputFieldHeight) {
                 isActive = true;
@@ -252,8 +252,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
 
     private void onLoginAttempt(String username) {
         System.out.println("Login attempt with username: " + username);
-        if (username.trim().length() > 0) {
-        }
+
     }
 
     @Override

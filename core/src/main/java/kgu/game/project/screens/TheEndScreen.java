@@ -3,19 +3,14 @@ package kgu.game.project.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
-
-
-import java.util.ArrayList;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
 import kgu.game.project.components.TextView;
 import kgu.game.project.managers.LocalizationManager;
-import kgu.game.project.managers.MemoryManager;
 
 public class TheEndScreen extends ScreenAdapter {
     MyGdxGame myGdxGame;

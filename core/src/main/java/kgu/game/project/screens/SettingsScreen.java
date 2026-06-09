@@ -12,11 +12,9 @@ import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.ImageView;
 import kgu.game.project.components.MovingBackgroundView;
 import kgu.game.project.components.TextView;
 
-import java.util.ArrayList;
 
 public class SettingsScreen extends ScreenAdapter {
 

@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
@@ -39,9 +37,9 @@ public class LoadGameScreen extends ScreenAdapter {
             this.timestamp = timestamp;
             this.x = x; this.y = y; this.w = w; this.h = h;
             bg          = new ImageView(x, y, w, h, GameResources.BUTTON_SHORT_BG_IMG_PATH);
-            slotNumText = new TextView(g.arialFont,   x + 14, y + h - 16, slotNum);
+            slotNumText = new TextView(MyGdxGame.arialFont,   x + 14, y + h - 16, slotNum);
             levelText   = new TextView(g.commonWhiteFont, x + 14, y + h - 50, levelName);
-            dateText    = new TextView(g.arialFont,   x + 14, y + 14,     date);
+            dateText    = new TextView(MyGdxGame.arialFont,   x + 14, y + 14,     date);
         }
 
         void draw(SpriteBatch batch) {
@@ -60,7 +58,7 @@ public class LoadGameScreen extends ScreenAdapter {
         this.myGdxGame = myGdxGame;
 
         titleTextView    = new TextView(myGdxGame.xanmonoFontBig, 380, 590, LocalizationManager.get("loadgame.title"));
-        subtitleTextView = new TextView(myGdxGame.arialFont, 430, 528, LocalizationManager.get("loadgame.subtitle"));
+        subtitleTextView = new TextView(MyGdxGame.arialFont, 430, 528, LocalizationManager.get("loadgame.subtitle"));
 
         returnButton = new ButtonView(
             480, 80, 160, 50,
@@ -94,11 +92,11 @@ public class LoadGameScreen extends ScreenAdapter {
         for (int level : sortedLevels) {
             long date = latestByLevel.get(level);
             float cx = startX + (cnt % 2) * gapX;
-            float cy = startY - (cnt / 2) * gapY;
+            float cy = startY - ((float) cnt / 2) * gapY;
 
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;
-            String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
+            @SuppressWarnings("DefaultLocale") String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
             String dateStr   = timestampToDateString(date);
 
             slotCards.add(new SaveSlotCard(myGdxGame,
@@ -108,7 +106,7 @@ public class LoadGameScreen extends ScreenAdapter {
     }
 
     public static String timestampToDateString(long timestamp) {
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        @SuppressWarnings("SimpleDateFormat") java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         return sdf.format(new java.util.Date(timestamp));
     }
 
@@ -147,8 +145,6 @@ public class LoadGameScreen extends ScreenAdapter {
                         String.valueOf(card.timestamp)
                     );
                     int level = Integer.parseInt(save.get(0).toString());
-                    float x   = Float.parseFloat(save.get(1).toString());
-                    float y   = Float.parseFloat(save.get(2).toString());
 
                     switch (level) {
                         case 1: myGdxGame.setScreen(new LevelOneScreen(myGdxGame)); break;
@@ -194,11 +190,11 @@ public class LoadGameScreen extends ScreenAdapter {
         for (int level : sortedLevels) {
             long date = latestByLevel.get(level);
             float cx = startX + (cnt % 2) * gapX;
-            float cy = startY - (cnt / 2) * gapY;
+            float cy = startY - ((float) cnt / 2) * gapY;
 
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;
-            String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
+            @SuppressWarnings("DefaultLocale") String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
             String dateStr   = timestampToDateString(date);
 
             slotCards.add(new SaveSlotCard(myGdxGame,
