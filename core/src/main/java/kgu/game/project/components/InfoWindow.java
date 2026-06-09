@@ -80,9 +80,6 @@ public class InfoWindow extends View {
     public boolean handleTouch(Vector3 touch, boolean isTouched) {
         if (!isVisible) return false;
 
-
-
-        // Проверяем нажатие на кнопку закрытия
         if (isTouched &&
             touch.x >= closeButtonX && touch.x <= closeButtonX + closeButtonSize &&
             touch.y >= closeButtonY && touch.y <= closeButtonY + closeButtonSize) {
@@ -93,7 +90,6 @@ public class InfoWindow extends View {
             return true;
         }
 
-        // Проверяем нажатие на заголовок окна (для перетаскивания)
         if (isTouched &&
             touch.x >= x && touch.x <= x + width &&
             touch.y >= y && touch.y <= y + TITLE_BAR_HEIGHT) {
@@ -103,12 +99,10 @@ public class InfoWindow extends View {
             return true;
         }
 
-        // Отпускаем кнопку мыши/пальца
         if (!isTouched) {
             isDragging = false;
         }
 
-        // Перетаскивание окна
         if (isDragging && isTouched) {
             float newX = touch.x - dragOffsetX;
             float newY = touch.y - dragOffsetY;
@@ -130,7 +124,6 @@ public class InfoWindow extends View {
         this.x = newX;
         this.y = newY;
 
-        // Обновляем позицию кнопки закрытия
         closeButtonX += deltaX;
         closeButtonY += deltaY;
     }
@@ -139,20 +132,13 @@ public class InfoWindow extends View {
     public void draw(SpriteBatch batch) {
         if (!isVisible) return;
 
-        // Рисуем фон окна
         batch.draw(backgroundTexture, x, y, width, height);
 
-        // Рисуем заголовок
         if (font != null && title != null) {
             font.draw(batch, title, x + PADDING, y + height - PADDING);
         }
 
-        // Рисуем линию под заголовком
-        // Можно добавить через ShapeRenderer, но для простоты используем текстуру
-
-        // Рисуем содержимое
         if (font != null && content != null) {
-            // Разбиваем текст на строки
             String[] lines = content.split("\n");
             float currentY = y + height - TITLE_BAR_HEIGHT - PADDING;
             for (String line : lines) {
@@ -160,8 +146,6 @@ public class InfoWindow extends View {
                 currentY -= font.getLineHeight();
             }
         }
-
-        // Рисуем кнопку закрытия
         batch.draw(closeButtonTexture, closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
 
     }

@@ -26,13 +26,11 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     ImageView blackoutImageView;
     ImageView titleTextView;
 
-    // Text input fields
     private StringBuilder inputText;
 
     private GlyphLayout glyphLayout;
     private ShapeRenderer shapeRenderer;
 
-    // Input field position and size
     private float inputFieldX = 550;
     private float inputFieldY = 500;
     private float inputFieldWidth = 480;
@@ -57,7 +55,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         loginForm = new ImageView(GameSettings.SCREEN_WIDTH / 2f - 200, 210, 400, 500, GameResources.LOGIN_FORM_PATH);
         avatar = new ImageView(GameSettings.SCREEN_WIDTH / 2f - 32, 550, 64, 64, GameResources.AVATAR);
 
-        // Initialize text input
         inputText = new StringBuilder();
         glyphLayout = new GlyphLayout();
         shapeRenderer = new ShapeRenderer();
@@ -81,7 +78,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         myGdxGame.batch.setProjectionMatrix(myGdxGame.uiCamera.combined);
         ScreenUtils.clear(Color.CLEAR);
 
-        // Draw images
         myGdxGame.batch.begin();
         blackoutImageView.draw(myGdxGame.batch);
         titleTextView.draw(myGdxGame.batch);
@@ -97,7 +93,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         myGdxGame.batch.end();
 
         drawInputField();
-        // Draw input field
         myGdxGame.batch.begin();
         infoWindow.draw(myGdxGame.batch);
         myGdxGame.batch.end();
@@ -128,7 +123,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
 
         myGdxGame.arialFont.draw(myGdxGame.batch, displayText, textX, textY);
 
-        // Draw hint text if empty
         if (inputText.length() == 0 && !isActive) {
             myGdxGame.arialFont.setColor(Color.GRAY);
             myGdxGame.arialFont.draw(myGdxGame.batch, LocalizationManager.get("login.password_hint"), textX, textY);
@@ -153,7 +147,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             }
             if (confirmButton.isHit(touchPos.x, touchPos.y)) {
                 if (inputText.toString().equals("password")) {
-                    if (myGdxGame.computerScreen != null){
+                    if (myGdxGame.computerScreen != null) {
                         myGdxGame.computerScreen = null;
                     }
                     myGdxGame.computerScreen = new ComputerScreen(myGdxGame);
@@ -190,7 +184,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     public boolean keyDown(int keycode) {
         if (!isActive) return false;
 
-        // Handle Backspace
         if (keycode == com.badlogic.gdx.Input.Keys.BACKSPACE) {
             if (inputText.length() > 0) {
                 inputText.deleteCharAt(inputText.length() - 1);
@@ -198,7 +191,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             return true;
         }
 
-        // Handle Enter
         if (keycode == com.badlogic.gdx.Input.Keys.ENTER) {
             isActive = false;
             Gdx.input.setOnscreenKeyboardVisible(false);
@@ -217,9 +209,8 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         if (!isActive) return false;
-        if (character >= 32 && character < 127) { // Printable ASCII
+        if (character >= 32 && character < 127) {
             if (inputText.length() < 15) {
-                // Filter to alphanumeric and some special characters
                 if (Character.isLetterOrDigit(character) || character == ' ' || character == '_' || character == '-') {
                     inputText.append(character);
                 }
@@ -262,8 +253,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     private void onLoginAttempt(String username) {
         System.out.println("Login attempt with username: " + username);
         if (username.trim().length() > 0) {
-            // Proceed to next screen
-            // myGdxGame.setScreen(new GameScreen(myGdxGame, username));
         }
     }
 
@@ -271,13 +260,11 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
     public void dispose() {
 
 
-        // Удаляем ShapeRenderer
         if (shapeRenderer != null) {
             shapeRenderer.dispose();
             shapeRenderer = null;
         }
 
-        // Удаляем все ImageView
         if (blackoutImageView != null) {
             blackoutImageView.dispose();
             blackoutImageView = null;
@@ -299,7 +286,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             image = null;
         }
 
-        // Удаляем ButtonView
         if (confirmButton != null) {
             confirmButton.dispose();
             confirmButton = null;
@@ -309,7 +295,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             forgotButton = null;
         }
 
-        // Удаляем InfoWindow
         if (infoWindow != null) {
             infoWindow.dispose();
             infoWindow = null;
@@ -317,6 +302,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         Gdx.input.setInputProcessor(null);
 
     }
+
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -14,8 +13,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.awt.Desktop;
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
 
 import kgu.game.project.GameResources;
@@ -24,13 +21,11 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
 import kgu.game.project.components.NetworkLogView;
 import kgu.game.project.components.IpInputView;
-import kgu.game.project.components.PasswordInputView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
 import kgu.game.project.components.TextView;
@@ -147,17 +142,24 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         tiledMapManager = new TiledMapManager(
             GameResources.TMX_MAP_LEVEL_FIVE_PATH,
-            myGdxGame.camera, myGdxGame.batch, 2
+            myGdxGame.camera, myGdxGame.batch, 4
         );
 
-        topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
+        topBlackoutView = new ImageView(0, 0, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
+
         liveView = new LiveView(305, 1215);
-        pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
+        pauseButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 80,      // x = 1200
+            GameSettings.SCREEN_HEIGHT - 60,     // y = 720 - 60 = 660
+            46, 54,
+            GameResources.PAUSE_IMG_PATH
+        );
+
         touchpadView = new TouchpadView(100, 100);
 
-        actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_IMG_PATH);
-        actionButtonActive = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-        actionButtonRed = new ButtonView(1100, 70, 70, 70, GameResources.RED_ACTION_BUTTON_IMG_PATH);
+        actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+        actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+        actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
 
         pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont,
@@ -180,7 +182,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         routerObject = new AntivirusObject(
             GameResources.ANTIVIRUS_FIVE_TEXTURE_PATH,
-            200, 200, 64, 64,
+            200, 200, 128, 128,
             GameSettings.ANTIVIRUS_BIT, myGdxGame.world
         );
         networkComputer = new ComputerObject(
@@ -198,10 +200,10 @@ public class LevelFiveScreen extends ScreenAdapter {
             GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world
         );
 
-        doorDown = new BatteryObject(
-            18, 6,
+        doorDown = new DoorObject(
+            1121, 448,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2,
-            GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT
+            GameResources.SERVER_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT
         );
 
         networkLogView = new NetworkLogView(
@@ -219,7 +221,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             ATTACKER_IP,
             () -> {
                 gameSession.resumeGame();
-                myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
+                myGdxGame.setScreen(new EndScreen(myGdxGame));
             },
             () -> {
             }
@@ -233,7 +235,6 @@ public class LevelFiveScreen extends ScreenAdapter {
                 else if (object instanceof BatteryObject) isNearBattery = true;
             },
             (GameObject object) -> {
-                String cls = object.getClass().getSimpleName();
                 if (object instanceof AntivirusObject || object instanceof ComputerObject
                     || object instanceof BatteryObject) {
                     isNearComputer = false;
@@ -253,22 +254,22 @@ public class LevelFiveScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
             direction.y = 1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
             direction.y = -1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
             direction.x = -1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
             direction.x = 1;
-            strength = 1;
+            strength = 2;
         }
 
         if (direction.x != 0 && direction.y != 0) {
@@ -303,6 +304,9 @@ public class LevelFiveScreen extends ScreenAdapter {
                 gameSession.pauseGame();
             } else if (isNearBattery && !toDrawSave && dialog == null) {
                 toDrawSave = true;
+                if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
+                    myGdxGame.audioManager.saveSound.play();
+                }
             } else if (isNearBattery && toDrawSave && dialog == null) {
                 toDrawSave = false;
             }
@@ -360,7 +364,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                     handleDesktopAction();
 
                     if (toDrawSave && isTouched && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                        MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                        MemoryManager.saveGameState(5, heroObject.getX(), heroObject.getY());
                         toDrawSave = false;
                     }
 
@@ -395,6 +399,9 @@ public class LevelFiveScreen extends ScreenAdapter {
 
                         if (isNearBattery && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawSave = true;
+                            if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
+                                myGdxGame.audioManager.saveSound.play();
+                            }
                         } else if (!isNearBattery || saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
                         }
@@ -410,7 +417,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive()) {
+                            if (touchpadView.isActive() && !toDrawSave && dialog == null && !toDrawNetworkLogs) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(),
                                     touchpadView.getStrength());
                             }
@@ -472,15 +479,15 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         myGdxGame.batch.begin();
         routerObject.draw(myGdxGame.batch);
+        if (doorDown != null) {
+            doorDown.draw(myGdxGame.batch);
+        }
         heroObject.draw(myGdxGame.batch);
         if (isNearRouter) {
             routerMessage.draw(myGdxGame.batch);
         }
         networkComputer.draw(myGdxGame.batch);
         batteryObject.draw(myGdxGame.batch);
-        if (doorDown != null) {
-            doorDown.draw(myGdxGame.batch);
-        }
         myGdxGame.batch.end();
 
         myGdxGame.uiCamera.update();
@@ -528,6 +535,9 @@ public class LevelFiveScreen extends ScreenAdapter {
             }
         }
 
+        float uiHeight = myGdxGame.uiCamera.viewportHeight;
+        float blackoutHeight = 64f;
+        topBlackoutView.setPosition(0, uiHeight - blackoutHeight);
         topBlackoutView.draw(myGdxGame.batch);
         if (!isDesktop) {
             pauseButton.draw(myGdxGame.batch);
@@ -579,7 +589,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
         heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2f - 200;
         heroY = (heroY != -1f) ? heroY : 150;
-        heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 64, 64,
+        heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128,
             heroFrames, myGdxGame.world);
         bulletArray.clear();
         createMapBorders();
@@ -600,11 +610,11 @@ public class LevelFiveScreen extends ScreenAdapter {
     private void createMapBorders() {
         float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
-        float t = 1f;
-        createWall(mapWidth / 2, -t / 2 + 0.5f, mapWidth, t);
-        createWall(mapWidth / 2, -t / 2 + 12, mapWidth, t);
-        createWall(-t / 2 + 0.8f, mapHeight / 2, t, mapHeight);
-        createWall(-t / 2 + 32.2f, mapHeight / 2, t, mapHeight);
+        float wallThickness = 1f;
+        createWall(mapWidth / 2, -wallThickness / 2 + 1f, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 23.4f, mapWidth, wallThickness);
+        createWall(-wallThickness / 2, mapHeight / 2, wallThickness, mapHeight);
+        createWall(-wallThickness / 2 + 66f, mapHeight / 2, wallThickness, mapHeight);
     }
 
     private void createWall(float x, float y, float width, float height) {
@@ -616,5 +626,11 @@ public class LevelFiveScreen extends ScreenAdapter {
         shape.setAsBox(width / 2f, height / 2f);
         body.createFixture(shape, 0);
         shape.dispose();
+    }
+
+    @Override
+    public void hide() {
+        myGdxGame.uiCamera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+        myGdxGame.uiCamera.update();
     }
 }

@@ -99,25 +99,20 @@ public class MemoryManager {
     public static void saveGameState(int currentLevel, float playerX, float playerY) {
         Json json = new Json();
 
-        // Получаем существующий список сохранений (исправлено имя Preference)
         String savesListJson = gameProgressPrefs.getString("savesList", "[]");
         ArrayList<Long> savesDates = json.fromJson(ArrayList.class, savesListJson);
 
-        // Если список null, создаем новый
         if (savesDates == null) {
             savesDates = new ArrayList<>();
         }
 
-        // Добавляем время текущего сохранения
         long currentTime = System.currentTimeMillis();
         savesDates.add(currentTime);
 
 
         Preferences saves = Gdx.app.getPreferences(String.valueOf(currentTime));
-        // Сохраняем обновленный список
         gameProgressPrefs.putString("savesList", json.toJson(savesDates));
 
-        // Сохраняем данные игры
         saves.putInteger("currentLevel", currentLevel);
         saves.putFloat("playerX", playerX);
         saves.putFloat("playerY", playerY);
@@ -125,7 +120,6 @@ public class MemoryManager {
         gameProgressPrefs.flush();
         saves.flush();
     }
-    // Геттер для получения всех дат сохранений
     public static ArrayList<Long> getAllSaveDates() {
         Json json = new Json();
         String savesListJson = gameProgressPrefs.getString("savesList", "[]");

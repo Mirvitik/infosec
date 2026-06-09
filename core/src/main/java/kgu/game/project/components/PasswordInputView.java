@@ -145,12 +145,8 @@ public class PasswordInputView extends View implements InputProcessor {
         loginForm.draw(batch);
         confirmButton.draw(batch);
 
-        // Input field background using a plain white pixel drawn via font
-        // (no ShapeRenderer to avoid batch conflicts)
         font.draw(batch, "________________", inputFieldX, inputFieldY + inputFieldHeight);
 
-
-        // Input text
         String display = inputText.toString();
         if (isActive && showCursor) display += "|";
 

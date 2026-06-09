@@ -15,13 +15,19 @@ public class AudioManager {
     public Sound shootSound;
     public Sound explosionSound;
     public Sound saveSound;
+    public Music storyMusic;
+    public Music hacked;
 
     public AudioManager() {
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.BACKGROUND_MUSIC_PATH));
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.BACKGROUND2_MUSIC_PATH));
         shootSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.SCROLL_SOUND_PATH));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.DESTROY_SOUND_PATH));
         saveSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.SAVE_SOUND_PATH));
+        storyMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.STORY_SOUND_PATH));
+        hacked = Gdx.audio.newMusic(Gdx.files.internal(GameResources.HACKED_PATH));
 
+        storyMusic.setVolume(0.5f);
+        storyMusic.setLooping(true);
         backgroundMusic.setVolume(0.2f);
         backgroundMusic.setLooping(true);
 

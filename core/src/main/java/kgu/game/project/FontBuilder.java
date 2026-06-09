@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 public class FontBuilder {
 
-    // Строка со всеми необходимыми символами (русские + английские + цифры + знаки)
     private static final String DEFAULT_CHARACTERS =
         "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
             "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
@@ -26,24 +25,18 @@ public class FontBuilder {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         parameter.size = size;
         parameter.color = color;
-
-        // КЛЮЧЕВОЙ МОМЕНТ: указываем все символы, которые должны быть в шрифте
         parameter.characters = characters;
-
-        // Дополнительные полезные настройки
-        parameter.borderWidth = 0;        // Обводка (0 - без обводки)
+        parameter.borderWidth = 0;
         parameter.borderColor = Color.BLACK;
-        parameter.shadowOffsetX = 0;      // Тень (0 - без тени)
+        parameter.shadowOffsetX = 0;
         parameter.shadowOffsetY = 0;
         parameter.shadowColor = Color.BLACK;
-        parameter.genMipMaps = false;     // Mip-карты для масштабирования
+        parameter.genMipMaps = false;
 
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
         return font;
     }
-
-    // Перегруженный метод с возможностью добавить дополнительные символы
     public static BitmapFont generateWithExtraChars(int size, Color color, String fontPath, String extraChars) {
         String allChars = DEFAULT_CHARACTERS + extraChars;
         return generate(size, color, fontPath, allChars);

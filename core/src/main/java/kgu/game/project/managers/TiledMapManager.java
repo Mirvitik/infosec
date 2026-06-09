@@ -52,7 +52,6 @@ public class TiledMapManager {
     }
 
     public void render() {
-        // Округляем позицию камеры до целых пикселей
         camera.position.x = Math.round(camera.position.x);
         camera.position.y = Math.round(camera.position.y);
         camera.update();

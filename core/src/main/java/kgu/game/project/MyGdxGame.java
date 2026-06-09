@@ -31,7 +31,9 @@ public class MyGdxGame extends Game {
     public BitmapFont xanmonoFont;
     public BitmapFont xanmonoFontBig;
     public static BitmapFont arialFont;
+    public static BitmapFont arialFontGray;
     public BitmapFont consolasFont;
+    public BitmapFont arialFontBlue;
     public BitmapFont arialFontRed;
 
     public Vector3 touch;
@@ -49,16 +51,14 @@ public class MyGdxGame extends Game {
     public LevelOneScreen levelOneScreen;
     public LevelThreeScreen levelThreeScreen;
     public LevelFourScreen levelFourScreen;
-    public LevelFiveScreen levelFiveScreen;
     public EndScreen endScreen;
     public Box2DDebugRenderer debugRenderer;
     public static BitmapFont arialWhiteFont;
-    public boolean debugMode = false;
+    public boolean debugMode = true;
     float accumulator = 0;
 
     @Override
     public void create() {
-        // Инициализируем шрифты ПОСЛЕ того как LibGDX готов
         initFonts();
 
         Box2D.init();
@@ -93,6 +93,10 @@ public class MyGdxGame extends Game {
         xanmonoFont = FontBuilder.generate(20, Color.GRAY, GameResources.XANMONO_FONT_PATH);
         xanmonoFontBig = FontBuilder.generate(60, Color.WHITE, GameResources.XANMONO_FONT_PATH);
         arialFont = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
+        arialFontGray = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
+        arialFontGray.setColor(Color.GRAY);
+        arialFontBlue = FontBuilder.generate(40, Color.BLUE, GameResources.ARIAL_FONT_PATH);
+        arialFontBlue.setColor(Color.BLUE);
         arialWhiteFont = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         consolasFont = FontBuilder.generate(20, Color.GRAY, GameResources.CONSOLAS_FONT_PATH);
         arialFontRed = FontBuilder.generate(20, Color.RED, GameResources.ARIAL_FONT_PATH);
@@ -102,7 +106,6 @@ public class MyGdxGame extends Game {
     public void dispose() {
         batch.dispose();
 
-        // Не забывай dispose для шрифтов
         if (largeWhiteFont != null) largeWhiteFont.dispose();
         if (commonWhiteFont != null) commonWhiteFont.dispose();
         if (commonBlackFont != null) commonBlackFont.dispose();

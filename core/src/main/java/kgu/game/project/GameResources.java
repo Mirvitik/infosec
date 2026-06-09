@@ -2,9 +2,8 @@ package kgu.game.project;
 
 public class GameResources {
 
-    // Images for textures
-
     public static final String BACKGROUND_IMG_PATH = "textures/background.png";
+    public static final String WALL_TEXTURE_PATH = "textures/wall.png";
     public static final String BACKGROUND_WINDOW_IMG_PATH = "textures/backgroundlog.png";
 
     public static final String BLACKOUT_FULL_IMG_PATH = "textures/blackout_full.png";
@@ -14,6 +13,16 @@ public class GameResources {
     public static final String SAVE_BACKGROUND_IMG_PATH = "textures/savebackground.png";
     public static final String DOOR_DOWN_IMG_PATH = "textures/doordown.png";
     public static final String DOOR_IMG_PATH = "textures/door.png";
+    public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
+    public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
+    public static final String STORY_TELLING_SPQR = "textures/storytellingspqr.png";
+    public static final String STORY_PEREBOR = "textures/perebor.png";
+    public static final String STORY_LOCK = "textures/lock.png";
+    public static final String XOR_IMG = "textures/xor.png";
+    public static final String MINUS_BUTTON = "textures/minusbutton.png";
+    public static final String PLUS_BUTTON = "textures/plusbutton.png";
+    public static final String ARROW_IMG = "textures/arrow.png";
+    public static final String OUTPUT_IMG = "textures/output.png";
     public static final String END_DOOR_IMG_PATH = "textures/enddoor.png";
     public static final String FRENCH_DOOR_IMG_PATH = "textures/frenchdoor.png";
     public static final String ROME_DOOR_IMG_PATH = "textures/romedoor.png";
@@ -22,6 +31,12 @@ public class GameResources {
     public static final String TURN_OFF_IMG_PATH = "textures/turnoffbutton.png";
     public static final String HI_MESSAGE_IMG_PATH = "textures/himessage.png";
     public static final String DIALOG_FON_IMG_PATH = "textures/dialogfon.png";
+    public static final String VIRUS_AVATAR_IMG_PATH = "textures/virusavatar.png";
+    public static final String PLAYER_AVATAR_IMG_PATH = "textures/playeravatar.png";
+    public static final String ANTIVIRUS_AVATAR_IMG_PATH = "textures/antivirusavatar.png";
+    public static final String STORY_TELLING_IMG_PATH = "textures/storytelling.png";
+    public static final String STORY_TELLING_2_IMG_PATH = "textures/storytelling2.png";
+    public static final String STORY_TELLING_3_IMG_PATH = "textures/storytelling3.png";
     public static final String SHINDOWS_LOGOTYPE_PATH = "textures/shindowslogotype.png";
     public static final String BLACKOUT_MIDDLE_IMG_PATH = "textures/blackout_middle.png";
 
@@ -66,19 +81,19 @@ public class GameResources {
     public static final String ANTIVIRUS_NAPOLEON_TEXTURE_PATH = "textures/napoleon.png";
     public static final String MAIL_ICON_PATH = "textures/mail-icon.png";
 
-    // Sounds and music for audio
-
     public static final String BACKGROUND_MUSIC_PATH = "sounds/music.wav";
+    public static final String BACKGROUND2_MUSIC_PATH = "sounds/background2.mp3";
     public static final String DESTROY_SOUND_PATH = "sounds/destroy.mp3";
     public static final String SAVE_SOUND_PATH = "sounds/save.mp3";
+    public static final String STORY_SOUND_PATH = "sounds/storytellingsound.wav";
     public static final String SHOOT_SOUND_PATH = "sounds/shoot.mp3";
     public static final String SCROLL_SOUND_PATH = "sounds/scroll.wav";
-
-    // Fonts for text
 
     public static final String FONT_PATH = "fonts/Big-font.ttf";
     public static final String FONT_PATH_HACKED = "fonts/HACKED.ttf";
     public static final String FONT_PATH_PIXEL = "fonts/ArcadeJeu-Regular.otf";
+    public static final String MINIGAME_BACKGROUND_PATH_PIXEL = "textures/minigamebackground.png";
+    public static final String HACKED_PATH = "sounds/hacked.ogg";
     public static final String ARIAL_FONT_PATH = "fonts/arialmt.ttf";
     public static final String CONSOLAS_FONT_PATH = "fonts/consolas.ttf";
     public static final String XANMONO_FONT_PATH = "fonts/xanmono.ttf";

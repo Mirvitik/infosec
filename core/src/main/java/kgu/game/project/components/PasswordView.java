@@ -76,7 +76,6 @@ public class PasswordView extends View implements InputProcessor {
         error = new TextView(font, GameSettings.SCREEN_WIDTH / 2f - 100, inputFieldY - 120, "INCORRECT PASSWORD!");
     }
 
-    // Обновление логики (вызывается из экрана)
     public void update(float delta) {
         if (!isVisible) return;
 
@@ -85,7 +84,6 @@ public class PasswordView extends View implements InputProcessor {
         updateErrorTimer(delta);
     }
 
-    // Отрисовка (вызывается из экрана)
     @Override
     public void draw(SpriteBatch batch) {
         if (!isVisible) return;
@@ -205,7 +203,6 @@ public class PasswordView extends View implements InputProcessor {
         }
     }
 
-    // Управление видимостью
     public void show() {
         isVisible = true;
         reset();

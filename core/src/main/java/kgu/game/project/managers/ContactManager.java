@@ -7,13 +7,12 @@ import kgu.game.project.objects.GameObject;
 
 public class ContactManager {
 
-    // Обновленные интерфейсы с передачей объекта
     public interface OnBeginContact {
-        void onPlayerHit(GameObject object); // Передает объект, с которым столкнулся игрок
+        void onPlayerHit(GameObject object);
     }
 
     public interface OnEndContact {
-        void onPlayerLeave(GameObject object); // Передает объект, от которого отошел игрок
+        void onPlayerLeave(GameObject object);
     }
 
     private OnBeginContact onBeginContact;
@@ -35,7 +34,6 @@ public class ContactManager {
                 int cDef = fixA.getFilterData().categoryBits;
                 int cDef2 = fixB.getFilterData().categoryBits;
 
-                // Получаем игрока и другой объект
                 GameObject player = null;
                 GameObject otherObject = null;
 
@@ -67,7 +65,6 @@ public class ContactManager {
                 int cDef = fixA.getFilterData().categoryBits;
                 int cDef2 = fixB.getFilterData().categoryBits;
 
-                // Получаем игрока и другой объект
                 GameObject player = null;
                 GameObject otherObject = null;
 

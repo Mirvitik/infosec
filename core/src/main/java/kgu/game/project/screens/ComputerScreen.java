@@ -28,7 +28,6 @@ public class ComputerScreen extends ScreenAdapter {
 
     private boolean isNearComputer = false;
 
-    // Track if touch is on UI elements
     ArrayList<IconView> iconsArray;
     private ImageView image;
     private DraggableWindow mailWindow;
@@ -60,7 +59,6 @@ public class ComputerScreen extends ScreenAdapter {
             GameResources.MAIL_ICON_PATH
         );
 
-        // Создаем окно (изначально скрыто)
         mailWindow = new DraggableWindow(
             myGdxGame, 400, 100,
             LocalizationManager.get("computer.mail_from"),
@@ -70,13 +68,11 @@ public class ComputerScreen extends ScreenAdapter {
             myGdxGame.commonPixelFontText
         );
 
-        // CloseListener - удаляем иконку при закрытии окна
         mailWindow.setOnCloseListener(() -> {
             removeMailIcon();
             System.out.println("Window closed, mail icon removed");
         });
 
-        // OpenListener - добавляем иконку при открытии окна (только если её нет)
         mailWindow.setOnOpenListener(() -> {
             System.out.println("Window opened");
             addMailIconIfNotExists();
@@ -88,7 +84,6 @@ public class ComputerScreen extends ScreenAdapter {
         Gdx.input.setOnscreenKeyboardVisible(false);
     }
 
-    // Вспомогательный метод для проверки наличия иконки mail
     private boolean hasMailIcon() {
         for (IconView icon : iconsArray) {
             if (icon.name != null && icon.name.equals("mail")) {
@@ -98,20 +93,18 @@ public class ComputerScreen extends ScreenAdapter {
         return false;
     }
 
-    // Вспомогательный метод для удаления иконки mail
     private void removeMailIcon() {
         Iterator<IconView> iterator = iconsArray.iterator();
         while (iterator.hasNext()) {
             IconView icon = iterator.next();
             if (icon.name != null && icon.name.equals("mail")) {
-                icon.dispose(); // Освобождаем ресурсы
+                icon.dispose();
                 iterator.remove();
-                break; // Удаляем только первую найденную
+                break;
             }
         }
     }
 
-    // Вспомогательный метод для добавления иконки mail (только если её нет)
     private void addMailIconIfNotExists() {
         if (!hasMailIcon()) {
             int newX = 150 * (iconsArray.size() + 1);
@@ -135,21 +128,18 @@ public class ComputerScreen extends ScreenAdapter {
             );
             boolean handledByWindow = false;
 
-            // Проверяем клик по окну, если оно видимо
             if (mailWindow.isVisible()) {
                 handledByWindow = mailWindow.handleTouch(touch, true);
             }
 
-            // Проверяем клик по кнопке mail
             if (!handledByWindow && mail.isHit(touch.x, touch.y)) {
                 System.out.println("Mail button touched!");
                 removeMailIcon();
 
-                // Переключаем видимость окна
                 if (mailWindow.isVisible()) {
-                    mailWindow.hide();  // CloseListener сработает здесь
+                    mailWindow.hide();
                 } else {
-                    mailWindow.show();  // OpenListener сработает здесь
+                    mailWindow.show();
                 }
             }
         } else {
@@ -171,12 +161,10 @@ public class ComputerScreen extends ScreenAdapter {
         menu_text.draw(myGdxGame.batch);
         os_icon.draw(myGdxGame.batch);
 
-        // Рисуем иконки из массива
         for (IconView icon : iconsArray) {
             icon.draw(myGdxGame.batch);
         }
 
-        // Окно рисуется ТОЛЬКО если оно видимо
         if (mailWindow.isVisible()) {
             mailWindow.draw(myGdxGame.batch);
         }
@@ -203,19 +191,16 @@ public class ComputerScreen extends ScreenAdapter {
             os_icon = null;
         }
 
-        // Удаляем ButtonView
         if (mail != null) {
             mail.dispose();
             mail = null;
         }
 
-        // Удаляем DraggableWindow
         if (mailWindow != null) {
             mailWindow.dispose();
             mailWindow = null;
         }
 
-        // Удаляем все иконки
         if (iconsArray != null) {
             for (IconView icon : iconsArray) {
                 if (icon != null) {

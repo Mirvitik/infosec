@@ -3,7 +3,6 @@ package kgu.game.project.objects;
 import static kgu.game.project.GameSettings.TILE_SIZE;
 
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -25,6 +24,28 @@ public class BatteryObject extends GameObject {
             texturePath,
             TILE_SIZE * x,
             TILE_SIZE * y,
+            width,
+            height,
+            GameSettings.BATTERY_BIT,
+            world
+        );
+
+        body.setType(BodyDef.BodyType.StaticBody);
+        body.setUserData(this);
+    }
+
+    public BatteryObject(
+        float x,
+        float y,
+        int width,
+        int height,
+        String texturePath,
+        World world
+    ) {
+        super(
+            texturePath,
+            (int) (TILE_SIZE * x),
+            (int) (TILE_SIZE * y),
             width,
             height,
             GameSettings.BATTERY_BIT,

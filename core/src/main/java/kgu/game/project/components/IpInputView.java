@@ -1,73 +1,48 @@
 package kgu.game.project.components;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
 
-/**
- * IpInputView — экран ввода IP-адреса злоумышленника.
- *
- * Структура почти идентична PasswordInputView, но:
- *  - Заголовок объясняет контекст: «Введи IP атакующего»
- *  - Клавиатура содержит цифры 0–9 и точку
- *  - При правильном вводе вызывается onSuccess, при ошибке — onFailure
- *  - Под полем вывода показывается подсказка о формате (xxx.xxx.xxx.xxx)
- *
- * Интеграция в LevelFiveScreen:
- *   - Создать экземпляр в конструкторе.
- *   - В PAUSED handleInput: вызывать update(delta) и handleTouch().
- *   - В draw при toDrawPassword/ipInputActive: вызывать draw(batch).
- */
+
 public class IpInputView {
 
-    // ───────────────────────────────── константы ─────────────────────────────
-    private static final int MAX_LENGTH = 15; // "xxx.xxx.xxx.xxx"
+    private static final int MAX_LENGTH = 15;
 
-    // ───────────────────────────────── поля ──────────────────────────────────
     private final MyGdxGame myGdxGame;
-    private final String    correctIp;
-    private final Runnable  onSuccess;
-    private final Runnable  onFailure;
-
-    // Текущий ввод
+    private final String correctIp;
+    private final Runnable onSuccess;
+    private final Runnable onFailure;
     private final StringBuilder input = new StringBuilder();
-
-    // Состояние
     private boolean visible = false;
-    private boolean wrongAttempt = false;   // мигаем красным при ошибке
-    private float   wrongTimer   = 0f;
+    private boolean wrongAttempt = false;
+    private float wrongTimer = 0f;
 
-    // UI-компоненты
-    private final TextView  titleText;
-    private final TextView  inputDisplay;   // отображает введённые символы
-    private final TextView  hintText;       // «формат: xxx.xxx.xxx.xxx»
-    private final TextView  errorText;      // «Неверный IP! Попробуй ещё раз»
+    private final TextView titleText;
+    private final TextView inputDisplay;
+    private final TextView hintText;
+    private final TextView errorText;
     private final ButtonView confirmButton;
     private final ButtonView clearButton;
     private final ButtonView backButton;
 
-    // Цифровая клавиатура + точка
-    // Расположение: 3 колонки × 4 строки + точка
     private static final String[] KEY_LABELS = {
-        "1","2","3",
-        "4","5","6",
-        "7","8","9",
-        ".","0","⌫"
+        "1", "2", "3",
+        "4", "5", "6",
+        "7", "8", "9",
+        ".", "0", "⌫"
     };
     private final ButtonView[] keyButtons;
 
-    // Размеры и позиции
     private static final float PANEL_X = 240f;
     private static final float PANEL_Y = 150f;
     private static final float PANEL_W = 800f;
     private static final float PANEL_H = 500f;
     private static final float KEY_SIZE = 90f;
-    private static final float KEY_GAP  = 10f;
+    private static final float KEY_GAP = 10f;
 
-    // ───────────────────────────────── конструктор ───────────────────────────
     public IpInputView(MyGdxGame myGdxGame, String correctIp,
                        Runnable onSuccess, Runnable onFailure) {
         this.myGdxGame = myGdxGame;
@@ -78,34 +53,30 @@ public class IpInputView {
         // Заголовок
         titleText = new TextView(
             myGdxGame.largeWhiteFont,
-            (int)(PANEL_X + PANEL_W / 2 - 250), (int)(PANEL_Y + PANEL_H - 40),
+            (int) (PANEL_X + PANEL_W / 2 - 250), (int) (PANEL_Y + PANEL_H - 40),
             "Введи IP злоумышленника из логов"
         );
 
-        // Поле ввода
         inputDisplay = new TextView(
             myGdxGame.largeWhiteFont,
-            (int)(PANEL_X + 40), (int)(PANEL_Y + PANEL_H - 120),
+            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 120),
             "_"
         );
 
-        // Подсказка формата
         hintText = new TextView(
             myGdxGame.commonPixelFontText,
-            (int)(PANEL_X + 40), (int)(PANEL_Y + PANEL_H - 160),
+            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 160),
             "Формат: xxx.xxx.xxx.xxx  (например, 192.168.1.1)"
         );
 
-        // Текст ошибки (изначально пустой)
         errorText = new TextView(
             myGdxGame.commonPixelFontText,
-            (int)(PANEL_X + 40), (int)(PANEL_Y + PANEL_H - 195),
+            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 195),
             ""
         );
 
-        // Кнопка подтверждения
         confirmButton = new ButtonView(
-            (int)(PANEL_X + PANEL_W / 2 - 130), (int)(PANEL_Y + 20) - 150,
+            (int) (PANEL_X + PANEL_W / 2 - 130), (int) (PANEL_Y + 20) - 150,
             260, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
@@ -113,7 +84,7 @@ public class IpInputView {
         );
 
         clearButton = new ButtonView(
-            (int)(PANEL_X + PANEL_W - 140), (int)(PANEL_Y + 20) - 150,
+            (int) (PANEL_X + PANEL_W - 140), (int) (PANEL_Y + 20) - 150,
             150, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
@@ -121,7 +92,7 @@ public class IpInputView {
         );
 
         backButton = new ButtonView(
-            (int)(PANEL_X + 20), (int)(PANEL_Y + 20) - 150,
+            (int) (PANEL_X + 20), (int) (PANEL_Y + 20) - 150,
             120, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
@@ -130,9 +101,9 @@ public class IpInputView {
 
         keyButtons = new ButtonView[KEY_LABELS.length];
         float kbX = PANEL_X + (PANEL_W - (3 * KEY_SIZE + 2 * KEY_GAP)) / 2f;
-        float kbY = PANEL_Y + 100f;  // начало снизу панели
+        float kbY = PANEL_Y + 100f;
         int cols = 3;
-        int rows = 4;  // всего 12 кнопок
+        int rows = 4;
         float kbHeight = rows * KEY_SIZE + (rows - 1) * KEY_GAP;
 
         for (int i = 0; i < KEY_LABELS.length; i++) {
@@ -150,7 +121,6 @@ public class IpInputView {
         }
     }
 
-    // ───────────────────────────────── публичные методы ──────────────────────
     public void show() {
         visible = true;
         input.setLength(0);
@@ -166,7 +136,6 @@ public class IpInputView {
         return visible;
     }
 
-    /** Вызывать каждый кадр в PAUSED, пока ipInputActive == true */
     public void update(float delta) {
         if (wrongAttempt) {
             wrongTimer -= delta;
@@ -177,7 +146,6 @@ public class IpInputView {
         }
     }
 
-    /** Вызывать каждый кадр в PAUSED при isTouched или обработке событий */
     public void handleTouch() {
         if (!visible) return;
         if (!Gdx.input.justTouched()) return;
@@ -193,20 +161,20 @@ public class IpInputView {
             }
         }
 
-        // Подтвердить
+
         if (confirmButton.isHit(tx, ty)) {
             checkAnswer();
             return;
         }
 
-        // Очистить
+
         if (clearButton.isHit(tx, ty)) {
             input.setLength(0);
             updateDisplay();
             return;
         }
 
-        // Назад
+
         if (backButton.isHit(tx, ty)) {
             hide();
         }
@@ -229,7 +197,6 @@ public class IpInputView {
         }
     }
 
-    // ───────────────────────────────── приватные методы ──────────────────────
     private void onKeyPressed(String label) {
         if (label.equals("⌫")) {
             if (input.length() > 0) {
@@ -248,13 +215,12 @@ public class IpInputView {
 
     private void checkAnswer() {
         if (input.toString().trim().equals(correctIp)) {
-            // Правильный IP!
+
             hide();
             onSuccess.run();
         } else {
-            // Неверно
             wrongAttempt = true;
-            wrongTimer   = 2.0f;
+            wrongTimer = 2.0f;
             errorText.setText("Неверный IP! Проверь логи ещё раз.");
             input.setLength(0);
             updateDisplay();

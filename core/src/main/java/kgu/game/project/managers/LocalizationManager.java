@@ -7,9 +7,8 @@ public class LocalizationManager {
 
     public enum Language {EN, RU}
 
-    private static Language currentLanguage = Language.RU;
+    private static Language currentLanguage = Language.EN;
 
-    // Словарь строк
     private static final Map<String, Map<Language, String>> strings = new HashMap<>();
 
     static {
@@ -38,7 +37,7 @@ public class LocalizationManager {
         add("talk.3", "You should have updated me,\nthe update would have taken only 5 days to download!",
             "Тебе надо было обновить меня,\nзагрузка обновлений длилась бы всего лишь 5 дней!");
         add("talk.4", "Now you're stuck inside your own computer for a while,\ncongratulations",
-            "Теперь ты застрял в своём компьютере надолго,\nпоздравляю тебя");
+            "Теперь ты застрял в своём компьютере надолго,\nпоздравляю тебя.\nТы проведёшь здесь 5 дней, пока я обновляюсь.");
         add("talk.5", "I can help you, but to get your device back\nyou need to learn the basics\nof information security",
             "Я могу тебе помочь, но для возвращения своего устройства\nсебе тебе надо обучиться основам\nинформационной безопасности");
         add("talk.6", " ", " ");
@@ -57,7 +56,10 @@ public class LocalizationManager {
             "В углу есть таблица ASCII\nс соответствием бит и символов");
         add("talk.14", "Find out the password\nto unlock the BIOS",
             "Узнай пароль,\nчтобы разблокировать BIOS");
-        add("talk.15", " ", " ");
+        add("talk.15", "You can try approaching the sign.\nPress the button when it turns\ngreen to interact.", "Ты можешь попробовать подойти к табличке.\nНажимай на кнопку, когда она станет\nзелёной для взаимодействия");
+
+        add("talk.16", "Use the battery to save between levels", "Используй батарейку для сохранения мужду уровнями");
+        add("talk.17", " ", " ");
 
         add("talk2.0", "Then good luck choking in the dust",
             "Тогда удачи задыхаться в пыли");
@@ -142,6 +144,85 @@ public class LocalizationManager {
             "хахахахаххаха");
         add("theend.title", "You completed the game!", "Вы прошли игру!");
         add("theend.subtitle", "Congratulations!", "Поздравляем!");
+        add("level2.talk.0", "So, now I'm not inside the computer case", "Так, теперь я не в корпусе компьютера");
+        add("level2.talk.1", "This place looks like some hall from the Roman Empire era", "Это место похоже на какой-то зал эпохи Римской Империи");
+        add("level2.talk.2", "I see that guy again, he thinks he's an emperor", "Опять вижу этого чувака, думает, он император");
+        add("level2.talk.3", "Such is fate, I need to approach him,\notherwise I won't return home", "Такая судьба, мне стоит к нему подойти,\nиначе я не вернусь домой");
+        add("level2.talk.4", "", "");
+
+        add("caesar.talk.vulnerability.0", "Caesar's cipher had one vulnerability.\nThe decryption key for the original text\ncould be found by simple brute force.", "Шифр Цезаря имел одну уязвимость.\nКлюч до расшифровки исходного текста\nможно было найти обычным подбором.");
+        add("caesar.talk.vulnerability.1", "A French diplomat became interested in cryptography\nand created a cipher that is based on Caesar's cipher,\nbut more resistant to brute force attacks.", "Один французский дипломат увлёкся криптографией\nи создал шифр, который основан на шифре Цезаря,\nно более устойчив к переборам.");
+
+        add("caesar.talk.0", "Greetings again!\nI see you've figured out how the computer sees characters", "Снова привет!\nВижу, ты разобрался, как компьютер видит символы");
+        add("caesar.talk.1", "Now I'll teach you how to encrypt data", "Сейчас я научу тебя шифровать данные");
+        add("caesar.talk.2", " ", " ");
+        add("caesar.talk.3", "", "");
+        add("caesar.talk.4", "He invented a cipher\nand named it after himself", "Он придумал шифр\nи назвал его в честь себя");
+        add("caesar.talk.5", "Caesar cipher works like this:\nthe alphabet is taken and each character\nbecomes another character\naccording to a shift (an integer)", "Шифр Цезаря работает так:\nберётся алфавит и каждый символ\nстановится другим символом\nсогласно сдвигу (целому числу)");
+        add("caesar.talk.6", "For example, the letter A from the alphabet,\nencrypted with a shift of 1,\nbecomes B", "Например, буква А из алфавита,\nзашифрованная шифром со сдвигом 1,\nстанет Б");
+        add("caesar.talk.7", "The letter B with a shift of 2\nbecomes D", "Буква Б с шифром со сдвигом 2\nстанет Г");
+        add("caesar.talk.8", "You can see how the cipher works on the screen.\nUse the floor plates to shift the alphabet", "Ты можешь посмотреть, как работает шифр на экране.\nИспользуй плиты на полу чтобы сдвигать алфавит");
+        add("caesar.talk.9", "The plate with a minus sign decreases the shift by 1\nThe plate with a plus sign increases the shift by 1", "Плита со знаком - уменьшает сдвиг на 1\nПлита со знаком + увеличивает сдвиг на 1");
+        add("caesar.talk.10", "The arrow at the top shows\nhow characters are encrypted with the given shift", "Стрелка вверху показывает,\nкак шифруются символы с данным сдвигом");
+        add("caesar.talk.11", "To decrypt a 26-letter English alphabet code,\nuse the formula 26-n,\nwhere n is the shift", "Для расшифровки кода из 26 буквенного\nанглийского алфавита\nиспользуй формулу 26-n,\nгде n-это сдвиг");
+        add("caesar.talk.12", "To decrypt a cipher with shift 5,\nyou need to encrypt the cipher again, but with shift 21", "Для расшифровки шифра со сдвигом 5,\nнадо зашифровать шифр снова, но со сдвигом 21");
+        add("caesar.talk.13", "The virus has infected the computer, decrypt the important system file", "Вирус заразил компьютер, расшифруй важный системный файл");
+        add("caesar.talk.14", " ", " ");
+        add("caesar.talk.15", "You can try approaching the tablet.\nPress the button when it turns green\nto interact", "Ты можешь попробовать подойти к табличке.\nНажимай на кнопку, когда она станет\nзелёной для взаимодействия");
+
+        add("caesar.talk2.0", "Correct, because he died before\nyou were born", "Правильно, ведь он умер ещё до\nтвоего рождения");
+        add("caesar.talk2.1", "", "");
+        add("caesar.talk2.2", "He invented a cipher\nand named it after himself", "Он придумал шифр,\nи назвал его в честь себя");
+        add("caesar.talk2.3", "", "");
+        add("caesar.talk2.4", "Caesar cipher works like this:\nthe alphabet is taken and each character\nbecomes another character\naccording to a shift (an integer)", "Шифр Цезаря работает так:\nберётся алфавит и каждый символ\nстановится другим символом\nсогласно сдвигу (целому числу)");
+        add("caesar.talk2.5", "For example, the letter A from the alphabet,\nencrypted with a shift of 1,\nbecomes B", "Например, буква А из алфавита,\nзашифрованная шифром со сдвигом 1,\nстанет Б");
+        add("caesar.talk2.6", "The letter B with a shift of 2\nbecomes D", "Буква Б с шифром со сдвигом 2\nстанет Г");
+        add("caesar.talk2.7", "You can see how the cipher works on the screen.\nUse the floor plates to see\nhow the cipher works", "Ты можешь посмотреть, как работает шифр на экране.\nИспользуй плиты на полу чтобы посмотреть,\nкак работает шифр");
+        add("caesar.talk2.8", "The virus has infected the computer, decrypt the important system file", "Вирус заразил компьютер, расшифруй важный системный файл");
+
+        add("pressK", "Press K to talk", "Нажми K для разговора");
+        add("pressGreen", "Press green button to talk", "Нажми зелёную кнопку, чтобы поговорить");
+        add("player.name", "Player", "Игрок");
+        add("caesar.question", "Do you know Gaius Julius Caesar?", "Ты знаешь Гая Юлия Цезаря?");
+        add("caesar.history.0", "In ancient times, people needed a secure\nway to exchange information\nso that enemies wouldn't find out about it", "В древние времена люди нуждались в безопасном\nспособе обмена информацией,\nчтобы её не узнали враги");
+        add("caesar.history.1", "Such a method was invented in the Roman Empire.\nAnd it is called the Caesar cipher.", "Такой способ был придуман в Римской Империи.\nИ именуется он шифром Цезаря.");
+        add("player.talk.0", "AAAAH, what happened!?", "ААААА, что произошло!?");
+        add("player.talk.1", "I got sucked into some strange place!\nIt's very dusty here :(", "Меня засосало в какое-то странное место!\nЗдесь очень пыльно :(");
+        add("player.talk.2", "This looks like my computer case", "Это похоже на корпус моего компьютера");
+        add("player.talk.3", "There's a person standing nearby, I should approach him", "Рядом стоит человек, мне стоит подойти к нему");
+        add("player.talk.4", "", "");
+        add("vigenere.talk.0", "Some people find the Caesar cipher complicated", "Некоторым шифр Цезаря кажется сложным");
+        add("vigenere.talk.1", "Now I want to introduce you to the Vigenere cipher", "Теперь я хочу познакомить тебя с шифром Виженера");
+        add("vigenere.talk.2", "The Vigenere cipher is a more complex version\nof the Caesar cipher", "Шифр Виженера - более сложная версия\nшифра Цезаря");
+        add("vigenere.talk.3", "In the Caesar cipher, we use\none shift for the entire word,\nwhile in the Vigenere cipher, we use a different shift\nfor each letter", "Если в шифре Цезаря мы используем\nодин сдвиг для целого слова,\nто в шифре Виженера мы для каждой буквы\nиспользуем разный сдвиг");
+        add("vigenere.talk.4", "The shifts for letters are set by a key like: 123.\nOriginally, the key could be a string,\nbut we have a simplified version of the cipher.", "Сдвиги для букв задаются ключом вида: 123.\nВ оригинале в виде ключа может быть строка,\nно у нас более упрощённая версия шифра.");
+        add("vigenere.talk.5", "With the key 15234, we will encrypt\nthe 1st letter of the string with a shift of 1,\nthe 2nd letter with a shift of 5, etc.", "С ключом 15234 каждую 1 букву строки мы будем\nшифровать со сдвигом 1,\nкаждую вторую со сдвигом 5 и т.д.");
+        add("vigenere.talk.6", "I need you to encrypt one file to protect it from the virus. Next to the battery, you’ll find a key and the text. Try to ENCRYPT it.", "Я хочу, чтобы ты зашифровал один файл от вируса.\nРядом с батарейкой есть ключ и текст, попробуй\nЗАШИФРОВАТЬ его.");
+        add("vigenere.talk.7", "", "");
+        add("player.talk.level3.0", "Now this guy has gone with a French theme", "Теперь этот чел сделал французские мотивы");
+        add("player.talk.level3.1", "And he's dressed like Napoleon", "И оделся он, как Наполеон");
+        add("player.talk.level3.2", "Looks like he's going to talk about some French scientist", "Видимо, будет говорить про какого-то французского учёного");
+        add("player.talk.level3.3", "He's always standing in one place, I need to approach him again", "Он вечно стоит на месте, надо подойти опять");
+        add("player.talk.level3.4", "", "");
+        add("xor.talk.0", "Well then...", "Ну что же...");
+        add("xor.talk.1", "Now I want to teach you another type of encryption", "Теперь я хочу тебя научить ещё одному виду шифрования");
+        add("xor.talk.2", "As you know, there are several types of logical\noperators in computer science", "Как ты знаешь, есть несколько типов логических\nоператоров в информатике");
+        add("xor.talk.3", "The most famous are AND and OR\nBut the most interesting, in my opinion, is XOR", "Самые известные: AND и OR\nНо самый интересный, по-моему, XOR");
+        add("xor.talk.4", "Let's say we have a character that was converted to bits\nusing ASCII,\nand we want to encrypt these bits", "Допустим, у нас есть символ, который с помощью ASCII\nбыл преобразован в биты,\nи мы хотим эти биты зашифровать");
+        add("xor.talk.5", "XOR has the property: A XOR B = C,\nC XOR B = A,\nwhich is used in encryption.", "XOR имеет совйство A XOR B = C\n" +
+            "C XOR B = A,\nкоторое используют при шфировке");
+        add("xor.talk.6", "Approach the computer labeled \"XOR\",\nfind the correct key so that when you perform XOR\non the text with this key,\nthe given ciphertext is created. XOR is performed bitwise.", "Подойди к компьютеру с надписью 'XOR',\nподбери ключ, чтобы при выполнении XOR\nптекста данным ключос создавался\nпданный шифр. XOR выполняется побитово.");
+        add("xor.talk.7", " ", " ");
+        add("xor.talk.8", "You need to learn about the Vigenere cipher", "Тебе надо узнать о шифре Виженера");
+        add("xor.talk.9", "The Vigenere cipher is an encryption method\nthat uses a keyword", "Шифр Виженера — это метод шифрования,\nиспользующий ключевое слово");
+        add("xor.talk.10", "To decrypt, you need to know the key and\nsubtract its value from the encrypted text", "Для расшифровки нужно знать ключ и\nвычитать его значение из зашифрованного текста");
+        add("xor.talk.11", "Try to decrypt a few words\nto prove you're ready!", "Попробуй расшифровать несколько слов,\nчтобы доказать, что ты готов!");
+        add("xor.talk.12", " ", " ");
+        add("xor.talk.13", " ", " ");
+        add("xor.text.example", "Text:   1001101 (77) M", "Текст:   1001101 (77) М");
+        add("xor.key.example", "Key:    0", "Ключ:    0");
+        add("xor.cipher.example", "Cipher: 0110110 (54) 6", "Шифр: 0110110 (54) 6");
+
     }
 
     private static void add(String key, String en, String ru) {

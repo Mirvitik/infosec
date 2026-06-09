@@ -1,27 +1,11 @@
 package kgu.game.project.components;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
 
-/**
- * NetworkLogView — отображает список поддельных сетевых логов на фоне терминала.
- * <p>
- * Логи генерируются один раз в конструкторе. IP атакующего (attackerIp) встречается
- * в них значительно чаще обычных адресов и всегда сопровождается тревожными
- * ключевыми словами: SYN_FLOOD, PORT_SCAN, REFUSED, BRUTE, PAYLOAD.
- * <p>
- * Нижняя кнопка «Ввести IP» вызывает onSubmitPressed колбэк — там открывается IpInputView.
- * <p>
- * Зависимости:
- * - ImageView      (фон терминала)
- * - TextView       (строки логов)
- * - ButtonView     (кнопка «Ввести IP»)
- * - ScrollView     (опционально, если компонент уже есть в проекте)
- */
+
 public class NetworkLogView {
 
     // ───────────────────────────────── поля ──────────────────────────────────
@@ -86,6 +70,7 @@ public class NetworkLogView {
             );
         }
     }
+
     public void draw(SpriteBatch batch) {
         background.draw(batch);
         for (TextView line : logLines) {

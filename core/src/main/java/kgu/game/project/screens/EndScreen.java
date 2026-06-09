@@ -34,6 +34,7 @@ import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.BatteryObject;
 import kgu.game.project.objects.ComputerObject;
+import kgu.game.project.objects.DoorObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
 import kgu.game.project.objects.TrashObject;
@@ -138,7 +139,7 @@ public class EndScreen extends ScreenAdapter {
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
 
-        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_END_PATH, myGdxGame.camera, myGdxGame.batch, 2);
+        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_END_PATH, myGdxGame.camera, myGdxGame.batch, 4);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
@@ -158,7 +159,7 @@ public class EndScreen extends ScreenAdapter {
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        antiVirus = new AntivirusObject(GameResources.VIRUS_TEXTURE_PATH, 200, 180, 64, 64, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
+        antiVirus = new AntivirusObject(GameResources.VIRUS_TEXTURE_PATH, 200, 180, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
             if (object instanceof AntivirusObject) {
@@ -193,7 +194,7 @@ public class EndScreen extends ScreenAdapter {
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         image = new ImageView(180, 0, 1028, 720, GameResources.ASCII_PATH);
         batteryObject = new BatteryObject(8, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
-        doorDown = new BatteryObject(15, 7, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.END_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
+        doorDown = new DoorObject(1186, 440, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.END_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
         mail1 = new BatteryObject(5, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
         mail2 = new BatteryObject(8, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
@@ -218,22 +219,22 @@ public class EndScreen extends ScreenAdapter {
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.W) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.UP)) {
             direction.y = 1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.S) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.DOWN)) {
             direction.y = -1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.A) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.LEFT)) {
             direction.x = -1;
-            strength = 1;
+            strength = 2;
         }
         if (Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.D) ||
             Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.RIGHT)) {
             direction.x = 1;
-            strength = 1;
+            strength = 2;
         }
 
         if (direction.x != 0 && direction.y != 0) {
@@ -258,7 +259,7 @@ public class EndScreen extends ScreenAdapter {
             if (isNearAntivirus && dialog == null && dialogNo == null) {
                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                    GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.VIRUS_AVATAR_IMG_PATH, "Virus");
             } else if (isNearDoor && !toDrawPassword && dialog == null) {
                 toDrawPassword = true;
                 passwordInput.show();
@@ -384,7 +385,7 @@ public class EndScreen extends ScreenAdapter {
                             if (isNearAntivirus && dialog == null) {
                                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.ANTIVIRUS_AVATAR_IMG_PATH, "Virus");
                             } else if (isNearDoor && !toDrawPassword && dialog == null) {
                                 toDrawPassword = true;
                                 passwordInput.show();
@@ -424,7 +425,7 @@ public class EndScreen extends ScreenAdapter {
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive()) {
+                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogNo == null) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(), touchpadView.getStrength());
                             }
                         } else {
@@ -485,15 +486,15 @@ public class EndScreen extends ScreenAdapter {
 
         myGdxGame.batch.begin();
         antiVirus.draw(myGdxGame.batch);
+        if (doorDown != null) {
+            doorDown.draw(myGdxGame.batch);
+        }
         heroObject.draw(myGdxGame.batch);
         if (isNearAntivirus) {
             message.draw(myGdxGame.batch);
         }
         asciiTable.draw(myGdxGame.batch);
         batteryObject.draw(myGdxGame.batch);
-        if (doorDown != null) {
-            doorDown.draw(myGdxGame.batch);
-        }
         mail1.draw(myGdxGame.batch);
         mail2.draw(myGdxGame.batch);
         mail3.draw(myGdxGame.batch);
@@ -590,7 +591,7 @@ public class EndScreen extends ScreenAdapter {
         }
         heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2 - 200;
         heroY = (heroY != -1f) ? heroY : 150;
-        heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 64, 64, heroFrames, myGdxGame.world);
+        heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
         bulletArray.clear();
         createMapBorders();
         gameSession.startGame();
@@ -608,10 +609,10 @@ public class EndScreen extends ScreenAdapter {
         float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
         float wallThickness = 1f;
-        createWall(mapWidth / 2, -wallThickness / 2 + 1.5f, mapWidth, wallThickness);
-        createWall(mapWidth / 2, -wallThickness / 2 + 13, mapWidth, wallThickness);
-        createWall(-wallThickness / 2 + 0.8f, mapHeight / 2, wallThickness, mapHeight);
-        createWall(-wallThickness / 2 + 32.2f, mapHeight / 2, wallThickness, mapHeight);
+        createWall(mapWidth / 2, -wallThickness / 2 + 4f, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 24.5f, mapWidth, wallThickness);
+        createWall(-wallThickness / 2 + 2f, mapHeight / 2, wallThickness, mapHeight);
+        createWall(-wallThickness / 2 + 63f, mapHeight / 2, wallThickness, mapHeight);
     }
 
     private void createWall(float x, float y, float width, float height) {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
@@ -25,6 +26,7 @@ public class MenuScreen extends ScreenAdapter {
     ButtonView settingsButtonView;
     ButtonView exitButtonView;
     ImageView image;
+
     public MenuScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
         float num = 250f;
@@ -64,9 +66,26 @@ public class MenuScreen extends ScreenAdapter {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             if (startButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                if (myGdxGame.gameScreen != null) myGdxGame.gameScreen.dispose();
-                myGdxGame.gameScreen = new GameScreen(myGdxGame);
-                myGdxGame.setScreen(myGdxGame.gameScreen);
+                String[] images = {
+                    GameResources.STORY_TELLING_IMG_PATH,
+                    GameResources.STORY_TELLING_2_IMG_PATH,
+                    GameResources.STORY_TELLING_3_IMG_PATH
+                };
+                String[] texts = {
+                    "Недвано-недавно был один мальчик,\nкоторому родители купили компьютер.\nОн очень любил своё устройство, берёг его\nот сыновей маминой подруги и пятиюродных братьев.",
+                    "В то же самое время по Интернету гулял вирус,\nрассылающийся с помощью фишинговых писем.\nВирус заражал устройство за устройством.\nШифровал данные на компьютерах.",
+                    "Но это не касалось нашего добряка. До одного момента..."
+                };
+                myGdxGame.audioManager.backgroundMusic.stop();
+                myGdxGame.audioManager.storyMusic.play();
+
+                myGdxGame.setScreen(new CutsceneScreen(myGdxGame, images, texts, () -> {
+                    if (myGdxGame.gameScreen != null) myGdxGame.gameScreen.dispose();
+                    myGdxGame.gameScreen = new GameScreen(myGdxGame);
+                    myGdxGame.setScreen(myGdxGame.gameScreen);
+                    myGdxGame.audioManager.storyMusic.stop();
+                    myGdxGame.audioManager.backgroundMusic.play();
+                }));
             }
             if (loadGameButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 myGdxGame.setScreen(myGdxGame.loadScreen);
@@ -81,6 +100,7 @@ public class MenuScreen extends ScreenAdapter {
 
         refreshAllTexts();
     }
+
     @Override
     public void dispose() {
         if (backgroundView != null) {
@@ -107,6 +127,12 @@ public class MenuScreen extends ScreenAdapter {
             exitButtonView.dispose();
             exitButtonView = null;
         }
+    }
+
+    @Override
+    public void show() {
+        myGdxGame.uiCamera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+        myGdxGame.uiCamera.update();
     }
 
     private void refreshAllTexts() {

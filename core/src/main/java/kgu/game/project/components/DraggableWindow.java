@@ -12,6 +12,7 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.managers.MemoryManager;
+import kgu.game.project.screens.HackScreen;
 import kgu.game.project.screens.LevelOneScreen;
 
 public class DraggableWindow extends View {
@@ -36,7 +37,6 @@ public class DraggableWindow extends View {
     private Runnable onCloseListener;
     private Runnable onOpenListener;
 
-    // Размеры окна
     private static final float WINDOW_WIDTH = 500;
     private static final float WINDOW_HEIGHT = 600;
     private static final float TITLE_BAR_HEIGHT = 40;
@@ -93,24 +93,19 @@ public class DraggableWindow extends View {
     public boolean handleTouch(Vector3 touch, boolean isTouched) {
         if (!isVisible) return false;
 
-        // Проверяем клик по clickButton (только в момент касания)
         if (isTouched && clickButton != null &&
             touch.x >= clickButton.getX() && touch.x <= clickButton.getX() + clickButton.getWidth() &&
             touch.y >= clickButton.getY() && touch.y <= clickButton.getY() + clickButton.getHeight()) {
-            if (myGdxGame.levelOneScreen != null) myGdxGame.levelOneScreen.dispose();
-            myGdxGame.levelOneScreen = new LevelOneScreen(myGdxGame);
             myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
             Gdx.app.postRunnable(() -> {
                 if (myGdxGame.computerScreen != null) {
                     myGdxGame.computerScreen.dispose();
                 }
-            }); // откладываем удаление до следующего кадра, чтобы не вызвать ошибку
-            myGdxGame.setScreen(myGdxGame.levelOneScreen);
-            // Здесь можно добавить любую другую логику
-            return true; // Возвращаем true, чтобы событие не ушло дальше
+            });
+            myGdxGame.setScreen(new HackScreen(myGdxGame));
+            return true;
         }
 
-        // Проверяем нажатие на кнопку закрытия
         if (isTouched &&
             touch.x >= closeButtonX && touch.x <= closeButtonX + closeButtonSize &&
             touch.y >= closeButtonY && touch.y <= closeButtonY + closeButtonSize) {
@@ -121,7 +116,6 @@ public class DraggableWindow extends View {
             return true;
         }
 
-        // Проверяем нажатие на заголовок окна (для перетаскивания)
         if (isTouched &&
             touch.x >= x && touch.x <= x + width &&
             touch.y >= y && touch.y <= y + TITLE_BAR_HEIGHT) {
@@ -131,7 +125,6 @@ public class DraggableWindow extends View {
             return true;
         }
 
-        // Отпускаем кнопку мыши/пальца
         if (!isTouched) {
             isDragging = false;
         }
@@ -158,7 +151,6 @@ public class DraggableWindow extends View {
         this.x = newX;
         this.y = newY;
 
-        // Обновляем позицию кнопки закрытия
         closeButtonX += deltaX;
         closeButtonY += deltaY;
     }
@@ -167,20 +159,15 @@ public class DraggableWindow extends View {
     public void draw(SpriteBatch batch) {
         if (!isVisible) return;
 
-        // Рисуем фон окна
         batch.draw(backgroundTexture, x, y, width, height);
 
-        // Рисуем заголовок
+
         if (font != null && title != null) {
             font.draw(batch, title, x + PADDING, y + height - PADDING);
         }
 
-        // Рисуем линию под заголовком
-        // Можно добавить через ShapeRenderer, но для простоты используем текстуру
 
-        // Рисуем содержимое
         if (font != null && content != null) {
-            // Разбиваем текст на строки
             String[] lines = content.split("\n");
             float currentY = y + height - TITLE_BAR_HEIGHT - PADDING;
             for (String line : lines) {
@@ -188,11 +175,8 @@ public class DraggableWindow extends View {
                 currentY -= font.getLineHeight();
             }
         }
-
-        // Рисуем кнопку закрытия
         batch.draw(closeButtonTexture, closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
 
-        // Рисуем clickButton
         if (clickButton != null) {
             clickButton.draw(batch);
         }

@@ -34,14 +34,13 @@ public class GameObject {
 
     public void draw(SpriteBatch batch) {
         batch.draw(texture,
-                getX() - (width / 2f),
-                getY() - (height / 2f),
-                width,
-                height);
+            getX() - (width / 2f),
+            getY() - (height / 2f),
+            width,
+            height);
     }
 
     public void hit() {
-        // all physics objects could be hit
     }
 
     public int getX() {
@@ -67,7 +66,7 @@ public class GameObject {
         Body body = world.createBody(def);
 
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(Math.max(width, height) * SCALE / 2f);
+        circleShape.setRadius(Math.max(width, height) * SCALE / 2f + 0.5f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circleShape;
@@ -83,10 +82,12 @@ public class GameObject {
         body.setTransform(x * SCALE, y * SCALE, 0);
         return body;
     }
+
     public void setJustTouched(boolean touched) {
         this.justTouched = touched;
     }
-    public short getBit(){
+
+    public short getBit() {
         return cBits;
     }
 

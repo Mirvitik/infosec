@@ -15,37 +15,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import kgu.game.project.GameSettings;
 import kgu.game.project.objects.GameObject;
 
-/**
- * Проходимый объект-триггер на Box2D (isSensor = true).
- * При столкновении с игроком выводит текст "Hello" и/или картинку.
- *
- * Интеграция в LevelTwoScreen:
- *
- *   1. Создать:
- *        helloTrigger = new HelloTrigger(tileX, tileY,
- *                GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
- *                "path/to/image.png",   // или null, если картинка не нужна
- *                myGdxGame.world);
- *
- *   2. ContactManager — добавить ветку:
- *        } else if (object.getClass().getSimpleName().equals("HelloTrigger")) {
- *            isNearHello = true;
- *        }
- *      и в end-контакте:
- *        isNearHello = false;
- *
- *   3. В draw():
- *        helloTrigger.draw(myGdxGame.batch);   // рисует спрайт объекта на карте
- *        if (isNearHello) {
- *            helloTrigger.drawOverlay(myGdxGame.batch); // рисует "Hello" / картинку поверх UI
- *        }
- *
- *   4. В dispose():
- *        helloTrigger.dispose();
- */
+
 public class HelloTrigger extends GameObject {
-    private Texture  overlayTexture;
-    private String   overlayText;
+    private Texture overlayTexture;
+    private String overlayText;
 
     private float overlayX, overlayY;
     private float overlayW, overlayH;
@@ -65,12 +38,15 @@ public class HelloTrigger extends GameObject {
         }
         overlayX = tileX;
         overlayY = tileY;
-        overlayW = 32;
-        overlayH = 32;
+        overlayW = 64;
+        overlayH = 64;
     }
 
     public HelloTrigger setOverlayBounds(float x, float y, float w, float h) {
-        overlayX = x; overlayY = y; overlayW = w; overlayH = h;
+        overlayX = x;
+        overlayY = y;
+        overlayW = w;
+        overlayH = h;
         return this;
     }
 
@@ -87,38 +63,38 @@ public class HelloTrigger extends GameObject {
 
     public void drawOverlay(SpriteBatch batch) {
         if (overlayTexture != null) {
-            // Режим: картинка
             batch.draw(overlayTexture, overlayX, overlayY, overlayW, overlayH);
-        } else {
-            // Режим: просто текст — рисуем через BitmapFont снаружи
-            // (font.draw(batch, overlayText, overlayX, overlayY))
-            // Текст передаётся через getOverlayText() для удобства
         }
     }
 
-    public String getOverlayText() { return overlayText; }
+    public String getOverlayText() {
+        return overlayText;
+    }
 
-    public boolean hasImage() { return overlayTexture != null; }
+    public boolean hasImage() {
+        return overlayTexture != null;
+    }
+
     @Override
     public Body createBody(float x, float y, World world) {
         BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.StaticBody;   // статичный — не двигается
+        def.type = BodyDef.BodyType.StaticBody;
         Body body = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(12 * SCALE / 2f, 12 * SCALE / 2f);
+        shape.setAsBox(12 * SCALE / 2f, 18 * SCALE / 2f);
 
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape  = shape;
+        fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
 
         fixtureDef.filter.categoryBits = cBits;
-        fixtureDef.filter.maskBits     = kgu.game.project.GameSettings.SHIP_BIT;
+        fixtureDef.filter.maskBits = kgu.game.project.GameSettings.SHIP_BIT;
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
-        body.setTransform((x + 26) * SCALE, (y + 24) * SCALE ,0);
+        body.setTransform((x + 10) * SCALE, (y + 50) * SCALE, 0);
         return body;
     }
 

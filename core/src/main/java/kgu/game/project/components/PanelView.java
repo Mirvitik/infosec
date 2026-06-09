@@ -14,7 +14,6 @@ public class PanelView extends View {
     private ShapeRenderer shapeRenderer;
     private boolean useTexture;
 
-    // Конструктор с цветом фона
     public PanelView(float x, float y, float width, float height, Color backgroundColor) {
         super(x, y);
         this.width = width;
@@ -24,7 +23,6 @@ public class PanelView extends View {
         shapeRenderer = new ShapeRenderer();
     }
 
-    // Конструктор с текстурой фона
     public PanelView(float x, float y, float width, float height, String texturePath) {
         super(x, y);
         this.width = width;
@@ -41,14 +39,12 @@ public class PanelView extends View {
 
     public void setTextView(TextView textView) {
         this.textView = textView;
-        // Центрируем текст
         textView.x = x + width / 2 - textView.width / 2;
         textView.y = y + height / 2 + textView.height / 2;
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        // Рисуем фон
         batch.end();
 
         if (useTexture) {
@@ -65,7 +61,6 @@ public class PanelView extends View {
 
         batch.begin();
 
-        // Рисуем текст
         if (textView != null) {
             textView.draw(batch);
         }

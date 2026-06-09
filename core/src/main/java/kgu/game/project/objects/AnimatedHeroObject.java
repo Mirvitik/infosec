@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class AnimatedHeroObject extends HeroObject {
 
-    // Анимации для разных направлений
+
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> walkUpAnimation;
     private Animation<TextureRegion> walkDownAnimation;
@@ -38,15 +38,13 @@ public class AnimatedHeroObject extends HeroObject {
 
     public AnimatedHeroObject(int x, int y, int width, int height,
                               TextureRegion[][] spriteSheet, World world) {
-        super(x, y, width, height, null, world); // texturePath = null, т.к. используем spriteSheet
+        super(x, y, width, height, null, world);
 
-        // Инициализация анимаций
         createAnimations(spriteSheet);
 
-        // Начальная анимация
         currentAnimation = idleAnimation;
         stateTime = 0;
-        lastDirection = new Vector2(0, -1); // Смотрим вниз по умолчанию
+        lastDirection = new Vector2(0, -1);
         isMoving = false;
     }
 
@@ -71,7 +69,6 @@ public class AnimatedHeroObject extends HeroObject {
             walkDownAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
 
-        // Ходьба вверх (ряд 1)
         if (spriteSheet.length > 1 && spriteSheet[1].length >= 4) {
             walkFrames.clear();
             for (int i = 0; i < 4; i++) {
@@ -81,7 +78,6 @@ public class AnimatedHeroObject extends HeroObject {
             walkUpAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
 
-        // Ходьба влево (ряд 2) - ИСПРАВЛЕНО
         if (spriteSheet.length > 2 && spriteSheet[2].length >= 4) {
             walkFrames.clear();
             for (int i = 0; i < 4; i++) {
@@ -93,7 +89,6 @@ public class AnimatedHeroObject extends HeroObject {
             walkLeftAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
 
-        // Ходьба вправо (ряд 3)
         if (spriteSheet.length > 2 && spriteSheet[2].length >= 4) {
             walkFrames.clear();
             for (int i = 0; i < 4; i++) {
@@ -103,7 +98,6 @@ public class AnimatedHeroObject extends HeroObject {
             walkRightAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
 
-        // Idle анимация (ряд 8)
         if (spriteSheet.length > 8 && spriteSheet[8].length > 0) {
             walkFrames.clear();
             walkFrames.add(spriteSheet[8][0]);
@@ -118,7 +112,6 @@ public class AnimatedHeroObject extends HeroObject {
     @Override
     public void moveWithTouchpad(Vector2 direction, float strength) {
         super.moveWithTouchpad(direction, strength);
-        // Обновляем анимацию в зависимости от направления
         updateAnimation(direction, strength > 0.1f);
     }
 
@@ -134,13 +127,11 @@ public class AnimatedHeroObject extends HeroObject {
             return;
         }
 
-        // Сохраняем последнее направление для idle анимации
         if (direction.len() > 0.1f) {
             lastDirection.set(direction);
         }
 
-        // Выбираем анимацию в зависимости от угла направления
-        float angle = direction.angleDeg(); // 0° = вправо, 90° = вверх
+        float angle = direction.angleDeg();
 
         if (angle >= 0 && angle < 22.5f) {
             currentAnimation = walkRightAnimation;
@@ -174,7 +165,6 @@ public class AnimatedHeroObject extends HeroObject {
         }
         TextureRegion currentFrame = currentAnimation.getKeyFrame(stateTime, true);
 
-        // Рисуем текущий кадр анимации
         batch.draw(currentFrame,
             getX() - width / 2,
             getY() - height / 2,
@@ -189,6 +179,7 @@ public class AnimatedHeroObject extends HeroObject {
         isMoving = false;
         currentAnimation = idleAnimation;
     }
+
     @Override
     public Body createBody(float x, float y, World world) {
         BodyDef def = new BodyDef();
@@ -197,12 +188,20 @@ public class AnimatedHeroObject extends HeroObject {
         Body body = world.createBody(def);
 
         PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(width * SCALE / 2f, height * SCALE / 2f);
+
+
+        float hitboxWidth = width * SCALE * 0.7f;
+        float hitboxHeight = height * SCALE * 0.85f;
+        float hitboxOffsetY = height * SCALE * 0.075f;
+
+        polygonShape.setAsBox(hitboxWidth / 2f, hitboxHeight / 2f,
+            new Vector2(0, hitboxOffsetY), 0);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
-        fixtureDef.density = 0.1f;
-        fixtureDef.friction = 1f;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.0f;
         fixtureDef.filter.categoryBits = cBits;
         fixtureDef.filter.maskBits = -1;
 
@@ -211,7 +210,32 @@ public class AnimatedHeroObject extends HeroObject {
         polygonShape.dispose();
 
         body.setTransform(x * SCALE, y * SCALE, 0);
+
+        addGroundSensor(body);
+
         return body;
+    }
+
+    private void addGroundSensor(Body body) {
+        PolygonShape sensorShape = new PolygonShape();
+        float sensorWidth = 64 * SCALE * 0.5f;
+        float sensorHeight = height * SCALE * 0.2f;
+        float sensorOffsetY = -height * SCALE * 0.45f; // At the bottom of feet
+
+        sensorShape.setAsBox(sensorWidth / 2f, sensorHeight / 2f,
+            new Vector2(0, sensorOffsetY), 0);
+
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.shape = sensorShape;
+        sensorDef.isSensor = true;
+        sensorDef.filter.categoryBits = cBits;
+        sensorDef.filter.maskBits = -1;
+
+        Fixture sensorFixture = body.createFixture(sensorDef);
+
+        sensorFixture.setUserData(this);
+
+        sensorShape.dispose();
     }
 }
 
