@@ -64,13 +64,11 @@ public class LevelThreeScreen extends ScreenAdapter {
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
     ImageView message;
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
     DialogView dialog;
     DialogView dialogNo;
-    private Vector3 touch2;
     public boolean isNearComputer = false;
 
-    private boolean isTouchingUI = false;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
@@ -152,9 +150,14 @@ public class LevelThreeScreen extends ScreenAdapter {
 
         touchpadView = new TouchpadView(140, 140);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
         } else {
@@ -214,7 +217,7 @@ public class LevelThreeScreen extends ScreenAdapter {
         alphabet.setText(alpha);
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
-        image = new ButtonView(180, 80, 1028, 360, myGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "КЛЮЧ:    295\nТЕКСТ: COOKIE");
+        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "КЛЮЧ:    295\nТЕКСТ: COOKIE");
         arrow = new ImageView(230, 530, 32, 32, "textures/arrow.png");
         batteryObject = new BatteryObject(11.5f, 6.5f, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 448, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.ROME_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
@@ -230,11 +233,7 @@ public class LevelThreeScreen extends ScreenAdapter {
 
     }
 
-    public LevelThreeScreen(MyGdxGame myGdxGame, float x, float y) {
-        this(myGdxGame);
-        heroX = x;
-        heroY = y;
-    }
+
 
     @Override
     public void show() {
@@ -353,7 +352,7 @@ public class LevelThreeScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
@@ -391,7 +390,7 @@ public class LevelThreeScreen extends ScreenAdapter {
                     }
                 } else {
                     if (isTouched) {
-                        isTouchingUI = false;
+                        boolean isTouchingUI = false;
 
                         if (dialogNo != null) {
                             if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
@@ -574,7 +573,7 @@ public class LevelThreeScreen extends ScreenAdapter {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
-        heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2 - 100;
+        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 100;
         heroY = (heroY != -1f) ? heroY : 250;
         heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
         createMapBorders();

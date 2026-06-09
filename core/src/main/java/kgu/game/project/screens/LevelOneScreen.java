@@ -71,10 +71,9 @@ public class LevelOneScreen extends ScreenAdapter {
     AntivirusObject antiVirus;
     ImageView message;
     ComputerObject asciiTable;
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
     DialogView dialog;
     DialogView dialogNo;
-    private Vector3 touch2;
     public boolean isNearComputer = false;
 
     private boolean isTouchingUI = false;
@@ -161,15 +160,26 @@ public class LevelOneScreen extends ScreenAdapter {
         touchpadView = new TouchpadView(140, 140);
 
         pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
         } else {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }
 
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
@@ -317,7 +327,7 @@ public class LevelOneScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            Vector3 touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {

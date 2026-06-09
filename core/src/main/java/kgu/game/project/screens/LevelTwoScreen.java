@@ -123,12 +123,12 @@ public class LevelTwoScreen extends ScreenAdapter {
                 LocalizationManager.get("caesar.talk.vulnerability.0"),
                 LocalizationManager.get("caesar.talk.vulnerability.1")};
             myGdxGame.audioManager.backgroundMusic.stop();
-            if (MemoryManager.loadIsMusicOn()){
+            if (MemoryManager.loadIsMusicOn()) {
                 myGdxGame.audioManager.storyMusic.play();
             }
             myGdxGame.setScreen(new CutsceneScreen(myGdxGame, story, texts, () -> {
                 myGdxGame.audioManager.storyMusic.stop();
-                if (MemoryManager.loadIsMusicOn()){
+                if (MemoryManager.loadIsMusicOn()) {
                     myGdxGame.audioManager.backgroundMusic.play();
                 }
                 myGdxGame.setScreen(new LevelThreeScreen(myGdxGame));
@@ -192,15 +192,27 @@ public class LevelTwoScreen extends ScreenAdapter {
         actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
 
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
 
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
         } else {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
@@ -492,7 +504,7 @@ public class LevelTwoScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            if (MemoryManager.loadIsSoundOn()){
+                            if (MemoryManager.loadIsSoundOn()) {
                                 myGdxGame.audioManager.saveSound.play();
                             }
                             MemoryManager.saveGameState(2, heroObject.getX(), heroObject.getY());
