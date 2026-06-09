@@ -14,6 +14,7 @@ import kgu.game.project.components.ImageView;
 import kgu.game.project.components.MovingBackgroundView;
 import kgu.game.project.components.TextView;
 import kgu.game.project.managers.LocalizationManager;
+import kgu.game.project.managers.MemoryManager;
 
 public class MenuScreen extends ScreenAdapter {
 
@@ -77,14 +78,18 @@ public class MenuScreen extends ScreenAdapter {
                     LocalizationManager.get("story.intro.2")
                 };
                 myGdxGame.audioManager.backgroundMusic.stop();
-                myGdxGame.audioManager.storyMusic.play();
+                if (MemoryManager.loadIsMusicOn()){
+                    myGdxGame.audioManager.storyMusic.play();
+                }
 
                 myGdxGame.setScreen(new CutsceneScreen(myGdxGame, images, texts, () -> {
                     if (myGdxGame.gameScreen != null) myGdxGame.gameScreen.dispose();
                     myGdxGame.gameScreen = new GameScreen(myGdxGame);
                     myGdxGame.setScreen(myGdxGame.gameScreen);
                     myGdxGame.audioManager.storyMusic.stop();
-                    myGdxGame.audioManager.backgroundMusic.play();
+                    if (MemoryManager.loadIsMusicOn()){
+                        myGdxGame.audioManager.backgroundMusic.play();
+                    }
                 }));
             }
             if (loadGameButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {

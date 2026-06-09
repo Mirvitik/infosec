@@ -126,10 +126,14 @@ public class LevelTwoScreen extends ScreenAdapter {
                 LocalizationManager.get("caesar.talk.vulnerability.0"),
                 LocalizationManager.get("caesar.talk.vulnerability.1")};
             myGdxGame.audioManager.backgroundMusic.stop();
-            myGdxGame.audioManager.storyMusic.play();
+            if (MemoryManager.loadIsMusicOn()){
+                myGdxGame.audioManager.storyMusic.play();
+            }
             myGdxGame.setScreen(new CutsceneScreen(myGdxGame, story, texts, () -> {
                 myGdxGame.audioManager.storyMusic.stop();
-                myGdxGame.audioManager.backgroundMusic.play();
+                if (MemoryManager.loadIsMusicOn()){
+                    myGdxGame.audioManager.backgroundMusic.play();
+                }
                 myGdxGame.setScreen(new LevelThreeScreen(myGdxGame));
             }));
         }, "VIVELAFRANCE");
@@ -498,8 +502,10 @@ public class LevelTwoScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            myGdxGame.audioManager.saveSound.play();
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            if (MemoryManager.loadIsSoundOn()){
+                                myGdxGame.audioManager.saveSound.play();
+                            }
+                            MemoryManager.saveGameState(2, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
                         if (dialog != null && isNearAntivirus && dialog.getCnt() == 2) {

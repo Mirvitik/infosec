@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import kgu.game.project.FontBuilder;
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.MemoryManager;
 
 public class HackScreen extends ScreenAdapter {
 
@@ -97,7 +98,9 @@ public class HackScreen extends ScreenAdapter {
 
         for (int i = 0; i < noiseX.length; i++) randomizeNoise(i);
         myGdxGame.audioManager.backgroundMusic.stop();
-        myGdxGame.audioManager.hacked.play();
+        if (MemoryManager.loadIsMusicOn()){
+            myGdxGame.audioManager.hacked.play();
+        }
     }
 
 
@@ -109,7 +112,9 @@ public class HackScreen extends ScreenAdapter {
         scanLine += delta * 220f;
         if (scanLine > VIEW_H) {
             myGdxGame.audioManager.hacked.stop();
-            myGdxGame.audioManager.backgroundMusic.play();
+            if (MemoryManager.loadIsMusicOn()){
+                myGdxGame.audioManager.backgroundMusic.play();
+            }
             myGdxGame.setScreen(new LevelOneScreen(myGdxGame));
         }
 

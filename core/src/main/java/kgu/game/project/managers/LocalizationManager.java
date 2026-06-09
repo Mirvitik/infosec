@@ -211,7 +211,7 @@ public class LocalizationManager {
         add("xor.talk.4", "Let's say we have a character that was converted to bits\nusing ASCII,\nand we want to encrypt these bits", "Допустим, у нас есть символ, который с помощью ASCII\nбыл преобразован в биты,\nи мы хотим эти биты зашифровать");
         add("xor.talk.5", "XOR has the property: A XOR B = C,\nC XOR B = A,\nwhich is used in encryption.", "XOR имеет совйство A XOR B = C\n" +
             "C XOR B = A,\nкоторое используют при шфировке");
-        add("xor.talk.6", "Approach the computer labeled \"XOR\",\nfind the correct key so that when you perform XOR\non the text with this key,\nthe given ciphertext is created. XOR is performed bitwise.", "Подойди к компьютеру с надписью 'XOR',\nподбери ключ, чтобы при выполнении XOR\nптекста данным ключос создавался\nпданный шифр. XOR выполняется побитово.");
+        add("xor.talk.6", "Approach the computer labeled XOR,\nfind the correct key so that when you perform XOR\non the text with this key,\nthe given ciphertext is created. XOR is performed bitwise.", "Подойди к компьютеру с надписью 'XOR',\nподбери ключ, чтобы при выполнении XOR\nптекста данным ключос создавался\nпданный шифр. XOR выполняется побитово.");
         add("xor.talk.7", " ", " ");
         add("xor.talk.8", "You need to learn about the Vigenere cipher", "Тебе надо узнать о шифре Виженера");
         add("xor.talk.9", "The Vigenere cipher is an encryption method\nthat uses a keyword", "Шифр Виженера — это метод шифрования,\nиспользующий ключевое слово");

@@ -115,10 +115,14 @@ public class LevelOneScreen extends ScreenAdapter {
                 LocalizationManager.get("caesar.history.1")
             };
             myGdxGame.audioManager.backgroundMusic.stop();
-            myGdxGame.audioManager.storyMusic.play();
+            if (MemoryManager.loadIsMusicOn()) {
+                myGdxGame.audioManager.storyMusic.play();
+            }
             myGdxGame.setScreen(new CutsceneScreen(myGdxGame, story, texts, () -> {
                 myGdxGame.audioManager.storyMusic.stop();
-                myGdxGame.audioManager.backgroundMusic.play();
+                if (MemoryManager.loadIsMusicOn()) {
+                    myGdxGame.audioManager.backgroundMusic.play();
+                }
                 myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
             }));
         }, "FROSYA");
@@ -160,7 +164,7 @@ public class LevelOneScreen extends ScreenAdapter {
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
         if (isDesktop) {
-            text = new TextView(myGdxGame.commonPixelFontText, 250, 150,  LocalizationManager.get("pressK"));
+            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
         } else {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }

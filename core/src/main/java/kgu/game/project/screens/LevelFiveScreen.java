@@ -407,7 +407,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                         }
 
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(5, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 

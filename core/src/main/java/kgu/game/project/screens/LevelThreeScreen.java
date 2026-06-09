@@ -14,15 +14,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
-
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
 import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.HelloTrigger;
 import kgu.game.project.components.ImageView;
@@ -40,11 +37,9 @@ import kgu.game.project.objects.ComputerObject;
 import kgu.game.project.objects.DoorObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
-import kgu.game.project.objects.TrashObject;
 import kgu.game.project.objects.AntivirusObject;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
-import kgu.game.project.objects.BulletObject;
 
 public class LevelThreeScreen extends ScreenAdapter {
 
@@ -444,7 +439,7 @@ public class LevelThreeScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(3, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 

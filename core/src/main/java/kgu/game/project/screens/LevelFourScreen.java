@@ -598,7 +598,7 @@ public class LevelFourScreen extends ScreenAdapter {
                         }
 
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(2, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(4, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 

@@ -76,7 +76,7 @@ public class LoadGameScreen extends ScreenAdapter {
         float gapX = 280f, gapY = 110f;
 
         String[] levelNames = {"Level 1", "Level 2", "Level 3",
-            "Level 4", "Level 5", "Level 6"};
+            "Level 4", "Level 5", "Final boss"};
 
         java.util.Map<Integer, Long> latestByLevel = new java.util.HashMap<>();
         for (long date : MemoryManager.getAllSaveDates()) {
@@ -161,6 +161,49 @@ public class LoadGameScreen extends ScreenAdapter {
                     return;
                 }
             }
+        }
+    }
+    @Override
+    public void show() {
+        refreshSavesList();
+    }
+
+    private void refreshSavesList() {
+        slotCards.clear();
+
+        float cardW = 260f, cardH = 90f;
+        float startX = 250f, startY = 430f;
+        float gapX = 280f, gapY = 110f;
+
+        String[] levelNames = {"Level 1", "Level 2", "Level 3",
+            "Level 4", "Level 5", "Level 6"};
+
+        java.util.Map<Integer, Long> latestByLevel = new java.util.HashMap<>();
+        for (long date : MemoryManager.getAllSaveDates()) {
+            ArrayList<Object> save = MemoryManager.getSaveByDate(String.valueOf(date));
+            int level = Integer.parseInt(save.get(0).toString());
+            if (!latestByLevel.containsKey(level) || date > latestByLevel.get(level)) {
+                latestByLevel.put(level, date);
+            }
+        }
+
+        java.util.List<Integer> sortedLevels = new java.util.ArrayList<>(latestByLevel.keySet());
+        java.util.Collections.sort(sortedLevels);
+
+        int cnt = 0;
+        for (int level : sortedLevels) {
+            long date = latestByLevel.get(level);
+            float cx = startX + (cnt % 2) * gapX;
+            float cy = startY - (cnt / 2) * gapY;
+
+            String levelName = level <= levelNames.length
+                ? levelNames[level - 1] : "Level " + level;
+            String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
+            String dateStr   = timestampToDateString(date);
+
+            slotCards.add(new SaveSlotCard(myGdxGame,
+                cx, cy, cardW, cardH, slotLabel, levelName, dateStr, date));
+            cnt++;
         }
     }
 }

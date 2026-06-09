@@ -265,7 +265,9 @@ public class EndScreen extends ScreenAdapter {
                 gameSession.pauseGame();
             } else if (isNearBattery && !toDrawSave && dialog == null) {
                 toDrawSave = true;
-                myGdxGame.audioManager.saveSound.play();
+                if (MemoryManager.loadIsSoundOn()){
+                    myGdxGame.audioManager.saveSound.play();
+                }
             } else if (isNearComputer && dialog == null) {
                 if (toDraw) {
                     toDraw = false;
@@ -390,7 +392,9 @@ public class EndScreen extends ScreenAdapter {
                                 gameSession.pauseGame();
                             } else if (isNearBattery && !toDrawSave && dialog == null) {
                                 toDrawSave = true;
-                                myGdxGame.audioManager.saveSound.play();
+                                if (MemoryManager.loadIsSoundOn()){
+                                    myGdxGame.audioManager.saveSound.play();
+                                }
                             } else if (isNearComputer && dialog == null) {
                                 toDraw = !toDraw;
                             } else if ((isNearMail1 || isNearMail2 || isNearMail3) && !toDrawMail) {
@@ -410,7 +414,7 @@ public class EndScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(6, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
                         if (dialog != null && dialog.getCnt() == 6) {
