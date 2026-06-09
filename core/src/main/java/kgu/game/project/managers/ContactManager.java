@@ -2,6 +2,7 @@ package kgu.game.project.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
+
 import kgu.game.project.GameSettings;
 import kgu.game.project.objects.GameObject;
 
@@ -15,13 +16,10 @@ public class ContactManager {
         void onPlayerLeave(GameObject object);
     }
 
-    private OnBeginContact onBeginContact;
-    private OnEndContact onEndContact;
-    private World world;
-    private boolean isPlayerNearComputer = false;
+    private final OnBeginContact onBeginContact;
+    private final OnEndContact onEndContact;
 
     public ContactManager(World world, OnBeginContact onBegin, OnEndContact onEnd) {
-        this.world = world;
         this.onBeginContact = onBegin;
         this.onEndContact = onEnd;
 
@@ -44,13 +42,10 @@ public class ContactManager {
                     player = (GameObject) fixB.getUserData();
                     otherObject = (GameObject) fixA.getUserData();
                 }
-
-                // Если есть игрок и другой объект, вызываем колбэк
                 if (player != null && otherObject != null && onBeginContact != null) {
                     Gdx.app.log("ContactManager", "Player hit: " + otherObject.getClass().getSimpleName());
                     onBeginContact.onPlayerHit(otherObject);
 
-                    // Можно сохранять состояние для endContact
                     otherObject.setJustTouched(true);
                 }
 
@@ -75,8 +70,6 @@ public class ContactManager {
                     player = (GameObject) fixB.getUserData();
                     otherObject = (GameObject) fixA.getUserData();
                 }
-
-                // Если контакт закончился, вызываем колбэк
                 if (player != null && otherObject != null && onEndContact != null) {
                     onEndContact.onPlayerLeave(otherObject);
                     otherObject.setJustTouched(false);
@@ -84,10 +77,12 @@ public class ContactManager {
             }
 
             @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {}
+            public void preSolve(Contact contact, Manifold oldManifold) {
+            }
 
             @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {}
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+            }
         });
     }
 }

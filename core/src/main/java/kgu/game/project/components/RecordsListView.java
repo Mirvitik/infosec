@@ -2,7 +2,6 @@ package kgu.game.project.components;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import kgu.game.project.GameSettings;
 
 import java.util.ArrayList;

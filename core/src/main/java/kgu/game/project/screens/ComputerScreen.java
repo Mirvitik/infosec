@@ -23,7 +23,6 @@ public class ComputerScreen extends ScreenAdapter {
     MyGdxGame myGdxGame;
     GameSession gameSession;
 
-    // PAUSED state UI
     ImageView fullBlackoutView;
 
     private boolean isNearComputer = false;

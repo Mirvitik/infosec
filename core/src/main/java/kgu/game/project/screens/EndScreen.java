@@ -206,11 +206,7 @@ public class EndScreen extends ScreenAdapter {
             GameResources.PASSWORD_IMG_PATH, "Close");
     }
 
-    public EndScreen(MyGdxGame myGdxGame, float x, float y) {
-        this(myGdxGame);
-        heroX = x;
-        heroY = y;
-    }
+
 
     private void handleKeyboardInput() {
         Vector2 direction = new Vector2(0, 0);

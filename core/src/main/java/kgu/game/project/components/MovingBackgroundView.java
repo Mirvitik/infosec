@@ -3,6 +3,7 @@ package kgu.game.project.components;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 import kgu.game.project.GameSettings;
 
 public class MovingBackgroundView extends View {
@@ -11,7 +12,6 @@ public class MovingBackgroundView extends View {
 
     int texture1Y;
     int texture2Y;
-    int speed = 2;
 
     public MovingBackgroundView(String pathToTexture) {
         super(0, 0);
@@ -20,17 +20,6 @@ public class MovingBackgroundView extends View {
         texture = new Texture(pathToTexture);
     }
 
-    public void move() {
-        texture1Y -= speed;
-        texture2Y -= speed;
-
-        if (texture1Y <= -GameSettings.SCREEN_HEIGHT) {
-            texture1Y = GameSettings.SCREEN_HEIGHT;
-        }
-        if (texture2Y <= -GameSettings.SCREEN_HEIGHT) {
-            texture2Y = GameSettings.SCREEN_HEIGHT;
-        }
-    }
 
     @Override
     public void draw(SpriteBatch batch) {

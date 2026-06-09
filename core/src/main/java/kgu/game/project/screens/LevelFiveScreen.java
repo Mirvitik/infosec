@@ -99,8 +99,8 @@ public class LevelFiveScreen extends ScreenAdapter {
     boolean isNearBattery = false;
     boolean isNearDoor = false;
 
-    float heroX = -1f;
-    float heroY = -1f;
+    float heroX;
+    float heroY;
 
     ContactManager contactManager;
     TextView hintText;

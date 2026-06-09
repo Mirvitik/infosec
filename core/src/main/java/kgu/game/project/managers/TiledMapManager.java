@@ -19,9 +19,6 @@ public class TiledMapManager {
     private final float mapHeightPixels;
     private float unitScale = 1f;
 
-    public TiledMapManager(String mapPath, OrthographicCamera camera, Batch batch) {
-        this(mapPath, camera, batch, 1f);
-    }
 
     public TiledMapManager(String mapPath, OrthographicCamera camera, Batch batch, float unitScale) {
         this.unitScale = unitScale;

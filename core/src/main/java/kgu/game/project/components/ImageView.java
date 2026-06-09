@@ -13,6 +13,7 @@ public class ImageView extends View {
         this.width = texture.getWidth();
         this.height = texture.getHeight();
     }
+
     public ImageView(float x, float y, float width, float height, String imagePath) {
         super(x, y);
         texture = new Texture(imagePath);
@@ -38,7 +39,6 @@ public class ImageView extends View {
         return (int) this.y;
     }
 
-    // Position methods
     public void setX(float x) {
         this.x = x;
     }
@@ -52,18 +52,6 @@ public class ImageView extends View {
         this.y = y;
     }
 
-    public void setSizeMaintainAspect(float targetWidth, float targetHeight) {
-        float textureAspect = (float) texture.getWidth() / (float) texture.getHeight();
-        float targetAspect = targetWidth / targetHeight;
-
-        if (targetAspect > textureAspect) {
-            this.height = targetHeight;
-            this.width = targetHeight * textureAspect;
-        } else {
-            this.width = targetWidth;
-            this.height = targetWidth / textureAspect;
-        }
-    }
 
     public int getTextureWidth() {
         return texture.getWidth();

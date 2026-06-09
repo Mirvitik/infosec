@@ -8,39 +8,37 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.screens.GameScreen;
 
 public class InfoWindow extends View {
     Game myGdxGame;
-    private Texture backgroundTexture;
-    private Texture closeButtonTexture;
-    private BitmapFont font;
+    private final Texture backgroundTexture;
+    private final Texture closeButtonTexture;
+    private final BitmapFont font;
 
-    private String title;
-    private String content;
+    private final String title;
+    private final String content;
 
     private boolean isDragging = false;
     private float dragOffsetX;
     Screen gameScreen;
     private float dragOffsetY;
 
-    private float closeButtonSize = 32;
+    private final float closeButtonSize = 32;
     private float closeButtonX;
     private float closeButtonY;
 
     private boolean isVisible = false;
     private Runnable onCloseListener;
 
-    // Размеры окна
     private static final float WINDOW_WIDTH = 500;
     private static final float WINDOW_HEIGHT = 600;
     private static final float TITLE_BAR_HEIGHT = 40;
     private static final float PADDING = 80;
 
     public InfoWindow(Game myGdxGame, float x, float y, String title, String content,
-                           String backgroundPath, String closeButtonPath) {
+                      String backgroundPath, String closeButtonPath) {
         super(x, y, WINDOW_WIDTH, WINDOW_HEIGHT);
         this.myGdxGame = myGdxGame;
         this.gameScreen = new GameScreen((MyGdxGame) myGdxGame);
@@ -73,9 +71,6 @@ public class InfoWindow extends View {
         return isVisible;
     }
 
-    public void setOnCloseListener(Runnable listener) {
-        this.onCloseListener = listener;
-    }
 
     public boolean handleTouch(Vector3 touch, boolean isTouched) {
         if (!isVisible) return false;
@@ -103,7 +98,7 @@ public class InfoWindow extends View {
             isDragging = false;
         }
 
-        if (isDragging && isTouched) {
+        if (isDragging) {
             float newX = touch.x - dragOffsetX;
             float newY = touch.y - dragOffsetY;
 

@@ -50,7 +50,6 @@ public class IpInputView {
         this.onSuccess = onSuccess;
         this.onFailure = onFailure;
 
-        // Заголовок
         titleText = new TextView(
             myGdxGame.largeWhiteFont,
             (int) (PANEL_X + PANEL_W / 2 - 250), (int) (PANEL_Y + PANEL_H - 40),
@@ -108,7 +107,7 @@ public class IpInputView {
 
         for (int i = 0; i < KEY_LABELS.length; i++) {
             int col = i % cols;
-            int row = rows - 1 - (i / cols); // строки снизу вверх
+            int row = rows - 1 - (i / cols);
             float bx = kbX + col * (KEY_SIZE + KEY_GAP);
             float by = kbY + row * (KEY_SIZE + KEY_GAP) - 150;
             keyButtons[i] = new ButtonView(

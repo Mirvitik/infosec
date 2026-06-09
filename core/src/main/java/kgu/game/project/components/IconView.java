@@ -16,12 +16,7 @@ public class IconView extends View {
     float textX;
     float textY;
 
-    public IconView(float x, float y, String texturePath) {
-        super(x, y, 0, 0);
-        this.texture = new Texture(texturePath);
-        this.width = texture.getWidth();
-        this.height = texture.getHeight();
-    }
+
     public IconView(float x, float y, int width, int height, String texturePath, String name) {
         super(x, y, 0, 0);
         this.texture = new Texture(texturePath);
@@ -30,27 +25,6 @@ public class IconView extends View {
         this.name = name;
     }
 
-    public IconView(float x, float y, float width, float height, BitmapFont font, String texturePath, String text) {
-        super(x, y, width, height);
-
-        this.text = text;
-        this.bitmapFont = font;
-
-        texture = new Texture(texturePath);
-
-        GlyphLayout glyphLayout = new GlyphLayout(bitmapFont, text);
-        float textWidth = glyphLayout.width;
-        float textHeight = glyphLayout.height;
-
-        textX = x + (width - textWidth) / 2;
-        textY = y + (height + textHeight) / 2;
-    }
-
-    public IconView(float x, float y, float width, float height, String texturePath) {
-        super(x, y, width, height);
-
-        texture = new Texture(texturePath);
-    }
 
     @Override
     public void draw(SpriteBatch batch) {

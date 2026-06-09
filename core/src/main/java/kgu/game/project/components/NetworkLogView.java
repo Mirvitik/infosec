@@ -8,11 +8,6 @@ import kgu.game.project.MyGdxGame;
 
 public class NetworkLogView {
 
-    // ───────────────────────────────── поля ──────────────────────────────────
-    private final MyGdxGame myGdxGame;
-    private final String attackerIp;
-    private final Runnable onSubmitPressed;
-
     private final TextView[] logLines;
     public ImageView background;
 
@@ -44,9 +39,6 @@ public class NetworkLogView {
 
     public NetworkLogView(MyGdxGame myGdxGame, float x, float y, float width, float height,
                           String attackerIp, Runnable onSubmitPressed) {
-        this.myGdxGame = myGdxGame;
-        this.attackerIp = attackerIp;
-        this.onSubmitPressed = onSubmitPressed;
 
         background = new ImageView(5, 60, 1200, 650, GameResources.BACKGROUND_WINDOW_IMG_PATH);
 

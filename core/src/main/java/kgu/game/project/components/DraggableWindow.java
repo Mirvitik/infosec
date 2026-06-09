@@ -11,18 +11,16 @@ import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.managers.LocalizationManager;
-import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.screens.HackScreen;
-import kgu.game.project.screens.LevelOneScreen;
 
 public class DraggableWindow extends View {
     MyGdxGame myGdxGame;
     private Texture backgroundTexture;
     private Texture closeButtonTexture;
-    private BitmapFont font;
+    private final BitmapFont font;
 
-    private String title;
-    private String content;
+    private final String title;
+    private final String content;
 
     private boolean isDragging = false;
     private float dragOffsetX;
@@ -129,8 +127,7 @@ public class DraggableWindow extends View {
             isDragging = false;
         }
 
-        // Перетаскивание окна
-        if (isDragging && isTouched) {
+        if (isDragging) {
             float newX = touch.x - dragOffsetX;
             float newY = touch.y - dragOffsetY;
 

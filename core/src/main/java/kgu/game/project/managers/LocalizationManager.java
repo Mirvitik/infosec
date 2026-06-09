@@ -256,9 +256,6 @@ public class LocalizationManager {
         return currentLanguage;
     }
 
-    public static void setLanguage(Language lang) {
-        currentLanguage = lang;
-    }
 
     public static void toggleLanguage() {
         currentLanguage = (currentLanguage == Language.EN) ? Language.RU : Language.EN;

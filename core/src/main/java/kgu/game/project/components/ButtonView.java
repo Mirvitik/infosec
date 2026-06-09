@@ -14,7 +14,6 @@ public class ButtonView extends View {
 
     float textX;
     float textY;
-    float scale;
     private boolean isVisible = true;
 
     public ButtonView(float x, float y, String texturePath) {
@@ -107,10 +106,6 @@ public class ButtonView extends View {
     public boolean isHit(float tx, float ty) {
         if (!isVisible) return false;
         return super.isHit(tx, ty);
-    }
-    public void setPosition(float x, float y){
-        this.x = x;
-        this.y = y;
     }
 
     public void show() {

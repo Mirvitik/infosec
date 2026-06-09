@@ -1,28 +1,19 @@
 package kgu.game.project.objects;
 
 import static kgu.game.project.GameSettings.SCALE;
-import static kgu.game.project.GameSettings.TILE_SIZE;
 
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import java.util.Vector;
 
-import kgu.game.project.GameSettings;
 
 public class DoorObject extends BatteryObject {
 
-
-    public DoorObject(int x, int y, int width, int height, String texturePath, World world) {
-        super(x, y, width, height, texturePath, world);
-    }
 
     public DoorObject(
         int x,

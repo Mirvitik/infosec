@@ -11,7 +11,6 @@ public class MemoryManager {
     private static final Preferences preferences = Gdx.app.getPreferences("User saves");
     private static final Preferences gameProgressPrefs = Gdx.app.getPreferences("GameProgress");
     private static final Preferences langPrefs = Gdx.app.getPreferences("Language");
-    private static Preferences savesListPrefs = Gdx.app.getPreferences("SavesList");
 
     public static void saveLanguage(LocalizationManager.Language lang) {
         langPrefs.putString(KEY_LANGUAGE, lang.name());
@@ -88,9 +87,9 @@ public class MemoryManager {
 
     public static float loadDifficultyNums() {
         String st = preferences.getString("difficultyLevel", "easy");
-        if (st == "easy") {
+        if (st.equals("easy")) {
             return 1f;
-        } else if (st == "normal") {
+        } else if (st.equals("normal")) {
             return 2.5f;
         }
         return 3f;
@@ -120,6 +119,7 @@ public class MemoryManager {
         gameProgressPrefs.flush();
         saves.flush();
     }
+
     public static ArrayList<Long> getAllSaveDates() {
         Json json = new Json();
         String savesListJson = gameProgressPrefs.getString("savesList", "[]");
@@ -131,6 +131,7 @@ public class MemoryManager {
 
         return savesDates;
     }
+
     public static ArrayList<Object> getSaveByDate(String time) {
         Preferences saves = Gdx.app.getPreferences(time);
         ArrayList<Object> gameData = new ArrayList<>();

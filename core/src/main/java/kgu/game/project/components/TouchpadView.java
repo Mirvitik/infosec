@@ -6,14 +6,14 @@ import com.badlogic.gdx.math.Vector2;
 import kgu.game.project.GameResources;
 
 public class TouchpadView {
-    private ImageView background;
-    private ImageView knob;
-    private Vector2 touchpadPosition;
-    private Vector2 knobPosition;
-    private float knobRadius;
-    private float baseRadius;
+    private final ImageView background;
+    private final ImageView knob;
+    private final Vector2 touchpadPosition;
+    private final Vector2 knobPosition;
+    private final float knobRadius;
+    private final float baseRadius;
     private boolean active;
-    private Vector2 direction;
+    private final Vector2 direction;
     private float strength;
 
     public TouchpadView(float x, float y) {
@@ -98,10 +98,6 @@ public class TouchpadView {
     }
 
 
-    public Vector2 getMovementVector() {
-        return new Vector2(direction.x * strength, direction.y * strength);
-    }
-
     public void draw(SpriteBatch batch) {
         background.draw(batch);
         knob.draw(batch);
@@ -117,10 +113,4 @@ public class TouchpadView {
     }
 
 
-    public void setPosition(float x, float y) {
-        this.touchpadPosition.set(x, y);
-        this.knobPosition.set(x, y);
-        background.setPosition(x - baseRadius, y - baseRadius);
-        knob.setPosition(x - knobRadius, y - knobRadius);
-    }
 }
