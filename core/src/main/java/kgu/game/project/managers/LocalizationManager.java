@@ -7,7 +7,7 @@ public class LocalizationManager {
 
     public enum Language {EN, RU}
 
-    private static Language currentLanguage = Language.EN;
+    private static Language currentLanguage = Language.RU;
 
     private static final Map<String, Map<Language, String>> strings = new HashMap<>();
 
@@ -83,7 +83,7 @@ public class LocalizationManager {
         add("login.error", "Incorrect password", "Неверный пароль");
         add("login.incorrect", "Incorrect password", "Неверный пароль");
         add("login.hint", "Password is 'password'", "Пароль это 'password'");
-        add("login.password_hint", "Enter your password", "Введите пароль");
+        add("login.password_hint", "Enter password", "Введите пароль");
         add("game.pause", "Pause", "Пауза");
         add("game.home", "Home", "Домой");
         add("game.continue", "Continue", "Продолжить");
@@ -140,8 +140,8 @@ public class LocalizationManager {
         add("talkVirus.5", "You won't be able to tell,\n" +
                 " which of the emails is not phishing",
             "Ты не сможешь определить,\n какое из писем не является фишинговым\n");
-        add("talkVirus.6", "hahahahahaha",
-            "хахахахаххаха");
+        add("talkVirus.6", "If you don't enter the phishing email number, you won't get out, hahahahahaha",
+            "Если ты не введёшь номер фишингвого письма, ты не выберишься, хахахахаххаха");
         add("theend.title", "You completed the game!", "Вы прошли игру!");
         add("theend.subtitle", "Congratulations!", "Поздравляем!");
         add("level2.talk.0", "So, now I'm not inside the computer case", "Так, теперь я не в корпусе компьютера");
@@ -222,7 +222,21 @@ public class LocalizationManager {
         add("xor.text.example", "Text:   1001101 (77) M", "Текст:   1001101 (77) М");
         add("xor.key.example", "Key:    0", "Ключ:    0");
         add("xor.cipher.example", "Cipher: 0110110 (54) 6", "Шифр: 0110110 (54) 6");
+        add("player.talk.start", "What a nice day to play on the computer!\nI need to go up to it and turn it on.", "Какой хороший день, чтобы поиграть в комп!\nМне надо подойти к нему и включить его");
+        add("pause", "Pause", "Пауза");
+        add("loadgame.title", "LOAD GAME", "ЗАГРУЗКА ИГРЫ");
+        add("loadgame.subtitle", "SELECT SAVE SLOT", "ВЫБЕРИТЕ СЛОТ");
+        add("story.intro.0",
+            "Not so long ago, there was a boy\nwhose parents bought him a computer.\nHe loved his device very much, protecting it\nfrom his mom's friend's sons and distant cousins.",
+            "Не так давно был один мальчик,\nкоторому родители купили компьютер.\nОн очень любил своё устройство, берёг его\nот сыновей маминой подруги и пятиюродных братьев.");
 
+        add("story.intro.1",
+            "At the same time, a virus was spreading across the Internet,\nsent through phishing emails.\nThe virus infected one device after another.\nIt encrypted data on the computers.",
+            "В то же самое время по Интернету гулял вирус,\nрассылающийся с помощью фишинговых писем.\nВирус заражал устройство за устройством.\nШифровал данные на компьютерах.");
+
+        add("story.intro.2",
+            "But that didn't affect our good guy. Until one moment...",
+            "Но это не касалось нашего добряка. До одного момента...");
     }
 
     private static void add(String key, String en, String ru) {
@@ -234,7 +248,7 @@ public class LocalizationManager {
 
     public static String get(String key) {
         Map<Language, String> map = strings.get(key);
-        if (map == null) return key; // fallback — возвращает ключ
+        if (map == null) return key;
         return map.getOrDefault(currentLanguage, key);
     }
 

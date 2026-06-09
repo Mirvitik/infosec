@@ -21,6 +21,7 @@ public class GameResources {
     public static final String XOR_IMG = "textures/xor.png";
     public static final String MINUS_BUTTON = "textures/minusbutton.png";
     public static final String PLUS_BUTTON = "textures/plusbutton.png";
+    public static final String LOGS_IMG = "textures/logs.png";
     public static final String ARROW_IMG = "textures/arrow.png";
     public static final String OUTPUT_IMG = "textures/output.png";
     public static final String END_DOOR_IMG_PATH = "textures/enddoor.png";

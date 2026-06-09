@@ -9,12 +9,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.TextView;
+import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.managers.MemoryManager;
 
 public class LoadGameScreen extends ScreenAdapter {
@@ -57,8 +59,8 @@ public class LoadGameScreen extends ScreenAdapter {
     public LoadGameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
 
-        titleTextView    = new TextView(myGdxGame.xanmonoFontBig, 380, 590, "LOAD GAME");
-        subtitleTextView = new TextView(myGdxGame.arialFont, 430, 528, "SELECT SAVE SLOT");
+        titleTextView    = new TextView(myGdxGame.xanmonoFontBig, 380, 590, LocalizationManager.get("loadgame.title"));
+        subtitleTextView = new TextView(myGdxGame.arialFont, 430, 528, LocalizationManager.get("loadgame.subtitle"));
 
         returnButton = new ButtonView(
             480, 80, 160, 50,

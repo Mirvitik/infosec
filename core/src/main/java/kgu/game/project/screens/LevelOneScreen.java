@@ -153,9 +153,10 @@ public class LevelOneScreen extends ScreenAdapter {
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
-        touchpadView = new TouchpadView(120, 120);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
+        touchpadView = new TouchpadView(140, 140);
+
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
         if (isDesktop) {

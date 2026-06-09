@@ -180,9 +180,10 @@ public class LevelFourScreen extends ScreenAdapter {
         liveView = new LiveView(305, 1215);
 
         pauseButton = new ButtonView(1200, 742, 46, 54, GameResources.PAUSE_IMG_PATH);
-        touchpadView = new TouchpadView(100, 100);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
+        touchpadView = new TouchpadView(140, 140);
+
+        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
         continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);

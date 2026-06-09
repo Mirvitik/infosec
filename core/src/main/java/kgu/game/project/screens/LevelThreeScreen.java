@@ -154,9 +154,10 @@ public class LevelThreeScreen extends ScreenAdapter {
         plusTrigger = new HelloTrigger(320, 260, 64, 64, GameResources.PLUS_BUTTON, myGdxGame.world, GameSettings.SENSOR_PLUS_BIT);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
-        touchpadView = new TouchpadView(120, 120);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
+        touchpadView = new TouchpadView(140, 140);
+
+        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
         if (isDesktop) {

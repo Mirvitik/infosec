@@ -70,7 +70,6 @@ public class EndScreen extends ScreenAdapter {
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
     ImageView message;
-    ComputerObject asciiTable;
     private TiledMapManager tiledMapManager;
 
     DialogView dialog;
@@ -99,9 +98,9 @@ public class EndScreen extends ScreenAdapter {
     PasswordInputView passwordInput;
     boolean isDesktop;
     private boolean wasKKeyPressed = false;
-    BatteryObject mail1; // фишинговое
-    BatteryObject mail2; // фишинговое
-    BatteryObject mail3; // настоящее
+    BatteryObject mail1;
+    BatteryObject mail2;
+    BatteryObject mail3;
     boolean isNearMail1, isNearMail2, isNearMail3;
     boolean toDrawMail = false;
     String currentMailText = "";
@@ -111,7 +110,6 @@ public class EndScreen extends ScreenAdapter {
     public EndScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
         myGdxGame.world.getBodies(bodies);
-        asciiTable = new ComputerObject(12, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.ASCII_SPRITE_PATH, myGdxGame.world);
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
             myGdxGame.setScreen(new TheEndScreen(myGdxGame));
@@ -135,7 +133,7 @@ public class EndScreen extends ScreenAdapter {
         int frameWidth = 32;
         int frameHeight = 32;
         heroFrames = TextureRegion.split(heroSpriteSheet, frameWidth, frameHeight);
-        actionButtonActive = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+        actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
 
@@ -143,9 +141,10 @@ public class EndScreen extends ScreenAdapter {
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
-        touchpadView = new TouchpadView(100, 100);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
+        touchpadView = new TouchpadView(140, 140);
+
+        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
         if (isDesktop) {
@@ -155,7 +154,7 @@ public class EndScreen extends ScreenAdapter {
         }
 
         continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
-        actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_IMG_PATH);
+        actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
@@ -192,6 +191,7 @@ public class EndScreen extends ScreenAdapter {
             });
 
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
+        message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
         image = new ImageView(180, 0, 1028, 720, GameResources.ASCII_PATH);
         batteryObject = new BatteryObject(8, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 440, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.END_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
@@ -255,7 +255,6 @@ public class EndScreen extends ScreenAdapter {
         }
         if (isKKeyPressed && !wasKKeyPressed) {
 
-            // Не создаем новый диалог, если уже есть открытый диалог или окно подтверждения
             if (isNearAntivirus && dialog == null && dialogNo == null) {
                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
@@ -372,7 +371,6 @@ public class EndScreen extends ScreenAdapter {
                             gameSession.pauseGame();
                         }
 
-                        // закрытие письма
                         if (toDrawMail && mailCloseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawMail = false;
                         }
@@ -385,7 +383,7 @@ public class EndScreen extends ScreenAdapter {
                             if (isNearAntivirus && dialog == null) {
                                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                    GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.ANTIVIRUS_AVATAR_IMG_PATH, "Virus");
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.VIRUS_AVATAR_IMG_PATH, "Virus");
                             } else if (isNearDoor && !toDrawPassword && dialog == null) {
                                 toDrawPassword = true;
                                 passwordInput.show();
@@ -493,7 +491,6 @@ public class EndScreen extends ScreenAdapter {
         if (isNearAntivirus) {
             message.draw(myGdxGame.batch);
         }
-        asciiTable.draw(myGdxGame.batch);
         batteryObject.draw(myGdxGame.batch);
         mail1.draw(myGdxGame.batch);
         mail2.draw(myGdxGame.batch);

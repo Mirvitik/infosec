@@ -48,7 +48,7 @@ public class NetworkLogView {
         this.attackerIp = attackerIp;
         this.onSubmitPressed = onSubmitPressed;
 
-        background = new ImageView(160, 60, 1000, 590, GameResources.BACKGROUND_WINDOW_IMG_PATH);
+        background = new ImageView(5, 60, 1200, 650, GameResources.BACKGROUND_WINDOW_IMG_PATH);
 
         logLines = new TextView[LOG_TEMPLATE.length];
         float lineY = y + height - 120f;
@@ -57,7 +57,6 @@ public class NetworkLogView {
         for (int i = 0; i < LOG_TEMPLATE.length; i++) {
             String raw = LOG_TEMPLATE[i];
             String line = raw.replace("{ATTACKER}", attackerIp);
-            // Заменяем {IP_n} на шумовые адреса
             for (int n = 1; n <= 7; n++) {
                 line = line.replace("{IP_" + n + "}", NOISE_IPS[(n - 1) % NOISE_IPS.length]);
             }

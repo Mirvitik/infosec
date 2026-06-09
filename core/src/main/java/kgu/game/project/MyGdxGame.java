@@ -54,7 +54,7 @@ public class MyGdxGame extends Game {
     public EndScreen endScreen;
     public Box2DDebugRenderer debugRenderer;
     public static BitmapFont arialWhiteFont;
-    public boolean debugMode = true;
+    public boolean debugMode = false;
     float accumulator = 0;
 
     @Override
@@ -78,7 +78,7 @@ public class MyGdxGame extends Game {
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
 
-        setScreen(menuScreen);
+        setScreen(new LevelFiveScreen(this));
     }
 
     private void initFonts() {
@@ -88,7 +88,7 @@ public class MyGdxGame extends Game {
         commonBlackFontText = FontBuilder.generate(36, Color.BLACK, GameResources.FONT_PATH_HACK_TEXT);
         commonHelpFontText = FontBuilder.generate(36, Color.GREEN, GameResources.FONT_PATH_HACK_TEXT);
         commonPixelFontText = FontBuilder.generate(20, Color.GREEN, GameResources.FONT_PATH_PIXEL);
-        commonPixelLogFontText = FontBuilder.generate(8, Color.GREEN, GameResources.FONT_PATH_PIXEL);
+        commonPixelLogFontText = FontBuilder.generate(12, Color.GREEN, GameResources.FONT_PATH_PIXEL);
         commonPixelFontGreyText = FontBuilder.generate(20, Color.GRAY, GameResources.FONT_PATH_PIXEL);
         xanmonoFont = FontBuilder.generate(20, Color.GRAY, GameResources.XANMONO_FONT_PATH);
         xanmonoFontBig = FontBuilder.generate(60, Color.WHITE, GameResources.XANMONO_FONT_PATH);

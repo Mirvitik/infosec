@@ -149,19 +149,19 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(
-            GameSettings.SCREEN_WIDTH - 80,      // x = 1200
-            GameSettings.SCREEN_HEIGHT - 60,     // y = 720 - 60 = 660
+            GameSettings.SCREEN_WIDTH - 80,
+            GameSettings.SCREEN_HEIGHT - 60,
             46, 54,
             GameResources.PAUSE_IMG_PATH
         );
 
-        touchpadView = new TouchpadView(100, 100);
+        touchpadView = new TouchpadView(140, 140);
 
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, "Pause");
+        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
         homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
         continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35,
@@ -188,12 +188,12 @@ public class LevelFiveScreen extends ScreenAdapter {
         networkComputer = new ComputerObject(
             14, 6,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
-            GameResources.ASCII_SPRITE_PATH,
+            GameResources.LOGS_IMG,
             myGdxGame.world
         );
 
         routerMessage = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
-
+        routerMessage.setSize(routerMessage.getTextureWidth() + 30, routerMessage.getTextureHeight() + 30);
         batteryObject = new BatteryObject(
             10, 6,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
@@ -208,7 +208,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         networkLogView = new NetworkLogView(
             myGdxGame,
-            180, 0, 1028, 720,
+            28, 0, 1028, 720,
             ATTACKER_IP,
             () -> {
                 ipInputActive = true;

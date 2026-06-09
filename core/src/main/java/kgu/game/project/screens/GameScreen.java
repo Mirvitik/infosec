@@ -132,9 +132,9 @@ public class GameScreen extends ScreenAdapter {
         );
         touchpadView = new TouchpadView(120, 120);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
-            350, 300,
+            GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
@@ -147,7 +147,7 @@ public class GameScreen extends ScreenAdapter {
             text = new TextView(myGdxGame.commonPixelFontText, 325, 110, LocalizationManager.get("game.login_hint"));
         }
         continueButton = new ButtonView(
-            GameSettings.SCREEN_WIDTH - 550, 300,
+            GameSettings.SCREEN_WIDTH - 750, 250,
             200, 35,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
@@ -164,10 +164,10 @@ public class GameScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.home")
         );
-        talksplayer.add("Какой хороший день, чтобы поиграть в комп!\nМне надо подойти к нему и включить его");
+        talksplayer.add(LocalizationManager.get("player.talk.start"));
         dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-            GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, "Игрок");
+            GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
         gameSession.pauseGame();
     }
 

@@ -72,9 +72,9 @@ public class MenuScreen extends ScreenAdapter {
                     GameResources.STORY_TELLING_3_IMG_PATH
                 };
                 String[] texts = {
-                    "Недвано-недавно был один мальчик,\nкоторому родители купили компьютер.\nОн очень любил своё устройство, берёг его\nот сыновей маминой подруги и пятиюродных братьев.",
-                    "В то же самое время по Интернету гулял вирус,\nрассылающийся с помощью фишинговых писем.\nВирус заражал устройство за устройством.\nШифровал данные на компьютерах.",
-                    "Но это не касалось нашего добряка. До одного момента..."
+                    LocalizationManager.get("story.intro.0"),
+                    LocalizationManager.get("story.intro.1"),
+                    LocalizationManager.get("story.intro.2")
                 };
                 myGdxGame.audioManager.backgroundMusic.stop();
                 myGdxGame.audioManager.storyMusic.play();
