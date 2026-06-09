@@ -68,13 +68,11 @@ public class LevelTwoScreen extends ScreenAdapter {
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
     ImageView message;
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
     DialogView dialog;
     DialogView dialogNo;
-    private Vector3 touch2;
     public boolean isNearComputer = false;
 
-    private boolean isTouchingUI = false;
     DialogOkNoView dialogOkNoView;
     ContactManager contactManager;
     TextView text;
@@ -108,7 +106,6 @@ public class LevelTwoScreen extends ScreenAdapter {
     boolean isDesktop;
     Array<String> talksplayer;
     private boolean wasKKeyPressed = false;
-    private boolean dialogDraw = false;
 
     public LevelTwoScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
@@ -253,7 +250,7 @@ public class LevelTwoScreen extends ScreenAdapter {
         alphabet.setText(alpha);
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
-        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "XKXGNCHTCPVG\nСдвиг = 2");
+        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "XKXGNCHTCPEG\nСдвиг = 2");
         arrow = new ImageView(220, 530, 32, 32, GameResources.ARROW_IMG);
         batteryObject = new BatteryObject(10, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 510, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.ROME_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
@@ -269,11 +266,6 @@ public class LevelTwoScreen extends ScreenAdapter {
             LocalizationManager.get("player.name"));
     }
 
-    public LevelTwoScreen(MyGdxGame myGdxGame, float x, float y) {
-        this(myGdxGame);
-        heroX = x;
-        heroY = y;
-    }
 
     @Override
     public void show() {
@@ -362,7 +354,6 @@ public class LevelTwoScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
             }
             if (cnt != 2 && cnt != -2) {
                 num -= cnt;
@@ -393,7 +384,6 @@ public class LevelTwoScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
@@ -452,7 +442,7 @@ public class LevelTwoScreen extends ScreenAdapter {
                     }
                 } else {
                     if (isTouched) {
-                        isTouchingUI = false;
+                        boolean isTouchingUI = false;
                         if (dialogOkNoView != null) {
                             if (dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                                 dialogOkNoView.dispose();
@@ -539,6 +529,7 @@ public class LevelTwoScreen extends ScreenAdapter {
                     toDrawPassword = false;
                 }
                 if (toDrawPassword) {
+                    assert passwordInput != null;
                     passwordInput.update(delta);
                     passwordInput.handleTouch();
                 }
@@ -663,7 +654,7 @@ public class LevelTwoScreen extends ScreenAdapter {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
-        heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2 - 100;
+        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 100;
         heroY = (heroY != -1f) ? heroY : 250;
         heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
         createMapBorders();
