@@ -99,6 +99,7 @@ public class LevelOneScreen extends ScreenAdapter {
     boolean isDesktop;
     Array talksplayer = new Array<>();
     private boolean wasKKeyPressed = false;
+    ImageView pauseBackground;
 
     public LevelOneScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
@@ -156,9 +157,10 @@ public class LevelOneScreen extends ScreenAdapter {
         tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_ONE_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
-        pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
+        pauseButton = new ButtonView(1200, 658, 64, 64, GameResources.PAUSE_IMG_PATH);
 
         touchpadView = new TouchpadView(140, 140);
+        pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
 
         pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
@@ -554,6 +556,7 @@ public class LevelOneScreen extends ScreenAdapter {
         }
         if (gameSession.state == GameState.PAUSED) {
             if (!toDrawPassword) {
+                pauseBackground.draw(myGdxGame.batch);
                 pauseTextView.draw(myGdxGame.batch);
                 homeButton.draw(myGdxGame.batch);
                 continueButton.draw(myGdxGame.batch);

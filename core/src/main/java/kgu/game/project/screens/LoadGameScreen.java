@@ -148,7 +148,10 @@ public class LoadGameScreen extends ScreenAdapter {
                         String.valueOf(card.timestamp)
                     );
                     int level = Integer.parseInt(save.get(0).toString());
-
+                    myGdxGame.audioManager.menuMusic.stop();
+                    if (MemoryManager.loadIsMusicOn()) {
+                        myGdxGame.audioManager.backgroundMusic.play();
+                    }
                     switch (level) {
                         case 1:
                             myGdxGame.setScreen(new LevelOneScreen(myGdxGame));
@@ -209,7 +212,7 @@ public class LoadGameScreen extends ScreenAdapter {
         for (int level : sortedLevels) {
             long date = latestByLevel.get(level);
             float cx = startX + (cnt % 2) * gapX;
-            float cy = startY - ((float) cnt / 2) * gapY;
+            float cy = startY - (cnt / 2) * gapY;
 
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;

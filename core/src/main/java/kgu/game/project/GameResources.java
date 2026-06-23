@@ -10,6 +10,8 @@ public class GameResources {
     public static final String BATTERY_BUTTON_IMG_PATH = "textures/battery.png";
     public static final String SAVE_BACKGROUND_IMG_PATH = "textures/savebackground.png";
     public static final String DOOR_IMG_PATH = "textures/door.png";
+    public static final String PAUSE_BACKGROUND = "textures/pausebackground.png";
+    public static final String MENU_SOUND = "sounds/menusound.wav";
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
     public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
     public static final String STORY_TELLING_SPQR = "textures/storytellingspqr.png";

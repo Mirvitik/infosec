@@ -67,8 +67,8 @@ public class GameScreen extends ScreenAdapter {
     Body up_wall;
     Body left_wall;
     Body right_wall;
-    ImageView message;
-    private TiledMapManager tiledMapManager;
+    ImageView pauseBackground;
+    private final TiledMapManager tiledMapManager;
     private Vector3 touch2;
     public boolean isNearComputer = false;
 
@@ -126,10 +126,11 @@ public class GameScreen extends ScreenAdapter {
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(
             1200, 658,
-            46, 54,
+            64, 64,
             GameResources.PAUSE_IMG_PATH
         );
         touchpadView = new TouchpadView(120, 120);
+        pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
 
         pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
@@ -254,9 +255,6 @@ public class GameScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(
-                new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
-            );
-            touch2 = myGdxGame.camera.unproject(
                 new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
             );
         }
@@ -395,6 +393,7 @@ public class GameScreen extends ScreenAdapter {
         myGdxGame.batch.begin();
         if (gameSession.state == GameState.PAUSED) {
             if (!isDialogOn) {
+                pauseBackground.draw(myGdxGame.batch);
                 pauseTextView.draw(myGdxGame.batch);
                 homeButton.draw(myGdxGame.batch);
                 continueButton.draw(myGdxGame.batch);

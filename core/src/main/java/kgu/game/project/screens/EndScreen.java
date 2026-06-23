@@ -82,7 +82,6 @@ public class EndScreen extends ScreenAdapter {
     TextView text;
     Array<String> talks;
     Array<String> talks2;
-    int ok_times = 1;
     Boolean isNearAntivirus = false;
     boolean toDraw = false;
     boolean toDrawSave = false;
@@ -140,7 +139,7 @@ public class EndScreen extends ScreenAdapter {
         tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_END_PATH, myGdxGame.camera, myGdxGame.batch, 4);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
-        pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
+        pauseButton = new ButtonView(1200, 658, 64, 64, GameResources.PAUSE_IMG_PATH);
         pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
@@ -407,7 +406,7 @@ public class EndScreen extends ScreenAdapter {
                                 } else if (isNearMail3) {
                                     currentMailText = "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.";
                                 }
-                                mailTextView = new TextView(myGdxGame.arialFont, 200, 300, currentMailText);
+                                mailTextView = new TextView(MyGdxGame.arialFont, 200, 300, currentMailText);
                             }
                         }
 
@@ -447,6 +446,7 @@ public class EndScreen extends ScreenAdapter {
                     toDrawPassword = false;
                 }
                 if (toDrawPassword) {
+                    assert passwordInput != null;
                     passwordInput.update(delta);
                     passwordInput.handleTouch();
                 }

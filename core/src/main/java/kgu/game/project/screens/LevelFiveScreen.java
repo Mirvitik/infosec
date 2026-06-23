@@ -62,6 +62,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     TouchpadView touchpadView;
 
     TextView pauseTextView;
+    ImageView pauseBackground;
     ButtonView homeButton;
     ButtonView continueButton;
 
@@ -150,7 +151,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         pauseButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 80,
             GameSettings.SCREEN_HEIGHT - 60,
-            46, 54,
+            64, 64,
             GameResources.PAUSE_IMG_PATH
         );
 
@@ -159,7 +160,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
-
+        pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
         pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
@@ -511,6 +512,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         if (gameSession.state == GameState.PAUSED) {
             if (!ipInputActive) {
+                pauseBackground.draw(myGdxGame.batch);
                 pauseTextView.draw(myGdxGame.batch);
                 homeButton.draw(myGdxGame.batch);
                 continueButton.draw(myGdxGame.batch);

@@ -94,6 +94,12 @@ public class SettingsScreen extends ScreenAdapter {
         languageSettingView.draw(myGdxGame.batch);
 
         myGdxGame.batch.end();
+        if (!MemoryManager.loadIsMusicOn()) {
+            myGdxGame.audioManager.menuMusic.stop();
+        } else {
+            myGdxGame.audioManager.backgroundMusic.stop();
+            myGdxGame.audioManager.menuMusic.play();
+        }
     }
 
     void handleInput() {
@@ -130,6 +136,7 @@ public class SettingsScreen extends ScreenAdapter {
             refreshAllTexts();
         }
     }
+
     private void refreshAllTexts() {
         titleTextView.setText(LocalizationManager.get("settings.title"));
         difficultSettingView.setText(LocalizationManager.get("settings.difficulty") + MemoryManager.loadDifficulty());

@@ -30,7 +30,6 @@ public class MenuScreen extends ScreenAdapter {
 
     public MenuScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
-        float num = 250f;
         backgroundView = new MovingBackgroundView(GameResources.BACKGROUND_IMG_PATH);
         image = new ImageView(800, (float) GameSettings.SCREEN_HEIGHT / 2 - 250f, GameResources.MASK_IMG_PATH);
         titleView = new TextView(myGdxGame.largeWhiteFont, 210, 560, "3xpl01T");
@@ -77,8 +76,8 @@ public class MenuScreen extends ScreenAdapter {
                     LocalizationManager.get("story.intro.1"),
                     LocalizationManager.get("story.intro.2")
                 };
-                myGdxGame.audioManager.backgroundMusic.stop();
-                if (MemoryManager.loadIsMusicOn()){
+                myGdxGame.audioManager.menuMusic.stop();
+                if (MemoryManager.loadIsMusicOn()) {
                     myGdxGame.audioManager.storyMusic.play();
                 }
 
@@ -87,12 +86,13 @@ public class MenuScreen extends ScreenAdapter {
                     myGdxGame.gameScreen = new GameScreen(myGdxGame);
                     myGdxGame.setScreen(myGdxGame.gameScreen);
                     myGdxGame.audioManager.storyMusic.stop();
-                    if (MemoryManager.loadIsMusicOn()){
+                    if (MemoryManager.loadIsMusicOn()) {
                         myGdxGame.audioManager.backgroundMusic.play();
                     }
                 }));
             }
             if (loadGameButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                myGdxGame.loadScreen = new LoadGameScreen(myGdxGame);
                 myGdxGame.setScreen(myGdxGame.loadScreen);
             }
             if (exitButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
@@ -138,6 +138,10 @@ public class MenuScreen extends ScreenAdapter {
     public void show() {
         myGdxGame.uiCamera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
         myGdxGame.uiCamera.update();
+        myGdxGame.audioManager.backgroundMusic.stop();
+        if (MemoryManager.loadIsMusicOn()) {
+            myGdxGame.audioManager.menuMusic.play();
+        }
     }
 
     private void refreshAllTexts() {
