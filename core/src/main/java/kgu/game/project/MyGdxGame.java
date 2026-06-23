@@ -80,7 +80,7 @@ public class MyGdxGame extends Game {
         debugRenderer = new Box2DDebugRenderer();
         levelFiveScreen = new LevelFiveScreen(this);
 
-        setScreen(levelFiveScreen);
+        setScreen(menuScreen);
     }
 
     private void initFonts() {
