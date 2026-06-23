@@ -2,14 +2,12 @@ package kgu.game.project.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import kgu.game.project.FontBuilder;
 import kgu.game.project.GameResources;
@@ -22,8 +20,6 @@ public class HackScreen extends ScreenAdapter {
     private static final float VIEW_H = 720f;
 
     private final MyGdxGame myGdxGame;
-    private final OrthographicCamera camera;
-    private final FitViewport viewport;
     private final ShapeRenderer shapes;
     private final BitmapFont font;
     private final BitmapFont fontSmall;
@@ -57,25 +53,6 @@ public class HackScreen extends ScreenAdapter {
     private static class CodeLine {
         String text;
         float x, y, alpha, speed;
-        Color color;
-
-        CodeLine() {
-            String[] pool = {
-                "0xDEADBEEF", "OVERFLOW->0xFFFF", "root# ./exploit",
-                "KERNEL PANIC", "decrypt(RSA)", "PAYLOAD INJECTED",
-                "SIGSEGV", "fork() = -1", "RET 0x41414141",
-                "iptables -F", "chmod 777 /etc", "SSH tunnel OK",
-                "NOP SLED x90", "TRACE 0x1337", "core dumped"
-            };
-            text = pool[MathUtils.random(pool.length - 1)];
-            x = MathUtils.random(VIEW_W * 0.65f);
-            y = MathUtils.random(VIEW_H);
-            alpha = 0.55f + MathUtils.random(0.45f);
-            speed = 25f + MathUtils.random(90f);
-            color = MathUtils.random() > 0.75f ? Color.CYAN
-                : MathUtils.random() > 0.5f ? Color.LIME
-                : Color.GREEN;
-        }
     }
 
     private final Array<CodeLine> codeLines = new Array<>();
@@ -89,20 +66,23 @@ public class HackScreen extends ScreenAdapter {
     public HackScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
 
-        camera = new OrthographicCamera();
-        viewport = new FitViewport(VIEW_W, VIEW_H, camera);
-        viewport.apply(true);
+        myGdxGame.resetCameras();
+
         shapes = new ShapeRenderer();
         font = FontBuilder.generate(40, Color.GREEN, GameResources.FONT_PATH_PIXEL);
         fontSmall = FontBuilder.generate(22, Color.GREEN, GameResources.FONT_PATH_PIXEL);
 
         for (int i = 0; i < noiseX.length; i++) randomizeNoise(i);
         myGdxGame.audioManager.backgroundMusic.stop();
-        if (MemoryManager.loadIsMusicOn()){
+        if (MemoryManager.loadIsMusicOn()) {
             myGdxGame.audioManager.hacked.play();
         }
     }
 
+    @Override
+    public void show() {
+        myGdxGame.resetCameras();
+    }
 
     @Override
     public void render(float delta) {
@@ -112,20 +92,25 @@ public class HackScreen extends ScreenAdapter {
         scanLine += delta * 220f;
         if (scanLine > VIEW_H) {
             myGdxGame.audioManager.hacked.stop();
-            if (MemoryManager.loadIsMusicOn()){
+            if (MemoryManager.loadIsMusicOn()) {
                 myGdxGame.audioManager.backgroundMusic.play();
             }
+
+            myGdxGame.resetCameras();
+
             myGdxGame.setScreen(new LevelOneScreen(myGdxGame));
+            return;
         }
 
         updateGlitches(delta);
         updateCodeLines(delta);
         updateNoise();
 
+        myGdxGame.camera.position.set(VIEW_W / 2f, VIEW_H / 2f, 0);
+        myGdxGame.camera.update();
 
-        camera.update();
-        shapes.setProjectionMatrix(camera.combined);
-        myGdxGame.batch.setProjectionMatrix(camera.combined);
+        shapes.setProjectionMatrix(myGdxGame.camera.combined);
+        myGdxGame.batch.setProjectionMatrix(myGdxGame.camera.combined);
 
         myGdxGame.batch.begin();
         if (screenshotRegion != null) {
@@ -220,7 +205,6 @@ public class HackScreen extends ScreenAdapter {
         shapes.setColor(0f, 0.05f, 0f, 0.45f);
         shapes.rect(0, 0, VIEW_W, VIEW_H);
 
-
         for (int i = 0; i < noiseX.length; i++) {
             shapes.setColor(250f, 0f, 0.3f, noiseA[i]);
             shapes.rect(noiseX[i], 0, noiseW[i], VIEW_H);
@@ -241,11 +225,6 @@ public class HackScreen extends ScreenAdapter {
         }
     }
 
-
-    @Override
-    public void resize(int w, int h) {
-        viewport.update(w, h, true);
-    }
 
     @Override
     public void dispose() {

@@ -32,11 +32,11 @@ public class DialogView extends View {
         this.fon = new Texture(GameResources.DIALOG_FON_IMG_PATH);
         this.width = width;
         this.height = height;
-        this.text = talks.get(cnt).toString();
-        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
+        this.text = talks.get(cnt);
+        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
 
 
-        this.bitmapFont = myGdxGame.arialFont;
+        this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
         this.talks = talks;
         avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);
@@ -47,10 +47,10 @@ public class DialogView extends View {
         this.fon = new Texture(GameResources.DIALOG_FON_IMG_PATH);
         this.width = width;
         this.height = height;
-        this.text = talks.get(cnt).toString();
-        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
+        this.text = talks.get(cnt);
+        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
 
-        this.bitmapFont = myGdxGame.arialFont;
+        this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
         this.talks = talks;
         avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);
@@ -73,11 +73,11 @@ public class DialogView extends View {
         if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             cnt += 1;
             if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && (cnt < talks.size - 1) && Gdx.input.justTouched() && cnt < talks.size) {
-                this.text = talks.get(cnt).toString();
+                this.text = talks.get(cnt);
             }
         }
         avatar.draw(batch);
-        myGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
+        MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
     }
 
     public boolean isToDispose() {

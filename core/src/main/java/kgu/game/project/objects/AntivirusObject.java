@@ -22,8 +22,8 @@ public class AntivirusObject extends GameObject {
         if (texture == null) return;
 
         batch.draw(texture,
-            getX() - width / 2,
-            getY() - height / 2,
+            getX() - (float) width / 2,
+            getY() - (float) height / 2,
             width, height);
     }
 

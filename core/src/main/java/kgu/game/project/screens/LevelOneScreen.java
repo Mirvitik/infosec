@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
@@ -284,11 +285,7 @@ public class LevelOneScreen extends ScreenAdapter {
                     myGdxGame.audioManager.saveSound.play();
                 }
             } else if (isNearComputer && dialog == null && dialogOkNoView == null) {
-                if (toDraw) {
-                    toDraw = false;
-                } else {
-                    toDraw = true;
-                }
+                toDraw = !toDraw;
             }
         }
         wasKKeyPressed = isKKeyPressed;
@@ -296,7 +293,14 @@ public class LevelOneScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        myGdxGame.resetCameras();
+
         restartGame();
+        if (heroObject != null) {
+            myGdxGame.camera.position.set(heroObject.getX(), heroObject.getY(), 0);
+            myGdxGame.camera.update();
+        }
+
         Gdx.input.setInputProcessor(null);
     }
 
@@ -305,7 +309,7 @@ public class LevelOneScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
             updateTrash();
             updateBullets();
@@ -484,6 +488,7 @@ public class LevelOneScreen extends ScreenAdapter {
                     toDrawPassword = false;
                 }
                 if (toDrawPassword) {
+                    assert passwordInput != null;
                     passwordInput.update(delta);
                     passwordInput.handleTouch();
                 }
@@ -627,7 +632,7 @@ public class LevelOneScreen extends ScreenAdapter {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
-        heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2 - 200;
+        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200;
         heroY = (heroY != -1f) ? heroY : 150;
         heroObject = new AnimatedHeroObject((int) heroX + 200, (int) heroY + 200, 128, 128, heroFrames, myGdxGame.world);
         bulletArray.clear();
@@ -663,4 +668,5 @@ public class LevelOneScreen extends ScreenAdapter {
         body.createFixture(shape, 0);
         shape.dispose();
     }
+
 }

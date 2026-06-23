@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
@@ -33,7 +34,6 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
@@ -65,28 +65,14 @@ public class LevelFourScreen extends ScreenAdapter {
     ArrayList<TrashObject> trashArray;
     ArrayList<BulletObject> bulletArray;
 
-    private TextView encryptedCodeView;
-    private TextView currentKeyView;
-    private TextView hintView;
-    private ButtonView keyIncreaseButton;
-    private ButtonView keyDecreaseButton;
-    private ButtonView submitCodeButton;
-    private ButtonView nextChallengeButton;
-    private int currentChallengeIndex = 0;
-    private int currentKey = 0;
-    private boolean isCipherGameActive = false;
-    private String targetEncryptedCode = "";
-    private String expectedDecryptedCode = "";
-    private int scoreForLevel = 0;
-    private int totalChallenges = 5;
-
-    private String[] challenges = {
-        "WKLV", "LV", "D", "YLJHQHUH", "FLSKHU"
-    };
-
-    private String[] challengeDecrypted = {
-        "THIS", "IS", "A", "VIGENERE", "CIPHER"
-    };
+    private final TextView encryptedCodeView;
+    private final TextView currentKeyView;
+    private final TextView hintView;
+    private final ButtonView keyIncreaseButton;
+    private final ButtonView keyDecreaseButton;
+    private final ButtonView submitCodeButton;
+    private final ButtonView nextChallengeButton;
+    private final boolean isCipherGameActive = false;
 
     ImageView topBlackoutView;
     LiveView liveView;
@@ -106,13 +92,11 @@ public class LevelFourScreen extends ScreenAdapter {
     AntivirusObject antiVirus;
     ImageView message;
     ComputerObject asciiTable;
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
     DialogView dialog;
     DialogView dialogNo;
-    private Vector3 touch2;
     public boolean isNearComputer = false;
 
-    private boolean isTouchingUI = false;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
@@ -183,9 +167,21 @@ public class LevelFourScreen extends ScreenAdapter {
 
         touchpadView = new TouchpadView(140, 140);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
@@ -313,7 +309,7 @@ public class LevelFourScreen extends ScreenAdapter {
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
         } else {
-            text = new TextView(myGdxGame.commonPixelFontText, 250, 150,  LocalizationManager.get("pressGreen"));
+            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }
     }
 
@@ -343,40 +339,6 @@ public class LevelFourScreen extends ScreenAdapter {
         return result.toString();
     }
 
-
-
-
-
-    private void updateDecryptedPreview() {
-        String decrypted = decryptVigenere(targetEncryptedCode, currentKey);
-        hintView.setText("Preview: " + decrypted + " (Key: " + currentKey + ")");
-    }
-
-    private void submitAnswer() {
-        String userDecrypted = decryptVigenere(targetEncryptedCode, currentKey);
-        if (userDecrypted.equals(expectedDecryptedCode)) {
-            scoreForLevel++;
-            if (currentChallengeIndex + 1 < totalChallenges) {
-                currentChallengeIndex++;
-            } else {
-                completeCipherGame();
-            }
-        } else {
-            hintView.setText("Wrong! Try again. Expected: " + expectedDecryptedCode);
-        }
-    }
-
-    private void completeCipherGame() {
-        isCipherGameActive = false;
-        if (scoreForLevel == totalChallenges) {
-            hintView.setText("Congratulations! You've mastered the Vigenere cipher! +10 points!");
-        } else {
-            hintView.setText("Game completed! Score: " + scoreForLevel + "/" + totalChallenges);
-        }
-        submitCodeButton.hide();
-        nextChallengeButton.hide();
-        encryptedCodeView.setText("Cipher game completed!");
-    }
 
     private void handleKeyboardInput() {
         Vector2 direction = new Vector2(0, 0);
@@ -421,8 +383,7 @@ public class LevelFourScreen extends ScreenAdapter {
             dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                 GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
                 GameSettings.SCREEN_HEIGHT / 4f, talks);
-        }
-        else if (isKKeyPressed && !wasKKeyPressed && isNearComputer && !toDraw && !isCipherGameActive && dialog == null && dialogNo == null) {
+        } else if (isKKeyPressed && !wasKKeyPressed && isNearComputer && !toDraw && !isCipherGameActive && dialog == null && dialogNo == null) {
             toDraw = true;
         } else if (isKKeyPressed && !wasKKeyPressed && isNearComputer && toDraw && dialog == null && dialogNo == null) {
             toDraw = false;
@@ -454,7 +415,7 @@ public class LevelFourScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
             updateTrash();
             updateBullets();
@@ -477,7 +438,6 @@ public class LevelFourScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
@@ -507,30 +467,13 @@ public class LevelFourScreen extends ScreenAdapter {
                     handleDesktopAction();
 
 
-
-                    if (isCipherGameActive) {
-                        if (isTouched && submitCodeButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            submitAnswer();
-                        }
-                        if (isTouched && keyIncreaseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            currentKey++;
-                            if (currentKey > 25) currentKey = 0;
-                            updateDecryptedPreview();
-                        }
-                        if (isTouched && keyDecreaseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            currentKey--;
-                            if (currentKey < 0) currentKey = 25;
-                            updateDecryptedPreview();
-                        }
-                    }
-
                     if (toDrawSave && isTouched && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         MemoryManager.saveGameState(4, heroObject.getX(), heroObject.getY());
                         toDrawSave = false;
                     }
                 } else {
                     if (isTouched) {
-                        isTouchingUI = false;
+                        boolean isTouchingUI = false;
 
 
                         if (dialogNo != null) {
@@ -572,22 +515,6 @@ public class LevelFourScreen extends ScreenAdapter {
                         }
 
 
-                        if (isCipherGameActive) {
-                            if (submitCodeButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                                submitAnswer();
-                            }
-                            if (keyIncreaseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                                currentKey++;
-                                if (currentKey > 25) currentKey = 0;
-                                updateDecryptedPreview();
-                            }
-                            if (keyDecreaseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                                currentKey--;
-                                if (currentKey < 0) currentKey = 25;
-                                updateDecryptedPreview();
-                            }
-                        }
-
                         if (isNearBattery && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawSave = true;
                             if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
@@ -623,12 +550,12 @@ public class LevelFourScreen extends ScreenAdapter {
                 break;
 
             case PAUSED:
-                // без изменений
                 if (passwordInput != null && !passwordInput.isVisible() && toDrawPassword) {
                     gameSession.resumeGame();
                     toDrawPassword = false;
                 }
                 if (toDrawPassword) {
+                    assert passwordInput != null;
                     passwordInput.update(delta);
                     passwordInput.handleTouch();
                 }
@@ -788,7 +715,7 @@ public class LevelFourScreen extends ScreenAdapter {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
-        heroX = (heroX != -1f) ? heroX : GameSettings.SCREEN_WIDTH / 2 - 200;
+        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200;
         heroY = (heroY != -1f) ? heroY : 150;
         heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
         bulletArray.clear();

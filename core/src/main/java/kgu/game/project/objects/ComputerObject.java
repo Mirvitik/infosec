@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-import java.util.Vector;
 
 import kgu.game.project.GameSettings;
 
@@ -34,6 +33,7 @@ public class ComputerObject extends GameObject {
         body.setType(BodyDef.BodyType.StaticBody);
         body.setUserData(this);
     }
+
     public ComputerObject(
         float x,
         float y,

@@ -28,25 +28,13 @@ public class DialogOkNoView extends View {
         this.width = width;
         this.height = height;
         this.text = text;
-        this.okButton = new ButtonView(width + 160, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.yes"));
-        this.noButton = new ButtonView(x + 20, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
+        this.okButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.yes"));
+        this.noButton = new ButtonView(x + 20, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
         this.bitmapFont = FontBuilder.generate(20, Color.BLACK, "fonts/arialmt.ttf");
         this.myGdxGame = myGdxGame;
         avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);
     }
 
-    public DialogOkNoView(MyGdxGame myGdxGame, float x, float y, float width, float height, String text, String image_path) {
-        super(x, y, width, height);
-        this.fon = new Texture(GameResources.DIALOG_FON_IMG_PATH);
-        this.width = width;
-        this.height = height;
-        this.text = text;
-        this.okButton = new ButtonView(width + 160, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.yes"));
-        this.noButton = new ButtonView(x + 20, y + 110, 90, 40, myGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
-        this.bitmapFont = FontBuilder.generate(20, Color.BLACK, "fonts/arialmt.ttf");
-        this.myGdxGame = myGdxGame;
-        avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);
-    }
 
     @Override
     public void draw(SpriteBatch batch) {
@@ -60,7 +48,7 @@ public class DialogOkNoView extends View {
         this.okButton.draw(myGdxGame.batch);
         this.noButton.draw(myGdxGame.batch);
         avatar.draw(batch);
-        myGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
+        MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
     }
 
     @Override

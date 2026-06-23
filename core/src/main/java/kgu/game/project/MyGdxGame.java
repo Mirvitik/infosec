@@ -51,6 +51,8 @@ public class MyGdxGame extends Game {
     public LevelOneScreen levelOneScreen;
     public LevelThreeScreen levelThreeScreen;
     public LevelFourScreen levelFourScreen;
+    public LevelFiveScreen levelFiveScreen;
+    public EndScreen endScreen;
     public Box2DDebugRenderer debugRenderer;
     public static BitmapFont arialWhiteFont;
     public boolean debugMode = false;
@@ -76,8 +78,9 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
+        levelFiveScreen = new LevelFiveScreen(this);
 
-        setScreen(menuScreen);
+        setScreen(levelFiveScreen);
     }
 
     private void initFonts() {
@@ -128,5 +131,13 @@ public class MyGdxGame extends Game {
             accumulator -= STEP_TIME;
             world.step(STEP_TIME, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
         }
+    }
+
+    public void resetCameras() {
+        camera.position.set(SCREEN_WIDTH / 2f, SCREEN_HEIGHT / 2f, 0);
+        camera.update();
+
+        uiCamera.position.set(SCREEN_WIDTH / 2f, SCREEN_HEIGHT / 2f, 0);
+        uiCamera.update();
     }
 }

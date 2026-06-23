@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.Objects;
+
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
 import kgu.game.project.GameSettings;
@@ -164,7 +166,13 @@ public class LevelThreeScreen extends ScreenAdapter {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }
 
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
@@ -232,7 +240,6 @@ public class LevelThreeScreen extends ScreenAdapter {
             GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
 
     }
-
 
 
     @Override
@@ -321,7 +328,7 @@ public class LevelThreeScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
             if (cnt != 2 && cnt != -2) {
                 num -= cnt;
@@ -463,6 +470,7 @@ public class LevelThreeScreen extends ScreenAdapter {
                     toDrawPassword = false;
                 }
                 if (toDrawPassword) {
+                    assert passwordInput != null;
                     passwordInput.update(delta);
                     passwordInput.handleTouch();
                 }

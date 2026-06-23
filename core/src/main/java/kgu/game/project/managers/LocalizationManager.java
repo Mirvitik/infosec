@@ -130,8 +130,8 @@ public class LocalizationManager {
             "Я заразил твой компьютер, чтобы переслать\nфишинговые письма твоим контактам!");
         add("talkVirus.3", "But I see\n" +
                 "that you have a decent understanding of cybersecurity.",
-            "Но я вижу" +
-                "что вы неплохо разбираетесь в кибербезопасности");
+            "Но я вижу," +
+                " что вы неплохо разбираетесь в кибербезопасности");
         add("talkVirus.4", "Your antivirus has been updated\n" +
                 "and almost defeated me\n" +
                 "while you were studying.\n" +

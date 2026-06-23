@@ -25,13 +25,12 @@ public class ComputerScreen extends ScreenAdapter {
 
     ImageView fullBlackoutView;
 
-    private boolean isNearComputer = false;
 
     ArrayList<IconView> iconsArray;
     private ImageView image;
     private DraggableWindow mailWindow;
     private ImageView os_icon;
-    private TextView menu_text;
+    private final TextView menu_text;
     ButtonView mail;
 
     public ComputerScreen(MyGdxGame myGdxGame) {

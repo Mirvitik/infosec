@@ -141,11 +141,23 @@ public class EndScreen extends ScreenAdapter {
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 46, 54, GameResources.PAUSE_IMG_PATH);
-
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
         touchpadView = new TouchpadView(140, 140);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("game.pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
 
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
@@ -153,7 +165,6 @@ public class EndScreen extends ScreenAdapter {
             text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
         }
 
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
@@ -205,7 +216,6 @@ public class EndScreen extends ScreenAdapter {
         mailCloseButton = new ButtonView(900, 150, 100, 40, MyGdxGame.arialFont,
             GameResources.PASSWORD_IMG_PATH, "Close");
     }
-
 
 
     private void handleKeyboardInput() {
@@ -261,7 +271,7 @@ public class EndScreen extends ScreenAdapter {
                 gameSession.pauseGame();
             } else if (isNearBattery && !toDrawSave && dialog == null) {
                 toDrawSave = true;
-                if (MemoryManager.loadIsSoundOn()){
+                if (MemoryManager.loadIsSoundOn()) {
                     myGdxGame.audioManager.saveSound.play();
                 }
             } else if (isNearComputer && dialog == null) {
@@ -383,7 +393,7 @@ public class EndScreen extends ScreenAdapter {
                                 gameSession.pauseGame();
                             } else if (isNearBattery && !toDrawSave && dialog == null) {
                                 toDrawSave = true;
-                                if (MemoryManager.loadIsSoundOn()){
+                                if (MemoryManager.loadIsSoundOn()) {
                                     myGdxGame.audioManager.saveSound.play();
                                 }
                             } else if (isNearComputer && dialog == null) {

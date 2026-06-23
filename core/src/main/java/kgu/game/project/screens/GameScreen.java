@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
@@ -29,7 +29,6 @@ import kgu.game.project.components.LiveView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.TextView;
 import kgu.game.project.components.TouchpadView;
-import kgu.game.project.managers.AudioManager;
 import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.AntivirusObject;
@@ -181,7 +180,7 @@ public class GameScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
 
             myGdxGame.camera.position.set(
@@ -338,7 +337,7 @@ public class GameScreen extends ScreenAdapter {
                 }
                 if (isTouched) {
                     if (isDialogOn) {
-                        if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             dialog.addCnt();
                             if (dialog.getCnt() >= talksplayer.size) {
                                 dialog.dispose();
@@ -501,7 +500,7 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    private Body createWall(
+    private void createWall(
         float x,
         float y,
         float width,
@@ -524,6 +523,5 @@ public class GameScreen extends ScreenAdapter {
         body.createFixture(fixtureDef);
 
         shape.dispose();
-        return body;
     }
 }

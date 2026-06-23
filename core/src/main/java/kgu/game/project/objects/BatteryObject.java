@@ -6,8 +6,6 @@ import static kgu.game.project.GameSettings.TILE_SIZE;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-import java.util.Vector;
-
 import kgu.game.project.GameSettings;
 
 public class BatteryObject extends GameObject {

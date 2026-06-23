@@ -32,7 +32,7 @@ public class MenuScreen extends ScreenAdapter {
         this.myGdxGame = myGdxGame;
         float num = 250f;
         backgroundView = new MovingBackgroundView(GameResources.BACKGROUND_IMG_PATH);
-        image = new ImageView(800, GameSettings.SCREEN_HEIGHT / 2 - 250f, GameResources.MASK_IMG_PATH);
+        image = new ImageView(800, (float) GameSettings.SCREEN_HEIGHT / 2 - 250f, GameResources.MASK_IMG_PATH);
         titleView = new TextView(myGdxGame.largeWhiteFont, 210, 560, "3xpl01T");
         startButtonView = new ButtonView(200, 396, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.start"));
         loadGameButtonView = new ButtonView(200, 301, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.load"));

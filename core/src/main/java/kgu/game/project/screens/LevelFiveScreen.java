@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.GameSession;
@@ -80,7 +81,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     BatteryObject batteryObject;
     BatteryObject doorDown;
 
-    private TiledMapManager tiledMapManager;
+    private final TiledMapManager tiledMapManager;
 
     DialogView dialog;
 
@@ -105,8 +106,6 @@ public class LevelFiveScreen extends ScreenAdapter {
     ContactManager contactManager;
     TextView hintText;
     TextView networkHintText;
-    private Vector3 touch2;
-    private boolean isTouchingUI = false;
     private boolean isDesktop;
     private boolean wasKKeyPressed = false;
 
@@ -161,11 +160,21 @@ public class LevelFiveScreen extends ScreenAdapter {
         actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
 
-        pauseTextView = new TextView(myGdxGame.largeWhiteFont, 525, 400, LocalizationManager.get("pause"));
-        homeButton = new ButtonView(350, 300, 200, 35, myGdxGame.commonBlackFont,
-            GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        continueButton = new ButtonView(GameSettings.SCREEN_WIDTH - 550, 300, 200, 35,
-            myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Continue");
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        homeButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 300,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.home")
+        );
+        continueButton = new ButtonView(
+            GameSettings.SCREEN_WIDTH - 750, 250,
+            200, 35,
+            myGdxGame.commonBlackFont,
+            GameResources.BUTTON_SHORT_BG_IMG_PATH,
+            LocalizationManager.get("game.continue")
+        );
 
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
@@ -325,7 +334,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
             updateTrash();
             updateBullets();
@@ -350,8 +359,6 @@ public class LevelFiveScreen extends ScreenAdapter {
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(
                 new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            touch2 = myGdxGame.camera.unproject(
-                new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
@@ -373,7 +380,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                     }
                 } else {
                     if (isTouched) {
-                        isTouchingUI = false;
+                        boolean isTouchingUI = false;
 
                         if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;

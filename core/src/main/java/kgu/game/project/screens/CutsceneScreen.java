@@ -25,14 +25,12 @@ public class CutsceneScreen extends ScreenAdapter {
     private String fullText;
     private String displayedText = "";
     private float charTimer = 0f;
-    private final float CHAR_DELAY = 0.045f;
     private int charIndex = 0;
     private boolean textComplete = false;
 
     private float lastTapTime = -1f;
-    private final float DOUBLE_TAP_INTERVAL = 0.35f;
 
-    private ButtonView nextButton;
+    private final ButtonView nextButton;
     private final Runnable onFinished;
 
     public CutsceneScreen(MyGdxGame myGdxGame, String[] images, String[] texts, Runnable onFinished) {
@@ -83,6 +81,7 @@ public class CutsceneScreen extends ScreenAdapter {
     public void render(float delta) {
         if (!textComplete) {
             charTimer += delta;
+            float CHAR_DELAY = 0.045f;
             while (charTimer >= CHAR_DELAY && charIndex < fullText.length()) {
                 charTimer -= CHAR_DELAY;
                 charIndex++;
@@ -109,6 +108,7 @@ public class CutsceneScreen extends ScreenAdapter {
             }
 
             float now = (float) (System.currentTimeMillis() / 1000.0);
+            float DOUBLE_TAP_INTERVAL = 0.35f;
             if (lastTapTime > 0 && (now - lastTapTime) <= DOUBLE_TAP_INTERVAL) {
                 completeText();
                 lastTapTime = -1f;

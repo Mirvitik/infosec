@@ -35,11 +35,14 @@ public class LoadGameScreen extends ScreenAdapter {
         SaveSlotCard(MyGdxGame g, float x, float y, float w, float h,
                      String slotNum, String levelName, String date, long timestamp) {
             this.timestamp = timestamp;
-            this.x = x; this.y = y; this.w = w; this.h = h;
-            bg          = new ImageView(x, y, w, h, GameResources.BUTTON_SHORT_BG_IMG_PATH);
-            slotNumText = new TextView(MyGdxGame.arialFont,   x + 14, y + h - 16, slotNum);
-            levelText   = new TextView(g.commonWhiteFont, x + 14, y + h - 50, levelName);
-            dateText    = new TextView(MyGdxGame.arialFont,   x + 14, y + 14,     date);
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+            bg = new ImageView(x, y, w, h, GameResources.BUTTON_SHORT_BG_IMG_PATH);
+            slotNumText = new TextView(MyGdxGame.arialFont, x + 14, y + h - 16, slotNum);
+            levelText = new TextView(g.commonWhiteFont, x + 14, y + h - 50, levelName);
+            dateText = new TextView(MyGdxGame.arialFont, x + 14, y + 14, date);
         }
 
         void draw(SpriteBatch batch) {
@@ -57,7 +60,7 @@ public class LoadGameScreen extends ScreenAdapter {
     public LoadGameScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
 
-        titleTextView    = new TextView(myGdxGame.xanmonoFontBig, 380, 590, LocalizationManager.get("loadgame.title"));
+        titleTextView = new TextView(myGdxGame.xanmonoFontBig, 380, 590, LocalizationManager.get("loadgame.title"));
         subtitleTextView = new TextView(MyGdxGame.arialFont, 430, 528, LocalizationManager.get("loadgame.subtitle"));
 
         returnButton = new ButtonView(
@@ -97,7 +100,7 @@ public class LoadGameScreen extends ScreenAdapter {
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;
             @SuppressWarnings("DefaultLocale") String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
-            String dateStr   = timestampToDateString(date);
+            String dateStr = timestampToDateString(date);
 
             slotCards.add(new SaveSlotCard(myGdxGame,
                 cx, cy, cardW, cardH, slotLabel, levelName, dateStr, date));
@@ -147,18 +150,34 @@ public class LoadGameScreen extends ScreenAdapter {
                     int level = Integer.parseInt(save.get(0).toString());
 
                     switch (level) {
-                        case 1: myGdxGame.setScreen(new LevelOneScreen(myGdxGame)); break;
-                        case 2: myGdxGame.setScreen(new LevelTwoScreen(myGdxGame)); break;
-                        case 3: myGdxGame.setScreen(new LevelThreeScreen(myGdxGame)); break;
-                        case 4: myGdxGame.setScreen(new LevelFourScreen(myGdxGame)); break;
-                        case 5: myGdxGame.setScreen(new LevelFiveScreen(myGdxGame)); break;
-                        default: myGdxGame.setScreen(new LevelFiveScreen(myGdxGame)); break;
+                        case 1:
+                            myGdxGame.setScreen(new LevelOneScreen(myGdxGame));
+                            break;
+                        case 2:
+                            myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
+                            break;
+                        case 3:
+                            myGdxGame.setScreen(new LevelThreeScreen(myGdxGame));
+                            break;
+                        case 4:
+                            myGdxGame.setScreen(new LevelFourScreen(myGdxGame));
+                            break;
+                        case 5:
+                            myGdxGame.setScreen(new LevelFiveScreen(myGdxGame));
+                            break;
+                        case 6:
+                            myGdxGame.setScreen(new EndScreen(myGdxGame));
+                            break;
+                        default:
+                            myGdxGame.setScreen(new LevelFiveScreen(myGdxGame));
+                            break;
                     }
                     return;
                 }
             }
         }
     }
+
     @Override
     public void show() {
         refreshSavesList();
@@ -195,7 +214,7 @@ public class LoadGameScreen extends ScreenAdapter {
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;
             @SuppressWarnings("DefaultLocale") String slotLabel = "SLOT " + String.format("%02d", cnt + 1);
-            String dateStr   = timestampToDateString(date);
+            String dateStr = timestampToDateString(date);
 
             slotCards.add(new SaveSlotCard(myGdxGame,
                 cx, cy, cardW, cardH, slotLabel, levelName, dateStr, date));
