@@ -106,6 +106,7 @@ public class SettingsScreen extends ScreenAdapter {
         if (Gdx.input.justTouched()) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
+
             if (returnButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 myGdxGame.setScreen(myGdxGame.menuScreen);
             }
@@ -144,7 +145,13 @@ public class SettingsScreen extends ScreenAdapter {
         soundSettingView.setText(LocalizationManager.get("settings.sound") + LocalizationManager.get(MemoryManager.loadIsSoundOn() ? "state.on" : "state.off"));
         subtitlesSettingView.setText(LocalizationManager.get("settings.subtitles") + LocalizationManager.get(MemoryManager.loadAreSubtitlesOn() ? "state.on" : "state.off"));
         languageSettingView.setText(LocalizationManager.get("settings.language") + LocalizationManager.getLanguage().name());
-        returnButton.setText(LocalizationManager.get("settings.return")); // если ButtonView поддерживает setText
+        returnButton.setText(LocalizationManager.get("settings.return"));
+        String langText = LocalizationManager.get("settings.language") + LocalizationManager.getLanguage().name();
+        int targetLength = 25;
+        while (langText.length() < targetLength) {
+            langText += " ";
+        }
+        languageSettingView.setText(langText);
     }
 
     private String translateStateToText(boolean state) {

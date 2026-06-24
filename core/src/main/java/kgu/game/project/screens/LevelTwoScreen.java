@@ -193,7 +193,7 @@ public class LevelTwoScreen extends ScreenAdapter {
         actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
         actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
         pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 580, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,

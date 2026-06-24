@@ -11,6 +11,7 @@ import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
+import kgu.game.project.managers.LocalizationManager;
 
 public class CutsceneScreen extends ScreenAdapter {
 
@@ -44,7 +45,7 @@ public class CutsceneScreen extends ScreenAdapter {
             200, 60,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "Далее"
+            LocalizationManager.get("dialog.next")
         );
 
         loadScene(0);

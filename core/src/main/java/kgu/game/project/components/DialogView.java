@@ -4,14 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
-
-import kgu.game.project.FontBuilder;
 import kgu.game.project.GameResources;
-import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.managers.LocalizationManager;
 
@@ -20,6 +15,7 @@ public class DialogView extends View {
     Texture fon;
     BitmapFont bitmapFont;
     public ButtonView nextButton;
+    public ButtonView exitButton;
     MyGdxGame myGdxGame;
     int cnt = 0;
     Array<String> talks;
@@ -34,7 +30,7 @@ public class DialogView extends View {
         this.height = height;
         this.text = talks.get(cnt);
         this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
-
+        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.exit"));
 
         this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
@@ -49,6 +45,7 @@ public class DialogView extends View {
         this.height = height;
         this.text = talks.get(cnt);
         this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
+        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.exit"));
 
         this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
@@ -69,15 +66,26 @@ public class DialogView extends View {
             bitmapFont.draw(batch, text, textX, textY);
         }
         this.nextButton.draw(batch);
+        exitButton.draw(batch);
         System.out.println(cnt);
+        if (myGdxGame.touch == null) {
+            return;
+        }
         if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             cnt += 1;
             if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && (cnt < talks.size - 1) && Gdx.input.justTouched() && cnt < talks.size) {
                 this.text = talks.get(cnt);
             }
         }
+        if (exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+            cnt = talks.size + 1;
+        }
         avatar.draw(batch);
         MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
+    }
+
+    public void setText(String newText) {
+        this.text = newText;
     }
 
     public boolean isToDispose() {
@@ -121,5 +129,12 @@ public class DialogView extends View {
 
     public void addCnt() {
         cnt += 1;
+    }
+
+    public void addCntAndUpdate() {
+        cnt += 1;
+        if (cnt < talks.size) {
+            this.text = talks.get(cnt);
+        }
     }
 }

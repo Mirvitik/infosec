@@ -78,6 +78,7 @@ public class LevelOneScreen extends ScreenAdapter {
     public boolean isNearComputer = false;
 
     private boolean isTouchingUI = false;
+    boolean isFirstTalk = false;
     DialogOkNoView dialogOkNoView;
     ContactManager contactManager;
     TextView text;
@@ -162,7 +163,7 @@ public class LevelOneScreen extends ScreenAdapter {
         touchpadView = new TouchpadView(140, 140);
         pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
 
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 580, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,
@@ -571,8 +572,10 @@ public class LevelOneScreen extends ScreenAdapter {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
             }
-            if (isNearAntivirus && dialog == null && dialogOkNoView == null && MemoryManager.loadAreSubtitlesOn()) {
-                text.draw(myGdxGame.batch);
+            if (isNearAntivirus && dialog == null && MemoryManager.loadAreSubtitlesOn()) {
+                if (dialogNo == null) {
+                    text.draw(myGdxGame.batch);
+                }
             }
         }
 

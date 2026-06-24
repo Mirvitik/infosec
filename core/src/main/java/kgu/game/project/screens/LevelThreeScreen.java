@@ -154,7 +154,7 @@ public class LevelThreeScreen extends ScreenAdapter {
 
         touchpadView = new TouchpadView(140, 140);
 
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 580, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,

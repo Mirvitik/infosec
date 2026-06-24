@@ -8,10 +8,8 @@ public class GameSettings {
     public static final int POSITION_ITERATIONS = 6;
     public static final float SCALE = 0.05f;
     public static float TRASH_VELOCITY = 20;
-    public static float MONSTER_VELOCITY = 20;
 
     public static int BULLET_VELOCITY = 10;
-    public static int SHOOTING_COOL_DOWN = 1000;
 
     public static final short TRASH_BIT = 2;
     public static final short SHIP_BIT = 4;
@@ -24,6 +22,7 @@ public class GameSettings {
     public static final short SENSOR_MINUS_BIT = 0x0009;
     public static final short SENSOR_PLUS_BIT = 0x0010;
     public static final short MAIL_BIT = 0x0011;
+    public static final short BOOK_SHELF_BIT = 0x0012;
     public static final int TILE_SIZE = 64;
 
 

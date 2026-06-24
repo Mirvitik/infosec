@@ -32,10 +32,10 @@ import kgu.game.project.components.TouchpadView;
 import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.AntivirusObject;
+import kgu.game.project.objects.BookshelfObject;
 import kgu.game.project.objects.ComputerObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
-import kgu.game.project.objects.TrashObject;
 import kgu.game.project.managers.ContactManager;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
@@ -52,6 +52,7 @@ public class GameScreen extends ScreenAdapter {
     LiveView liveView;
     ButtonView pauseButton;
     TouchpadView touchpadView;
+    BookshelfObject bookshelfObject;
 
     TextView pauseTextView;
     ButtonView homeButton;
@@ -62,6 +63,7 @@ public class GameScreen extends ScreenAdapter {
     ButtonView actionButton;
     Texture heroSpriteSheet;
     boolean isDialogOn = true;
+    boolean isDialogPlayerOn = false;
     TextureRegion[][] heroFrames;
     Body low_wall;
     Body up_wall;
@@ -71,13 +73,16 @@ public class GameScreen extends ScreenAdapter {
     private final TiledMapManager tiledMapManager;
     private Vector3 touch2;
     public boolean isNearComputer = false;
+    Array<String> talks;
 
     private boolean isTouchingUI = false;
     boolean isDesktop;
+    boolean isNearBookshelf;
     TextView text;
     private boolean wasKKeyPressed = false;
     Array talksplayer = new Array<>();
     DialogView dialog;
+    DialogView dialogPlayer;
 
     public GameScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
@@ -99,15 +104,15 @@ public class GameScreen extends ScreenAdapter {
             } else if (object instanceof ComputerObject) {
                 isNearComputer = true;
                 System.out.println("Touched COMPUTER");
-            } else if (object instanceof TrashObject) {
-                System.out.println("Touched TRASH - take damage!");
-                heroObject.hit();
+            } else if (object instanceof BookshelfObject) {
+                isNearBookshelf = true;
             }
         },
             (GameObject object) -> {
                 if (object instanceof AntivirusObject ||
-                    object.getClass().getSimpleName().equals("ComputerObject")) {
+                    object instanceof ComputerObject || object instanceof BookshelfObject) {
                     isNearComputer = false;
+                    isNearBookshelf = false;
                     System.out.println("Left computer area");
                 }
             });
@@ -132,7 +137,7 @@ public class GameScreen extends ScreenAdapter {
         touchpadView = new TouchpadView(120, 120);
         pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
 
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 580, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,
@@ -140,6 +145,7 @@ public class GameScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.home")
         );
+        bookshelfObject = new BookshelfObject(4, 10, 128, 192, GameResources.BOOK_SHELF, myGdxGame.world);
         if (isDesktop) {
             text = new TextView(myGdxGame.commonPixelFontText, 325, 110, LocalizationManager.get("game.login2_hint"));
 
@@ -153,7 +159,7 @@ public class GameScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.continue")
         );
-        computer = new ComputerObject(10, 5, 64, 64, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
+        computer = new ComputerObject(10, 5, 128, 128, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, LocalizationManager.get("game.last_records"));
@@ -168,6 +174,10 @@ public class GameScreen extends ScreenAdapter {
         dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
+        talks = new Array<>();
+        for (int i = 1; i <= 3; i++) {
+            talks.add(LocalizationManager.get("book." + i));
+        }
         gameSession.pauseGame();
     }
 
@@ -286,7 +296,7 @@ public class GameScreen extends ScreenAdapter {
                     if (isTouched) {
                         isTouchingUI = false;
 
-                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        if (!isDialogPlayerOn && !isDialogPlayerOn && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;
                             gameSession.pauseGame();
                         }
@@ -296,10 +306,18 @@ public class GameScreen extends ScreenAdapter {
                             myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
                             myGdxGame.setScreen(myGdxGame.loginScreen);
                         }
-
+                        if (actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && isNearBookshelf) {
+                            dialogPlayer = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
+                            isDialogPlayerOn = true;
+                            gameSession.pauseGame();
+                        }
                         if (isNearComputer) {
                             actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                             computer.onClick();
+                        } else if (isNearBookshelf) {
+                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                         } else {
                             actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
                         }
@@ -334,13 +352,59 @@ public class GameScreen extends ScreenAdapter {
                     );
                 }
                 if (isTouched) {
-                    if (isDialogOn) {
+                    if (isDialogOn || isDialogPlayerOn) {
                         if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             dialog.addCnt();
                             if (dialog.getCnt() >= talksplayer.size) {
                                 dialog.dispose();
                                 dialog = null;
                                 isDialogOn = false;
+                                gameSession.resumeGame();
+                            }
+                        }
+
+                        if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.dispose();
+                            dialog = null;
+                            isDialogOn = false;
+                            gameSession.resumeGame();
+                            return;
+                        }
+
+                        if (dialogPlayer != null && dialogPlayer.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogPlayer.addCntAndUpdate();
+                            if (dialogPlayer.getCnt() >= talks.size) {
+                                dialogPlayer.dispose();
+                                dialogPlayer = null;
+                                isDialogPlayerOn = false;
+                                gameSession.resumeGame();
+                            }
+                        }
+
+                        if (dialogPlayer != null && dialogPlayer.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogPlayer.dispose();
+                            dialogPlayer = null;
+                            isDialogPlayerOn = false;
+                            gameSession.resumeGame();
+                            return;
+                        }
+                    }
+                    if (isDialogOn || isDialogPlayerOn) {
+                        if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.addCnt();
+                            if (dialog.getCnt() >= talksplayer.size) {
+                                dialog.dispose();
+                                dialog = null;
+                                isDialogOn = false;
+                                gameSession.resumeGame();
+                            }
+                        }
+                        if (dialogPlayer != null && dialogPlayer.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogPlayer.addCntAndUpdate();
+                            if (dialogPlayer.getCnt() >= talks.size) {
+                                dialogPlayer.dispose();
+                                dialogPlayer = null;
+                                isDialogPlayerOn = false;
                                 gameSession.resumeGame();
                             }
                         }
@@ -354,7 +418,7 @@ public class GameScreen extends ScreenAdapter {
                     }
                 }
                 if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
-                    if (!isDialogOn) {
+                    if (!isDialogOn || !isDialogPlayerOn) {
                         gameSession.resumeGame();
                     }
                 }
@@ -385,6 +449,7 @@ public class GameScreen extends ScreenAdapter {
         myGdxGame.batch.begin();
         heroObject.draw(myGdxGame.batch);
         computer.draw(myGdxGame.batch);
+        bookshelfObject.draw(myGdxGame.batch);
         myGdxGame.batch.end();
         myGdxGame.batch.setProjectionMatrix(
             myGdxGame.uiCamera.combined
@@ -393,10 +458,12 @@ public class GameScreen extends ScreenAdapter {
         myGdxGame.batch.begin();
         if (gameSession.state == GameState.PAUSED) {
             if (!isDialogOn) {
-                pauseBackground.draw(myGdxGame.batch);
-                pauseTextView.draw(myGdxGame.batch);
-                homeButton.draw(myGdxGame.batch);
-                continueButton.draw(myGdxGame.batch);
+                if (!isDialogPlayerOn) {
+                    pauseBackground.draw(myGdxGame.batch);
+                    pauseTextView.draw(myGdxGame.batch);
+                    homeButton.draw(myGdxGame.batch);
+                    continueButton.draw(myGdxGame.batch);
+                }
             }
         } else if (gameSession.state == GameState.ENDED) {
             recordsTextView.draw(myGdxGame.batch);
@@ -414,10 +481,11 @@ public class GameScreen extends ScreenAdapter {
         if (dialog != null) {
             dialog.draw(myGdxGame.batch);
         }
-        topBlackoutView.draw(myGdxGame.batch);
-        if (!isDesktop) {
-            pauseButton.draw(myGdxGame.batch);
+        if (dialogPlayer != null) {
+            dialogPlayer.draw(myGdxGame.batch);
         }
+        topBlackoutView.draw(myGdxGame.batch);
+        pauseButton.draw(myGdxGame.batch);
 
         myGdxGame.batch.end();
         if (myGdxGame.debugMode) {
@@ -446,7 +514,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         heroObject = new AnimatedHeroObject(GameSettings.SCREEN_WIDTH / 2 - 400, 450, 128, 128, heroFrames, myGdxGame.world);
-        computer = new ComputerObject(10, 5, 64, 64, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
+        computer = new ComputerObject(10, 5, 128, 128, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
         myGdxGame.camera.position.set(
             heroObject.getX(),
             heroObject.getY(),

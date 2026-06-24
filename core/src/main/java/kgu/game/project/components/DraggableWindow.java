@@ -11,7 +11,6 @@ import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.managers.LocalizationManager;
-import kgu.game.project.screens.HackScreen;
 
 public class DraggableWindow extends View {
     MyGdxGame myGdxGame;
@@ -24,10 +23,9 @@ public class DraggableWindow extends View {
 
     private boolean isDragging = false;
     private float dragOffsetX;
-    Screen gameScreen;
     private float dragOffsetY;
 
-    private float closeButtonSize = 32;
+    private final float closeButtonSize = 32;
     private float closeButtonX;
     private float closeButtonY;
 
@@ -100,7 +98,6 @@ public class DraggableWindow extends View {
                     myGdxGame.computerScreen.dispose();
                 }
             });
-            myGdxGame.setScreen(new HackScreen(myGdxGame));
             return true;
         }
 

@@ -115,6 +115,7 @@ public class LocalizationManager {
         add("network.talk.15", "Good luck...", "Удачи...");
         add("dialog.next", "Next", "Далее");
         add("dialog.yes", "Yes", "Да");
+        add("dialog.exit", "Exit", "Выйти");
         add("dialog.no", "No", "Нет");
         add("passwoidInput.door", "DOOR TO THE NEXT LEVEL", "ДВЕРЬ НА СЛЕДУЮЩИЙ УРОВЕНЬ");
         add("passwoidInput.answer", "Enter answer", "Введи ответ");
@@ -237,6 +238,17 @@ public class LocalizationManager {
         add("story.intro.2",
             "But that didn't affect our good guy. Until one moment...",
             "Но это не касалось нашего добряка. До одного момента...");
+
+        add("book.1",
+            "How many books have I been given on information\nsecurity in a long time!\n" +
+                "I can't read them all!",
+            "Сколько много книг мне подарили\nпо информационной безопасности\nза долгое время!\nУжас, мне их все не прочитать!");
+        add("book.2",
+            "It's a good thing I spent my\ntime productively and didn't read any of them!",
+            "Хорошо, что я продуктивно\nпотратил время и не читал\nни одну из них!");
+        add("book.3",
+            "It's better not to come here,\nso as not to torture your brains",
+            "Лучше не подходить сюда,\nчтобы не мучить свои мозги");
     }
 
     private static void add(String key, String en, String ru) {

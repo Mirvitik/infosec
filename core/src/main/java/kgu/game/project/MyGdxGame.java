@@ -31,6 +31,7 @@ public class MyGdxGame extends Game {
     public BitmapFont xanmonoFont;
     public BitmapFont xanmonoFontBig;
     public static BitmapFont arialFont;
+    public static BitmapFont arialFontWhite;
     public static BitmapFont arialFontGray;
     public BitmapFont consolasFont;
     public BitmapFont arialFontBlue;
@@ -80,8 +81,9 @@ public class MyGdxGame extends Game {
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
         menuScreen = new MenuScreen(this);
+        computerScreen = new ComputerScreen(this);
 
-        setScreen(menuScreen);
+        setScreen(computerScreen);
     }
 
     private void initFonts() {
@@ -96,6 +98,7 @@ public class MyGdxGame extends Game {
         xanmonoFont = FontBuilder.generate(20, Color.GRAY, GameResources.XANMONO_FONT_PATH);
         xanmonoFontBig = FontBuilder.generate(60, Color.WHITE, GameResources.XANMONO_FONT_PATH);
         arialFont = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
+        arialFontWhite = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         arialFontGray = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
         arialFontGray.setColor(Color.GRAY);
         arialFontBlue = FontBuilder.generate(40, Color.BLUE, GameResources.ARIAL_FONT_PATH);

@@ -10,6 +10,9 @@ public class GameResources {
     public static final String BATTERY_BUTTON_IMG_PATH = "textures/battery.png";
     public static final String SAVE_BACKGROUND_IMG_PATH = "textures/savebackground.png";
     public static final String DOOR_IMG_PATH = "textures/door.png";
+    public static final String MENU_IMG_PATH = "textures/menu.png";
+    public static final String EMPTY_IMG_PATH = "textures/empty.png";
+    public static final String LOGOUT_IMG_PATH = "textures/logout.png";
     public static final String PAUSE_BACKGROUND = "textures/pausebackground.png";
     public static final String MENU_SOUND = "sounds/menusound.wav";
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
@@ -43,6 +46,7 @@ public class GameResources {
     public static final String BUTTON_LONG_BG_IMG_PATH = "textures/button_background_long.png";
 
     public static final String PAUSE_IMG_PATH = "textures/pause_icon.png";
+    public static final String BOOK_SHELF = "textures/bookshelf.png";
     public static final String LIVE_IMG_PATH = "textures/life.png";
 
     public static final String SPRITE_SHEET = "textures/hero.png";

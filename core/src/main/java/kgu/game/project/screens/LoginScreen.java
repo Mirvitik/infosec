@@ -78,6 +78,11 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         ScreenUtils.clear(Color.CLEAR);
 
         myGdxGame.batch.begin();
+        if (blackoutImageView == null){
+            myGdxGame.batch.end();
+            this.dispose();
+            return;
+        }
         blackoutImageView.draw(myGdxGame.batch);
         titleTextView.draw(myGdxGame.batch);
         loginForm.draw(myGdxGame.batch);
@@ -148,10 +153,16 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             if (confirmButton.isHit(touchPos.x, touchPos.y)) {
                 if (inputText.toString().equals("password")) {
                     if (myGdxGame.computerScreen != null) {
+                        myGdxGame.computerScreen.dispose();
                         myGdxGame.computerScreen = null;
                     }
                     myGdxGame.computerScreen = new ComputerScreen(myGdxGame);
                     myGdxGame.setScreen(myGdxGame.computerScreen);
+                    myGdxGame.loginScreen = null;
+                    // Сброс камеры при переходе
+                    myGdxGame.camera.position.set(myGdxGame.camera.viewportWidth / 2f, myGdxGame.camera.viewportHeight / 2f, 0);
+                    myGdxGame.camera.update();
+                    return;
                 }
             }
             if (!infoWindow.isVisible()) {
@@ -174,6 +185,8 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
                 bodies.clear();
                 myGdxGame.gameScreen = new GameScreen(myGdxGame);
                 myGdxGame.setScreen(myGdxGame.gameScreen);
+                this.dispose();
+                return;
             }
             infoWindow.handleTouch(touchPos, true);
         }
@@ -298,6 +311,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
             infoWindow.dispose();
             infoWindow = null;
         }
+        myGdxGame.loginScreen = null;
         Gdx.input.setInputProcessor(null);
 
     }

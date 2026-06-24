@@ -168,7 +168,7 @@ public class LevelSixScreen extends ScreenAdapter {
         touchpadView = new TouchpadView(140, 140);
         pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
 
-        pauseTextView = new TextView(myGdxGame.xanmonoFont, 525, 400, LocalizationManager.get("game.pause"));
+        pauseTextView = new TextView(myGdxGame.xanmonoFont, 580, 400, LocalizationManager.get("game.pause"));
         homeButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 300,
             200, 35,
