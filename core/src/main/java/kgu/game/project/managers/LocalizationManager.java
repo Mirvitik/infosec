@@ -265,7 +265,12 @@ public class LocalizationManager {
         add("logic.history.1", "But there is another\noperator that is used in encryption-xor", "Но есть ещё один оператор, который используют\nпри шифровании-xor");
         add("networks.history.0", "Hackers often attack various networks", "Хакеры часто осуществляют\nатаки на различные сети");
         add("networks.history.1", "Specialists check website logs\nto determine the source of the attack", "Специалисты проверяют логи сайтов,\nчтобы понять, откуда была совершена атака");
-
+        add("ipinput.title", "Enter attacker IP from logs", "Введи IP злоумышленника из логов");
+        add("ipinput.hint", "Format: xxx.xxx.xxx.xxx (e.g., 192.168.1.1)", "Формат: xxx.xxx.xxx.xxx (например, 192.168.1.1)");
+        add("ipinput.confirm", "Confirm", "Подтвердить");
+        add("ipinput.clear", "Clear", "Очистить");
+        add("ipinput.back", "Back", "Назад");
+        add("ipinput.error", "Invalid IP! Check the logs again.", "Неверный IP! Проверь логи ещё раз.");
     }
 
     private static void add(String key, String en, String ru) {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import kgu.game.project.GameResources;
 import kgu.game.project.MyGdxGame;
+import kgu.game.project.managers.LocalizationManager;
 
 
 public class IpInputView {
@@ -20,7 +21,6 @@ public class IpInputView {
     private boolean wrongAttempt = false;
     private float wrongTimer = 0f;
 
-    private final TextView titleText;
     private final TextView inputDisplay;
     private final TextView hintText;
     private final TextView errorText;
@@ -50,11 +50,6 @@ public class IpInputView {
         this.onSuccess = onSuccess;
         this.onFailure = onFailure;
 
-        titleText = new TextView(
-            myGdxGame.largeWhiteFont,
-            (int) (PANEL_X + PANEL_W / 2 - 250), (int) (PANEL_Y + PANEL_H - 40),
-            "Введи IP злоумышленника из логов"
-        );
 
         inputDisplay = new TextView(
             myGdxGame.largeWhiteFont,
@@ -65,12 +60,12 @@ public class IpInputView {
         hintText = new TextView(
             myGdxGame.commonPixelFontText,
             (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 160),
-            "Формат: xxx.xxx.xxx.xxx  (например, 192.168.1.1)"
+            LocalizationManager.get("ipinput.hint")
         );
 
         errorText = new TextView(
             myGdxGame.commonPixelFontText,
-            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 195),
+            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 120),
             ""
         );
 
@@ -79,7 +74,7 @@ public class IpInputView {
             260, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "Подтвердить"
+            LocalizationManager.get("ipinput.confirm")
         );
 
         clearButton = new ButtonView(
@@ -87,7 +82,7 @@ public class IpInputView {
             150, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "Очистить"
+            LocalizationManager.get("ipinput.clear")
         );
 
         backButton = new ButtonView(
@@ -95,7 +90,7 @@ public class IpInputView {
             120, 55,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "Назад"
+            LocalizationManager.get("ipinput.back")
         );
 
         keyButtons = new ButtonView[KEY_LABELS.length];
@@ -152,7 +147,7 @@ public class IpInputView {
         float tx = myGdxGame.touch.x;
         float ty = myGdxGame.touch.y;
 
-        // Клавиатура
+        // Keyboard
         for (int i = 0; i < keyButtons.length; i++) {
             if (keyButtons[i].isHit(tx, ty)) {
                 onKeyPressed(KEY_LABELS[i]);
@@ -160,19 +155,16 @@ public class IpInputView {
             }
         }
 
-
         if (confirmButton.isHit(tx, ty)) {
             checkAnswer();
             return;
         }
-
 
         if (clearButton.isHit(tx, ty)) {
             input.setLength(0);
             updateDisplay();
             return;
         }
-
 
         if (backButton.isHit(tx, ty)) {
             hide();
@@ -182,7 +174,6 @@ public class IpInputView {
     public void draw(SpriteBatch batch) {
         if (!visible) return;
 
-        titleText.draw(batch);
         inputDisplay.draw(batch);
         hintText.draw(batch);
         if (wrongAttempt) {
@@ -214,13 +205,12 @@ public class IpInputView {
 
     private void checkAnswer() {
         if (input.toString().trim().equals(correctIp)) {
-
             hide();
             onSuccess.run();
         } else {
             wrongAttempt = true;
             wrongTimer = 2.0f;
-            errorText.setText("Неверный IP! Проверь логи ещё раз.");
+            errorText.setText(LocalizationManager.get("ipinput.error"));
             input.setLength(0);
             updateDisplay();
             if (onFailure != null) onFailure.run();

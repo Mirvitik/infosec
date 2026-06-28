@@ -51,15 +51,6 @@ public class HeroObject extends GameObject {
     }
 
 
-    @Override
-    public void hit() {
-        livesLeft -= 1;
-        if (isAlive()) {
-            Vector2 pushBack = new Vector2(0, -5);
-            body.setLinearVelocity(pushBack);
-        }
-    }
-
     public boolean isAlive() {
         return livesLeft > 0;
     }

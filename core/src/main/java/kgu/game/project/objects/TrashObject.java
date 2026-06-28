@@ -35,9 +35,4 @@ public class TrashObject extends GameObject {
     public boolean isInFrame() {
         return getY() + height / 2 > 0;
     }
-
-    @Override
-    public void hit() {
-        livesLeft -= 1;
-    }
 }
