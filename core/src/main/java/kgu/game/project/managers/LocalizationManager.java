@@ -272,6 +272,17 @@ public class LocalizationManager {
         add("ipinput.back", "Back", "Назад");
         add("ipinput.error", "Invalid IP! Check the logs again.", "Неверный IP! Проверь логи ещё раз.");
         add("levelThree.loc", "KEY:    295\nTEXT:  COOKIE", "КЛЮЧ:    295\nТЕКСТ: COOKIE");
+        add("mail.phishing1",
+            "From: support@sber-online.ru\nSubject: Your account has been blocked!\n\nClick the link to unblock:\nhttp://sber-online.ru.evil.com/login\n\n[PHISHING: suspicious domain]",
+            "From: support@sber-online.ru\nSubject: Ваш аккаунт заблокирован!\n\nПерейдите по ссылке для разблокировки:\nhttp://sber-online.ru.evil.com/login\n\n[ФИШИНГ: подозрительный домен]");
+
+        add("mail.phishing2",
+            "From: noreply@gosuslugi-help.com\nSubject: Data confirmation required\n\nEnter SNILS and password on the website:\nhttp://gosuslugi-help.com\n\n[PHISHING: government services don't request\npassword via email]",
+            "From: noreply@gosuslugi-help.com\nSubject: Требуется подтверждение данных\n\nВведите СНИЛС и пароль на сайте:\nhttp://gosuslugi-help.com\n\n[ФИШИНГ: госуслуги не запрашивают\nпароль по email]");
+
+        add("mail.legitimate",
+            "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[LEGITIMATE: official domain,\nno action required]",
+            "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]");
     }
 
     private static void add(String key, String en, String ru) {

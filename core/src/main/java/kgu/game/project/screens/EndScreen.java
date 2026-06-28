@@ -281,11 +281,11 @@ public class EndScreen extends ScreenAdapter {
             } else if ((isNearMail1 || isNearMail2 || isNearMail3) && !toDrawMail) {
                 toDrawMail = true;
                 if (isNearMail1) {
-                    currentMailText = "From: support@sber-online.ru\nSubject: Ваш аккаунт заблокирован!\n\nПерейдите по ссылке для разблокировки:\nhttp://sber-online.ru.evil.com/login\n\n[ФИШИНГ: подозрительный домен]";
+                    currentMailText = LocalizationManager.get("mail.phishing1");
                 } else if (isNearMail2) {
-                    currentMailText = "From: noreply@gosuslugi-help.com\nSubject: Требуется подтверждение данных\n\nВведите СНИЛС и пароль на сайте:\nhttp://gosuslugi-help.com\n\n[ФИШИНГ: госуслуги не запрашивают\nпароль по email]";
+                    currentMailText = LocalizationManager.get("mail.phishing2");
                 } else if (isNearMail3) {
-                    currentMailText = "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]";
+                    currentMailText = LocalizationManager.get("mail.legitimate");
                 }
                 mailTextView = new TextView(MyGdxGame.arialFont, 200, 500, currentMailText);
             }
