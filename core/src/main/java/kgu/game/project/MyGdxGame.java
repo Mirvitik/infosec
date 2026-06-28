@@ -49,12 +49,7 @@ public class MyGdxGame extends Game {
     public SettingsScreen settingsScreen;
     public ComputerScreen computerScreen;
     public LoginScreen loginScreen;
-    public LevelOneScreen levelOneScreen;
     public LevelThreeScreen levelThreeScreen;
-    public LevelFourScreen levelFourScreen;
-    public LevelFiveScreen levelFiveScreen;
-    public LevelSixScreen levelSixScreen;
-    public EndScreen endScreen;
     public Box2DDebugRenderer debugRenderer;
     public static BitmapFont arialWhiteFont;
     public boolean debugMode = false;
@@ -80,10 +75,8 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
-        menuScreen = new MenuScreen(this);
-        computerScreen = new ComputerScreen(this);
 
-        setScreen(computerScreen);
+        setScreen(menuScreen);
     }
 
     private void initFonts() {
@@ -106,6 +99,7 @@ public class MyGdxGame extends Game {
         arialWhiteFont = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         consolasFont = FontBuilder.generate(20, Color.GRAY, GameResources.CONSOLAS_FONT_PATH);
         arialFontRed = FontBuilder.generate(20, Color.RED, GameResources.ARIAL_FONT_PATH);
+        MyGdxGame.arialFont.setColor(Color.BLACK);
     }
 
     @Override

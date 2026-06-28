@@ -58,7 +58,7 @@ public class IpInputView {
 
         inputDisplay = new TextView(
             myGdxGame.largeWhiteFont,
-            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 120),
+            (int) (PANEL_X + 40), (int) (PANEL_Y + PANEL_H - 80),
             "_"
         );
 

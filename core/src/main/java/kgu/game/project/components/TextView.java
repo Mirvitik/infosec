@@ -4,10 +4,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class TextView extends View{
+public class TextView extends View {
 
     protected BitmapFont font;
     protected String text;
+    boolean toShow = true;
 
     public TextView(BitmapFont font, float x, float y) {
         super(x, y);
@@ -32,12 +33,22 @@ public class TextView extends View{
 
     @Override
     public void draw(SpriteBatch batch) {
-        font.draw(batch, text, x, y + height);
+        if (toShow) {
+            font.draw(batch, text, x, y + height);
+        }
     }
 
     @Override
     public void dispose() {
         font.dispose();
+    }
+
+    public void show() {
+        toShow = true;
+    }
+
+    public void hide() {
+        toShow = false;
     }
 
 }

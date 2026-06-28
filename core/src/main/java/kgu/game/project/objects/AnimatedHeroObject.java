@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
+import kgu.game.project.GameSettings;
+
 
 public class AnimatedHeroObject extends HeroObject {
 
@@ -33,7 +35,7 @@ public class AnimatedHeroObject extends HeroObject {
     private float stateTime;
 
     // Текущее направление движения
-    private Vector2 lastDirection;
+    private final Vector2 lastDirection;
     private boolean isMoving;
 
     public AnimatedHeroObject(int x, int y, int width, int height,
@@ -85,7 +87,7 @@ public class AnimatedHeroObject extends HeroObject {
                 frame.flip(true, false);
                 walkFrames.add(frame);
             }
-            walkLeftAnimation = new Animation<>(frameDuration, walkFrames);  // <-- ИСПРАВЛЕНО
+            walkLeftAnimation = new Animation<>(frameDuration, walkFrames);
             walkLeftAnimation.setPlayMode(Animation.PlayMode.LOOP);
         }
 
@@ -166,8 +168,8 @@ public class AnimatedHeroObject extends HeroObject {
         TextureRegion currentFrame = currentAnimation.getKeyFrame(stateTime, true);
 
         batch.draw(currentFrame,
-            getX() - width / 2,
-            getY() - height / 2,
+            getXf() - width / 2f,
+            getYf() - height / 2f,
             width, height);
     }
 
@@ -220,7 +222,7 @@ public class AnimatedHeroObject extends HeroObject {
         PolygonShape sensorShape = new PolygonShape();
         float sensorWidth = 64 * SCALE * 0.5f;
         float sensorHeight = height * SCALE * 0.2f;
-        float sensorOffsetY = -height * SCALE * 0.45f; // At the bottom of feet
+        float sensorOffsetY = -height * SCALE * 0.45f;
 
         sensorShape.setAsBox(sensorWidth / 2f, sensorHeight / 2f,
             new Vector2(0, sensorOffsetY), 0);

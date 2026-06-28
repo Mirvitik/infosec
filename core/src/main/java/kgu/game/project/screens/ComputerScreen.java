@@ -37,6 +37,7 @@ public class ComputerScreen extends ScreenAdapter {
     ImageView menu;
     ImageView fon;
     ButtonView logout_button;
+    ImageView mail_app;
 
     public ComputerScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
@@ -62,6 +63,7 @@ public class ComputerScreen extends ScreenAdapter {
             64, 64,
             GameResources.MAIL_ICON_PATH
         );
+        mail_app = new ImageView(20, 580, 64, 64, GameResources.MAIL_ICON_PATH);
         menu = new ImageView(0, 100, GameResources.MENU_IMG_PATH);
         apps_text = new TextView(MyGdxGame.arialWhiteFont, 20, 650, "Приложения:");
         logout_button = new ButtonView(270, 130, GameResources.LOGOUT_IMG_PATH);
@@ -158,6 +160,16 @@ public class ComputerScreen extends ScreenAdapter {
             if (mailWindow.isVisible()) {
                 handledByWindow = mailWindow.handleTouch(touch, true);
             }
+            if (toDrawMenu) {
+                if (mail_app != null && mail_app.isHit(touch.x, touch.y)) {
+                    if (mailWindow.isVisible()) {
+                        mailWindow.hide();
+                        removeMailIcon();
+                    } else {
+                        mailWindow.show();
+                    }
+                }
+            }
 
             if (!handledByWindow && mail.isHit(touch.x, touch.y)) {
                 System.out.println("Mail button touched!");
@@ -215,6 +227,7 @@ public class ComputerScreen extends ScreenAdapter {
             menu.draw(myGdxGame.batch);
             apps_text.draw(myGdxGame.batch);
             logout_button.draw(myGdxGame.batch);
+            mail_app.draw(myGdxGame.batch);
         }
         myGdxGame.batch.end();
 
@@ -244,6 +257,9 @@ public class ComputerScreen extends ScreenAdapter {
         if (mailWindow != null) {
             mailWindow.dispose();
             mailWindow = null;
+        }
+        if (mail_app != null) {
+            mail_app.dispose();
         }
         menu.dispose();
 

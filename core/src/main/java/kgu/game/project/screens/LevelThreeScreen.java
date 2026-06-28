@@ -22,11 +22,13 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
+import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.HelloTrigger;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
 import kgu.game.project.components.PasswordInputView;
+import kgu.game.project.components.QuestionView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
 import kgu.game.project.components.TextView;
@@ -48,6 +50,11 @@ public class LevelThreeScreen extends ScreenAdapter {
     MyGdxGame myGdxGame;
     GameSession gameSession;
     HeroObject heroObject;
+    QuestionView questionDialog;
+    boolean toDrawQuestion = false;
+    private int savedDialogCnt = 0;
+    private int antivirusApproachCount = 0;
+    Array<String> hint;
 
     ImageView topBlackoutView;
     LiveView liveView;
@@ -63,6 +70,8 @@ public class LevelThreeScreen extends ScreenAdapter {
     RecordsListView recordsListView;
     ButtonView homeButton2;
     ButtonView actionButton;
+    ButtonView actionButtonActive;
+    ButtonView actionButtonRed;
     Texture heroSpriteSheet;
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
@@ -72,6 +81,7 @@ public class LevelThreeScreen extends ScreenAdapter {
     DialogView dialogNo;
     public boolean isNearComputer = false;
 
+    DialogOkNoView dialogOkNoView;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
@@ -87,6 +97,7 @@ public class LevelThreeScreen extends ScreenAdapter {
     BatteryObject batteryObject;
     BatteryObject doorDown;
     SaveView saveView = new SaveView(350, 50, 500, 600);
+    public Integer exitCnt;
     boolean isNearDoor;
     Boolean toDrawPassword = false;
     short cnt;
@@ -111,11 +122,25 @@ public class LevelThreeScreen extends ScreenAdapter {
         myGdxGame.world.getBodies(bodies);
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
-            if (myGdxGame.levelFourScreen != null) {
-                myGdxGame.levelFourScreen.dispose();
+            String[] story = {
+                GameResources.STORY_TELLING_AND_OR,
+                GameResources.STORY_TELLING_XOR
+            };
+            String[] texts = {
+                LocalizationManager.get("logic.history.0"),
+                LocalizationManager.get("logic.history.1")
+            };
+            myGdxGame.audioManager.backgroundMusic.stop();
+            if (MemoryManager.loadIsMusicOn()) {
+                myGdxGame.audioManager.storyMusic.play();
             }
-            myGdxGame.levelFourScreen = new LevelFourScreen(myGdxGame);
-            myGdxGame.setScreen(myGdxGame.levelFourScreen);
+            myGdxGame.setScreen(new CutsceneScreen(myGdxGame, story, texts, () -> {
+                myGdxGame.audioManager.storyMusic.stop();
+                if (MemoryManager.loadIsMusicOn()) {
+                    myGdxGame.audioManager.backgroundMusic.play();
+                }
+                myGdxGame.setScreen(new LevelFourScreen(myGdxGame));
+            }));
         }, "EXTMRJ");
 
         for (Body body : bodies) {
@@ -135,6 +160,11 @@ public class LevelThreeScreen extends ScreenAdapter {
             LocalizationManager.get("vigenere.talk.7")
         };
         talks = new Array<>(initialValues);
+
+        talks2 = new Array<>();
+        talks2.add(LocalizationManager.get("vigenere.talk2.0"));
+        talks2.add(LocalizationManager.get("vigenere.talk2.1"));
+
         bodies.clear();
         this.myGdxGame = myGdxGame;
         gameSession = new GameSession();
@@ -176,6 +206,8 @@ public class LevelThreeScreen extends ScreenAdapter {
             LocalizationManager.get("game.continue")
         );
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+        actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+        actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
@@ -237,10 +269,16 @@ public class LevelThreeScreen extends ScreenAdapter {
         talksplayer.add(LocalizationManager.get("player.talk.level3.2"));
         talksplayer.add(LocalizationManager.get("player.talk.level3.3"));
         talksplayer.add(LocalizationManager.get("player.talk.level3.4"));
+        hint = new Array<>();
+        hint.add(LocalizationManager.get("hint.3"));
         dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
 
+        questionDialog = new QuestionView(myGdxGame,
+            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+            GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+            GameSettings.SCREEN_HEIGHT / 4f);
     }
 
 
@@ -303,23 +341,23 @@ public class LevelThreeScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
             gameSession.pauseGame();
         }
-        if (isKKeyPressed && !wasKKeyPressed && isNearAntivirus && dialog == null && dialogNo == null) {
-            dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                GameSettings.SCREEN_HEIGHT / 4f, talks);
-        } else if (isKKeyPressed && !wasKKeyPressed && isNearDoor && !toDrawPassword && dialog == null && dialogNo == null) {
-            toDrawPassword = true;
-            passwordInput.show();
-            gameSession.pauseGame();
-        } else if (isKKeyPressed && !wasKKeyPressed && isNearBattery && !toDrawSave && dialog == null && dialogNo == null) {
-            toDrawSave = true;
-            if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
-                myGdxGame.audioManager.saveSound.play();
+        if (isKKeyPressed && !wasKKeyPressed) {
+            if (isNearAntivirus && dialog == null && dialogOkNoView == null && dialogNo == null && !toDrawQuestion) {
+                dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+            } else if (isNearDoor && !toDrawPassword && dialog == null && dialogOkNoView == null && dialogNo == null) {
+                toDrawPassword = true;
+                passwordInput.show();
+                gameSession.pauseGame();
+            } else if (isNearBattery && !toDrawSave && dialog == null && dialogOkNoView == null && dialogNo == null) {
+                toDrawSave = true;
+                if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
+                    myGdxGame.audioManager.saveSound.play();
+                }
+            } else if (isNearComputer && dialog == null && dialogOkNoView == null && dialogNo == null) {
+                toDraw = !toDraw;
             }
-        } else if (isKKeyPressed && !wasKKeyPressed && isNearComputer && toDraw && dialog == null && dialogNo == null) {
-            toDraw = false;
-        } else if (isKKeyPressed && !wasKKeyPressed && isNearComputer && !toDraw && dialog == null && dialogNo == null) {
-            toDraw = true;
         }
 
         wasKKeyPressed = isKKeyPressed;
@@ -343,7 +381,24 @@ public class LevelThreeScreen extends ScreenAdapter {
             alphabet_ratated.setText(shiftString(alpha, num));
             numberView.setText(String.valueOf(-num));
 
-            myGdxGame.camera.position.set(heroObject.getX(), heroObject.getY(), 0);
+            int x, y;
+            x = heroObject.getX();
+            y = heroObject.getY();
+            if (heroObject.getX() > 600) {
+                x = 600;
+            }
+            if (heroObject.getX() < 560) {
+                x = 560;
+            }
+            if (heroObject.getY() < 380) {
+                y = 380;
+            }
+            System.out.println(x);
+            myGdxGame.camera.position.set(
+                x,
+                y,
+                0
+            );
             myGdxGame.camera.update();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
@@ -361,33 +416,100 @@ public class LevelThreeScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
         switch (gameSession.state) {
             case PLAYING:
                 if (isDesktop) {
                     handleKeyboardInput();
+                    if (isTouched) {
+                        myGdxGame.touch = myGdxGame.uiCamera.unproject(
+                            new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
+                        );
+                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            gameSession.pauseGame();
+                        }
+                    }
 
+                    if (dialogOkNoView != null) {
+                        if (isTouched && dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogOkNoView.dispose();
+                            dialogOkNoView = null;
+                            if (dialog != null) {
+                                dialog.nextButton.show();
+                            }
+                        } else if (isTouched && dialogOkNoView.noButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogNo = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks2);
+                            if (dialogOkNoView != null) dialogOkNoView.dispose();
+                            dialogOkNoView = null;
+                            if (dialog != null) dialog.dispose();
+                            dialog = null;
+                            return;
+                        }
+                    }
 
                     if (dialogNo != null) {
                         if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            dialog = null;
                             dialogNo.addCnt();
                             if (dialogNo.getCnt() >= talks2.size) {
                                 dialogNo = null;
+                                dialog = null;
+                                dialogOkNoView = null;
                             }
                         }
                     }
 
-                    if ((isNearAntivirus || isNearComputer || isNearBattery || isNearDoor) && !toDraw) {
-                        actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-                    } else if (!toDraw) {
-                        actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+                    if (questionDialog != null) {
+                        if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            savedDialogCnt = 0;
+                            dialog = new DialogView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            dialog = new DialogView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            for (int i = 0; i < savedDialogCnt; i++) {
+                                dialog.addCntAndUpdate();
+                            }
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.hintButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            if (dialog != null) {
+                                savedDialogCnt = 0;
+                                dialog.dispose();
+                                dialog = null;
+                            }
+                            dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, hint);
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            if (dialog != null) {
+                                savedDialogCnt = dialog.getCnt();
+                                dialog.dispose();
+                                dialog = null;
+                            }
+                            questionDialog = null;
+                            toDrawQuestion = false;
+                        }
                     }
 
                     handleDesktopAction();
-
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
                         if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
@@ -401,44 +523,133 @@ public class LevelThreeScreen extends ScreenAdapter {
                     if (isTouched) {
                         boolean isTouchingUI = false;
 
-                        if (dialogNo != null) {
-                            if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        if (dialogOkNoView != null) {
+                            if (dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                                dialogOkNoView.dispose();
+                                dialogOkNoView = null;
+                                if (dialog != null) {
+                                    dialog.nextButton.show();
+                                }
+                            } else if (dialogOkNoView.noButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                                dialogNo = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks2);
+                                if (dialogOkNoView != null) dialogOkNoView.dispose();
+                                dialogOkNoView = null;
+                                if (dialog != null) dialog.dispose();
                                 dialog = null;
+                                return;
+                            }
+                        }
+
+                        if (dialogNo != null) {
+                            if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                                 dialogNo.addCnt();
                                 if (dialogNo.getCnt() >= talks2.size) {
                                     dialogNo = null;
+                                    dialog = null;
+                                    dialogOkNoView = null;
                                 }
                             }
                         }
+
+                        if (questionDialog != null) {
+                            if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                savedDialogCnt = 0;
+                                dialog = new DialogView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                dialog = new DialogView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                                for (int i = 0; i < savedDialogCnt; i++) {
+                                    dialog.addCntAndUpdate();
+                                }
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.hintButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                if (dialog != null) {
+                                    savedDialogCnt = 0;
+                                    dialog.dispose();
+                                    dialog = null;
+                                }
+                                dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, hint);
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                if (dialog != null) {
+                                    savedDialogCnt = dialog.getCnt();
+                                    dialog.dispose();
+                                    dialog = null;
+                                }
+                                questionDialog = null;
+                                toDrawQuestion = false;
+                            }
+                        }
+
                         if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;
                             gameSession.pauseGame();
                         }
 
                         if ((isNearAntivirus || isNearComputer || isNearBattery || isNearDoor) && !toDraw) {
-                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                         } else if (!toDraw) {
-                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
                         }
-                        if (isNearAntivirus && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+
+                        if (dialog == null
+                            && dialogNo == null
+                            && dialogOkNoView == null
+                            && isNearAntivirus
+                            && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+
+                            antivirusApproachCount++;
+
+                            if (antivirusApproachCount >= 2) {
+                                if (dialog != null) {
+                                    savedDialogCnt = dialog.getCnt();
+                                }
+                                questionDialog = new QuestionView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f);
+                                toDrawQuestion = true;
+                            } else {
+                                dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            }
                         }
-                        if (isNearDoor && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+
+                        if (isNearDoor && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawPassword = true;
                             passwordInput.show();
                             gameSession.pauseGame();
                         }
-                        if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched() && toDraw) {
-                            toDraw = false;
-                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
 
-                        } else if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched() && toDraw) {
+                            toDraw = false;
+                        } else if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDraw = true;
-                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
                         }
-                        if (isNearBattery && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+
+                        if (isNearBattery && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawSave = true;
                             if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
                                 myGdxGame.audioManager.saveSound.play();
@@ -446,14 +657,18 @@ public class LevelThreeScreen extends ScreenAdapter {
                         } else if (!isNearBattery || saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
                         }
+
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            if (MemoryManager.loadIsSoundOn()) {
+                                myGdxGame.audioManager.saveSound.play();
+                            }
                             MemoryManager.saveGameState(3, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogNo == null) {
+                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogOkNoView == null && dialogNo == null) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(), touchpadView.getStrength());
                             }
                         } else {
@@ -542,6 +757,9 @@ public class LevelThreeScreen extends ScreenAdapter {
         if (toDraw) {
             image.draw(myGdxGame.batch);
         }
+        if (toDrawQuestion && isNearAntivirus && questionDialog != null) {
+            questionDialog.draw(myGdxGame.batch);
+        }
         if (gameSession.state == GameState.PAUSED) {
             if (!toDrawPassword) {
                 pauseBackground.draw(myGdxGame.batch);
@@ -559,22 +777,42 @@ public class LevelThreeScreen extends ScreenAdapter {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
             }
-            if (isNearAntivirus && dialog == null && MemoryManager.loadAreSubtitlesOn()) {
+
+            if (!isDesktop) {
+                ButtonView currentButton = actionButton;
+                boolean nearSomething = isNearAntivirus || isNearComputer || isNearBattery || isNearDoor;
+                if (nearSomething && !toDraw) {
+                    currentButton = actionButtonActive;
+                } else if (toDraw) {
+                    currentButton = actionButtonRed;
+                }
+                currentButton.draw(myGdxGame.batch);
+            }
+
+            if (isNearAntivirus && dialog == null && dialogOkNoView == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
             }
         }
         topBlackoutView.draw(myGdxGame.batch);
         if (!isDesktop) {
-            actionButton.draw(myGdxGame.batch);
             pauseButton.draw(myGdxGame.batch);
         }
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);
         }
+        if (dialogOkNoView != null) {
+            dialogOkNoView.draw(myGdxGame.batch);
+        }
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
         }
         myGdxGame.batch.end();
+        if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+            savedDialogCnt = dialog.getCnt();
+            dialog.exitCnt();
+            exitCnt = dialog.getCnt();
+            System.out.println(exitCnt);
+        }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);
         }
@@ -585,7 +823,7 @@ public class LevelThreeScreen extends ScreenAdapter {
             myGdxGame.world.destroyBody(heroObject.body);
         }
         heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 100;
-        heroY = (heroY != -1f) ? heroY : 250;
+        heroY = (heroY != -1f) ? heroY : 400;
         heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
         createMapBorders();
         gameSession.startGame();
@@ -597,6 +835,9 @@ public class LevelThreeScreen extends ScreenAdapter {
         heroSpriteSheet.dispose();
         touchpadView.dispose();
         tiledMapManager.dispose();
+        if (actionButton != null) actionButton.dispose();
+        if (actionButtonActive != null) actionButtonActive.dispose();
+        if (actionButtonRed != null) actionButtonRed.dispose();
     }
 
     private void createMapBorders() {

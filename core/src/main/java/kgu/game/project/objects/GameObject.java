@@ -40,8 +40,6 @@ public class GameObject {
             height);
     }
 
-    public void hit() {
-    }
 
     public int getX() {
         return (int) (body.getPosition().x / SCALE);
@@ -57,6 +55,14 @@ public class GameObject {
 
     public void setY(int y) {
         body.setTransform(body.getPosition().x, y * SCALE, 0);
+    }
+
+    public float getXf() {
+        return body.getPosition().x / SCALE;
+    }
+
+    public float getYf() {
+        return body.getPosition().y / SCALE;
     }
 
     public Body createBody(float x, float y, World world) {

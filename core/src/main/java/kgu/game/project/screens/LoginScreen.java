@@ -61,6 +61,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         confirmButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f + 90, 510, 50, 25, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.confirm"));
         forgotButton = new ButtonView(GameSettings.SCREEN_WIDTH / 2f - 230 / 2f, 250, 230, 25, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("login.forgot"), 1f);
         error = new TextView(MyGdxGame.arialFont, GameSettings.SCREEN_WIDTH / 2f - 85, 538, LocalizationManager.get("login.error"));
+        error.hide();
         infoWindow = new InfoWindow(myGdxGame, 120, 120, LocalizationManager.get("login.incorrect"), LocalizationManager.get("login.hint"), GameResources.WINDOW_PATH, GameResources.CLOSE_BUTTON_PATH);
         tornOffButton = new ButtonView(20, 20, 128, 128, GameResources.TURN_OFF_IMG_PATH);
         Gdx.input.setInputProcessor(this);
@@ -78,7 +79,7 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
         ScreenUtils.clear(Color.CLEAR);
 
         myGdxGame.batch.begin();
-        if (blackoutImageView == null){
+        if (blackoutImageView == null) {
             myGdxGame.batch.end();
             this.dispose();
             return;
@@ -163,6 +164,8 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
                     myGdxGame.camera.position.set(myGdxGame.camera.viewportWidth / 2f, myGdxGame.camera.viewportHeight / 2f, 0);
                     myGdxGame.camera.update();
                     return;
+                } else {
+                    error.show();
                 }
             }
             if (!infoWindow.isVisible()) {

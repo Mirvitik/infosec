@@ -137,5 +137,26 @@ public class MemoryManager {
         return gameData;
     }
 
+    private static final String MUSIC_VOLUME_KEY = "musicVolume";
+    private static final String SOUND_VOLUME_KEY = "soundVolume";
+
+    public static void saveMusicVolume(float volume) {
+        preferences.putFloat(MUSIC_VOLUME_KEY, volume);
+        preferences.flush();
+    }
+
+    public static float loadMusicVolume() {
+        return preferences.getFloat(MUSIC_VOLUME_KEY, 0.5f);
+    }
+
+    public static void saveSoundVolume(float volume) {
+        preferences.putFloat(SOUND_VOLUME_KEY, volume);
+        preferences.flush();
+    }
+
+    public static float loadSoundVolume() {
+        return preferences.getFloat(SOUND_VOLUME_KEY, 0.5f);
+    }
+
 
 }

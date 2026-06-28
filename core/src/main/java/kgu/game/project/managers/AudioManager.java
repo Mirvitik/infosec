@@ -18,6 +18,7 @@ public class AudioManager {
     public Music storyMusic;
     public Music hacked;
     public Music menuMusic;
+
     public AudioManager() {
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.BACKGROUND2_MUSIC_PATH));
         shootSound = Gdx.audio.newSound(Gdx.files.internal(GameResources.SCROLL_SOUND_PATH));
@@ -46,5 +47,4 @@ public class AudioManager {
         if (isMusicOn) backgroundMusic.play();
         else backgroundMusic.stop();
     }
-
 }

@@ -72,6 +72,7 @@ public class GameScreen extends ScreenAdapter {
     ImageView pauseBackground;
     private final TiledMapManager tiledMapManager;
     private Vector3 touch2;
+    boolean toDrawText;
     public boolean isNearComputer = false;
     Array<String> talks;
 
@@ -83,6 +84,7 @@ public class GameScreen extends ScreenAdapter {
     Array talksplayer = new Array<>();
     DialogView dialog;
     DialogView dialogPlayer;
+    TextView esc;
 
     public GameScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
@@ -119,9 +121,19 @@ public class GameScreen extends ScreenAdapter {
         isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
 
         heroObject = new AnimatedHeroObject(GameSettings.SCREEN_WIDTH / 2 - 400, 150, 428, 128, heroFrames, myGdxGame.world);
+        int x, y;
+        x = heroObject.getX();
+        y = heroObject.getY();
+        if (heroObject.getX() > 600) {
+            x = 600;
+        }
+        if (heroObject.getX() < 565) {
+            x = 565;
+        }
+        System.out.println(y);
         myGdxGame.camera.position.set(
-            heroObject.getX(),
-            heroObject.getY(),
+            x,
+            y,
             0
         );
         myGdxGame.camera.update();
@@ -179,6 +191,8 @@ public class GameScreen extends ScreenAdapter {
             talks.add(LocalizationManager.get("book." + i));
         }
         gameSession.pauseGame();
+        esc = new TextView(MyGdxGame.arialWhiteFont, 600, 50, "Нажми esc, чтобы выйти");
+        toDrawText = false;
     }
 
     @Override
@@ -194,9 +208,22 @@ public class GameScreen extends ScreenAdapter {
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
 
+            int x, y;
+            x = heroObject.getX();
+            y = heroObject.getY();
+            if (heroObject.getX() > 600) {
+                x = 600;
+            }
+            if (heroObject.getX() < 565) {
+                x = 565;
+            }
+            if (heroObject.getY() < 380) {
+                y = 380;
+            }
+            System.out.println(x);
             myGdxGame.camera.position.set(
-                heroObject.getX(),
-                heroObject.getY(),
+                x,
+                y,
                 0
             );
 
@@ -486,7 +513,9 @@ public class GameScreen extends ScreenAdapter {
         }
         topBlackoutView.draw(myGdxGame.batch);
         pauseButton.draw(myGdxGame.batch);
-
+        if (isDesktop && toDrawText) {
+            esc.draw(myGdxGame.batch);
+        }
         myGdxGame.batch.end();
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);

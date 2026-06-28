@@ -249,6 +249,23 @@ public class LocalizationManager {
         add("book.3",
             "It's better not to come here,\nso as not to torture your brains",
             "Лучше не подходить сюда,\nчтобы не мучить свои мозги");
+        add("question.restart", "Restart", "Начать заново");
+        add("question.continue", "Continue\ndialog", "Продолжить\nдиалог");
+        add("question.hint", "Get hint", "Получить подсказку");
+        add("question.hint.default", "Try to think again", "Попробуйте подумать еще раз");
+        add("question.hint.prefix", "Hint:", "Подсказка:");
+        add("question.dialog.finished", "Dialog finished", "Диалог завершен");
+        add("hint.1", "The answer starts with FRO, find 3 other letters", "Ответ начинается с FRO, найди 3 последние буквы");
+        add("hint.2", "The answer starts with VIVELA, find other letters", "Ответ начинается с VIVELA, найди остальные буквы");
+        add("hint.3", "I gave a task to the neural network, and it gave me: EX...\n" +
+            "Then the tokens ran out:(", "Я дал задачу нейросети, она выдала: EX...\nДальше закончились токены:(");
+        add("hint.4", "In binary representation, the answer has one 0", "В двоичном представлении ответ имеет один 0");
+        add("hint.5", "The answer is 4 numbers with dots between them", "Ответ это 4 числа, между которыми точки");
+        add("logic.history.0", "In computer science classes, there are three main logical\noperators: and, or, and not.", "На уроках информатики проходят 3 основных\nлогических оператора: and, or, not");
+        add("logic.history.1", "But there is another\noperator that is used in encryption-xor", "Но есть ещё один оператор, который используют\nпри шифровании-xor");
+        add("networks.history.0", "Hackers often attack various networks", "Хакеры часто осуществляют\nатаки на различные сети");
+        add("networks.history.1", "Specialists check website logs\nto determine the source of the attack", "Специалисты проверяют логи сайтов,\nчтобы понять, откуда была совершена атака");
+
     }
 
     private static void add(String key, String en, String ru) {

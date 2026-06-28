@@ -27,6 +27,7 @@ import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
 import kgu.game.project.components.NetworkLogView;
 import kgu.game.project.components.IpInputView;
+import kgu.game.project.components.QuestionView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
 import kgu.game.project.components.TextView;
@@ -52,6 +53,11 @@ public class LevelFiveScreen extends ScreenAdapter {
     MyGdxGame myGdxGame;
     GameSession gameSession;
     HeroObject heroObject;
+    QuestionView questionDialog;
+    boolean toDrawQuestion = false;
+    private int savedDialogCnt = 0;
+    private int antivirusApproachCount = 0;
+    Array<String> hint;
 
     ArrayList<TrashObject> trashArray;
     ArrayList<BulletObject> bulletArray;
@@ -85,6 +91,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     private final TiledMapManager tiledMapManager;
 
     DialogView dialog;
+    DialogView dialogNo;
 
     NetworkLogView networkLogView;
     IpInputView ipInputView;
@@ -95,6 +102,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     boolean toDrawSave = false;
 
     Array<String> talks;
+    Array<String> talks2;
 
     boolean isNearComputer = false;
     Boolean isNearRouter = false;
@@ -107,6 +115,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     ContactManager contactManager;
     TextView hintText;
     TextView networkHintText;
+    public Integer exitCnt;
     private boolean isDesktop;
     private boolean wasKKeyPressed = false;
 
@@ -132,6 +141,13 @@ public class LevelFiveScreen extends ScreenAdapter {
         for (int i = 0; i <= 15; i++) {
             talks.add(LocalizationManager.get("network.talk." + i));
         }
+
+        talks2 = new Array<>();
+        talks2.add(LocalizationManager.get("network.talk2.0"));
+        talks2.add(LocalizationManager.get("network.talk2.1"));
+
+        hint = new Array<>();
+        hint.add(LocalizationManager.get("hint.5"));
 
         gameSession = new GameSession();
         heroSpriteSheet = new Texture(GameResources.SPRITE_SHEET);
@@ -254,6 +270,11 @@ public class LevelFiveScreen extends ScreenAdapter {
                 }
             }
         );
+
+        questionDialog = new QuestionView(myGdxGame,
+            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+            GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+            GameSettings.SCREEN_HEIGHT / 4f);
     }
 
 
@@ -301,23 +322,23 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
 
         if (isKKeyPressed && !wasKKeyPressed) {
-            if (isNearRouter && dialog == null) {
+            if (isNearRouter && dialog == null && dialogNo == null && !toDrawQuestion) {
                 dialog = new DialogView(myGdxGame,
                     (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
                     GameSettings.SCREEN_HEIGHT / 4f, talks);
-            } else if (isNearComputer) {
+            } else if (isNearComputer && dialog == null && dialogNo == null) {
                 toDrawNetworkLogs = !toDrawNetworkLogs;
-            } else if (isNearDoor && !ipInputActive && dialog == null) {
+            } else if (isNearDoor && !ipInputActive && dialog == null && dialogNo == null) {
                 ipInputActive = true;
                 ipInputView.show();
                 gameSession.pauseGame();
-            } else if (isNearBattery && !toDrawSave && dialog == null) {
+            } else if (isNearBattery && !toDrawSave && dialog == null && dialogNo == null) {
                 toDrawSave = true;
                 if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
                     myGdxGame.audioManager.saveSound.play();
                 }
-            } else if (isNearBattery && toDrawSave && dialog == null) {
+            } else if (isNearBattery && toDrawSave && dialog == null && dialogNo == null) {
                 toDrawSave = false;
             }
         }
@@ -339,7 +360,24 @@ public class LevelFiveScreen extends ScreenAdapter {
             }
             updateTrash();
             updateBullets();
-            myGdxGame.camera.position.set(heroObject.getX(), heroObject.getY(), 0);
+            int x, y;
+            x = heroObject.getX();
+            y = heroObject.getY();
+            if (heroObject.getX() > 750) {
+                x = 750;
+            }
+            if (heroObject.getX() < 565) {
+                x = 565;
+            }
+            if (heroObject.getY() < 280) {
+                y = 280;
+            }
+            System.out.println(x);
+            myGdxGame.camera.position.set(
+                x,
+                y,
+                0
+            );
             myGdxGame.camera.update();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
@@ -366,13 +404,81 @@ public class LevelFiveScreen extends ScreenAdapter {
             case PLAYING:
                 if (isDesktop) {
                     handleKeyboardInput();
-                    if (isTouched && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                        gameSession.pauseGame();
+                    if (isTouched) {
+                        myGdxGame.touch = myGdxGame.uiCamera.unproject(
+                            new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
+                        );
+                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            gameSession.pauseGame();
+                        }
                     }
+
+                    if (dialogNo != null) {
+                        if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialogNo.addCnt();
+                            if (dialogNo.getCnt() >= talks2.size) {
+                                dialogNo = null;
+                                dialog = null;
+                            }
+                        }
+                    }
+
+                    if (questionDialog != null) {
+                        if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            savedDialogCnt = 0;
+                            dialog = new DialogView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            dialog = new DialogView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            for (int i = 0; i < savedDialogCnt; i++) {
+                                dialog.addCntAndUpdate();
+                            }
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.hintButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            if (dialog != null) {
+                                savedDialogCnt = 0;
+                                dialog.dispose();
+                                dialog = null;
+                            }
+                            dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f, hint);
+                            questionDialog = null;
+                            toDrawQuestion = false;
+
+                        } else if (questionDialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+                            if (dialog != null) {
+                                savedDialogCnt = dialog.getCnt();
+                                dialog.dispose();
+                                dialog = null;
+                            }
+                            questionDialog = null;
+                            toDrawQuestion = false;
+                        }
+                    }
+
                     handleDesktopAction();
 
                     if (toDrawSave && isTouched && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         MemoryManager.saveGameState(5, heroObject.getX(), heroObject.getY());
+                        toDrawSave = false;
+                    }
+
+                    if (toDrawSave && isTouched && saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         toDrawSave = false;
                     }
 
@@ -383,16 +489,98 @@ public class LevelFiveScreen extends ScreenAdapter {
                     if (isTouched) {
                         boolean isTouchingUI = false;
 
+                        if (dialogNo != null) {
+                            if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                                dialogNo.addCnt();
+                                if (dialogNo.getCnt() >= talks2.size) {
+                                    dialogNo = null;
+                                    dialog = null;
+                                }
+                            }
+                        }
+
+                        if (questionDialog != null) {
+                            if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                savedDialogCnt = 0;
+                                dialog = new DialogView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                dialog = new DialogView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                                for (int i = 0; i < savedDialogCnt; i++) {
+                                    dialog.addCntAndUpdate();
+                                }
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.hintButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                if (dialog != null) {
+                                    savedDialogCnt = 0;
+                                    dialog.dispose();
+                                    dialog = null;
+                                }
+                                dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, hint);
+                                questionDialog = null;
+                                toDrawQuestion = false;
+
+                            } else if (questionDialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                                && Gdx.input.justTouched()) {
+                                if (dialog != null) {
+                                    savedDialogCnt = dialog.getCnt();
+                                    dialog.dispose();
+                                    dialog = null;
+                                }
+                                questionDialog = null;
+                                toDrawQuestion = false;
+                            }
+                        }
+
                         if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;
                             gameSession.pauseGame();
                         }
 
-                        if (isNearRouter && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            dialog = new DialogView(myGdxGame,
-                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, talks);
+                        if ((isNearRouter || isNearComputer || isNearBattery || isNearDoor) && !toDrawNetworkLogs) {
+                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+                        } else if (!toDrawNetworkLogs) {
+                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+                        }
+
+                        if (dialog == null
+                            && dialogNo == null
+                            && isNearRouter
+                            && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && Gdx.input.justTouched()) {
+
+                            antivirusApproachCount++;
+
+                            if (antivirusApproachCount >= 2) {
+                                if (dialog != null) {
+                                    savedDialogCnt = dialog.getCnt();
+                                }
+                                questionDialog = new QuestionView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f);
+                                toDrawQuestion = true;
+                            } else {
+                                dialog = new DialogView(myGdxGame,
+                                    (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
+                            }
                         }
 
                         if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
@@ -415,8 +603,16 @@ public class LevelFiveScreen extends ScreenAdapter {
                         }
 
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            if (MemoryManager.loadIsSoundOn()) {
+                                myGdxGame.audioManager.saveSound.play();
+                            }
                             MemoryManager.saveGameState(5, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
+                        }
+
+                        if (dialog != null && dialog.getCnt() == 4 && isNearRouter) {
+                            // Просто продолжаем диалог без OkNoDialog
+                            dialog.addCnt();
                         }
 
                         if (!isNearRouter) {
@@ -425,7 +621,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive() && !toDrawSave && dialog == null && !toDrawNetworkLogs) {
+                            if (touchpadView.isActive() && !toDrawSave && dialog == null && dialogNo == null && !toDrawNetworkLogs) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(),
                                     touchpadView.getStrength());
                             }
@@ -510,6 +706,10 @@ public class LevelFiveScreen extends ScreenAdapter {
             networkLogView.draw(myGdxGame.batch);
         }
 
+        if (toDrawQuestion && isNearRouter && questionDialog != null) {
+            questionDialog.draw(myGdxGame.batch);
+        }
+
         if (gameSession.state == GameState.PAUSED) {
             if (!ipInputActive) {
                 pauseBackground.draw(myGdxGame.batch);
@@ -542,6 +742,10 @@ public class LevelFiveScreen extends ScreenAdapter {
             if (toDrawNetworkLogs) {
                 networkHintText.draw(myGdxGame.batch);
             }
+
+            if (isNearRouter && dialog == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
+                hintText.draw(myGdxGame.batch);
+            }
         }
 
         float uiHeight = myGdxGame.uiCamera.viewportHeight;
@@ -553,12 +757,20 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
         liveView.draw(myGdxGame.batch);
 
+        if (dialogNo != null) {
+            dialogNo.draw(myGdxGame.batch);
+        }
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
         }
 
         myGdxGame.batch.end();
-
+        if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+            savedDialogCnt = dialog.getCnt();
+            dialog.exitCnt();
+            exitCnt = dialog.getCnt();
+            System.out.println(exitCnt);
+        }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);
         }
@@ -604,6 +816,12 @@ public class LevelFiveScreen extends ScreenAdapter {
         createMapBorders();
         gameSession.startGame();
         wasKKeyPressed = false;
+        antivirusApproachCount = 0;
+        savedDialogCnt = 0;
+        toDrawQuestion = false;
+        questionDialog = null;
+        dialog = null;
+        dialogNo = null;
     }
 
     @Override

@@ -105,6 +105,8 @@ public class EndScreen extends ScreenAdapter {
     String currentMailText = "";
     TextView mailTextView;
     ButtonView mailCloseButton;
+    ImageView pauseBackground;
+    public Integer exitCnt;
 
     public EndScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
@@ -206,14 +208,15 @@ public class EndScreen extends ScreenAdapter {
         batteryObject = new BatteryObject(8, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 440, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.END_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
         mail1 = new BatteryObject(5, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
-            GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
+            GameResources.MAIL_ICON_PATH_1, myGdxGame.world, GameSettings.MAIL_BIT);
         mail2 = new BatteryObject(8, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
-            GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
+            GameResources.MAIL_ICON_PATH_2, myGdxGame.world, GameSettings.MAIL_BIT);
         mail3 = new BatteryObject(11, 2, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
-            GameResources.MAIL_ICON_PATH, myGdxGame.world, GameSettings.MAIL_BIT);
+            GameResources.MAIL_ICON_PATH_3, myGdxGame.world, GameSettings.MAIL_BIT);
         mailTextView = new TextView(MyGdxGame.arialFont, 200, 500, "");
         mailCloseButton = new ButtonView(900, 150, 100, 40, MyGdxGame.arialFont,
             GameResources.PASSWORD_IMG_PATH, "Close");
+        pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
     }
 
 
@@ -305,7 +308,24 @@ public class EndScreen extends ScreenAdapter {
             }
             updateTrash();
             updateBullets();
-            myGdxGame.camera.position.set(heroObject.getX(), heroObject.getY(), 0);
+            int x, y;
+            x = heroObject.getX();
+            y = heroObject.getY();
+            if (heroObject.getX() > 650) {
+                x = 650;
+            }
+            if (heroObject.getX() < 565) {
+                x = 565;
+            }
+            if (heroObject.getY() < 280) {
+                y = 280;
+            }
+            System.out.println(x);
+            myGdxGame.camera.position.set(
+                x,
+                y,
+                0
+            );
             myGdxGame.camera.update();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
@@ -329,7 +349,14 @@ public class EndScreen extends ScreenAdapter {
             case PLAYING:
                 if (isDesktop) {
                     handleKeyboardInput();
-                    handleDesktopAction();
+                    if (isTouched) {
+                        myGdxGame.touch = myGdxGame.uiCamera.unproject(
+                            new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
+                        );
+                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            gameSession.pauseGame();
+                        }
+                    }
 
                     if (toDrawMail && isTouched && mailCloseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         toDrawMail = false;
@@ -515,6 +542,7 @@ public class EndScreen extends ScreenAdapter {
         }
         if (gameSession.state == GameState.PAUSED) {
             if (!toDrawPassword) {
+                pauseBackground.draw(myGdxGame.batch);
                 pauseTextView.draw(myGdxGame.batch);
                 homeButton.draw(myGdxGame.batch);
                 continueButton.draw(myGdxGame.batch);
@@ -553,6 +581,11 @@ public class EndScreen extends ScreenAdapter {
             mailCloseButton.draw(myGdxGame.batch);
         }
         myGdxGame.batch.end();
+        if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+            dialog.exitCnt();
+            exitCnt = dialog.getCnt();
+            System.out.println(exitCnt);
+        }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);
         }

@@ -54,6 +54,7 @@ public class DialogView extends View {
         this.name = name;
     }
 
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(fon, x, y + 90, width, height);
@@ -76,9 +77,6 @@ public class DialogView extends View {
             if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && (cnt < talks.size - 1) && Gdx.input.justTouched() && cnt < talks.size) {
                 this.text = talks.get(cnt);
             }
-        }
-        if (exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-            cnt = talks.size + 1;
         }
         avatar.draw(batch);
         MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
@@ -136,5 +134,9 @@ public class DialogView extends View {
         if (cnt < talks.size) {
             this.text = talks.get(cnt);
         }
+    }
+
+    public void exitCnt() {
+        cnt = talks.size; // просто помечаем как завершённый, не talks.size + 1
     }
 }

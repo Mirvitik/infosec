@@ -17,6 +17,10 @@ public class GameResources {
     public static final String MENU_SOUND = "sounds/menusound.wav";
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
     public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
+    public static final String STORY_TELLING_AND_OR = "textures/storytellingandor.png";
+    public static final String STORY_TELLING_XOR = "textures/storytellingxor.png";
+    public static final String STORY_TELLING_WI_FI = "textures/storytellingwifi.png";
+    public static final String STORY_TELLING_LOGS = "textures/storytellinglogs.png";
     public static final String STORY_TELLING_SPQR = "textures/storytellingspqr.png";
     public static final String STORY_PEREBOR = "textures/perebor.png";
     public static final String STORY_LOCK = "textures/lock.png";
@@ -77,6 +81,10 @@ public class GameResources {
     public static final String ANTIVIRUS_FIVE_TEXTURE_PATH = "textures/antivirus5.png";
     public static final String ANTIVIRUS_NAPOLEON_TEXTURE_PATH = "textures/napoleon.png";
     public static final String MAIL_ICON_PATH = "textures/mail-icon.png";
+
+    public static final String MAIL_ICON_PATH_1 = "textures/mail-icon_1.png";
+    public static final String MAIL_ICON_PATH_2 = "textures/mail-icon_2.png";
+    public static final String MAIL_ICON_PATH_3 = "textures/mail-icon_3.png";
 
     public static final String BACKGROUND2_MUSIC_PATH = "sounds/background2.mp3";
     public static final String DESTROY_SOUND_PATH = "sounds/destroy.mp3";
