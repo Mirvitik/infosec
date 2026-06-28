@@ -271,6 +271,7 @@ public class LocalizationManager {
         add("ipinput.clear", "Clear", "Очистить");
         add("ipinput.back", "Back", "Назад");
         add("ipinput.error", "Invalid IP! Check the logs again.", "Неверный IP! Проверь логи ещё раз.");
+        add("levelThree.loc", "KEY:    295\nTEXT:  COOKIE", "КЛЮЧ:    295\nТЕКСТ: COOKIE");
     }
 
     private static void add(String key, String en, String ru) {

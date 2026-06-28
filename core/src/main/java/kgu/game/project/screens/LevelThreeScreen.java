@@ -259,7 +259,7 @@ public class LevelThreeScreen extends ScreenAdapter {
         alphabet.setText(alpha);
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
-        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "КЛЮЧ:    295\nТЕКСТ: COOKIE");
+        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, LocalizationManager.get("levelThree.loc"));
         arrow = new ImageView(230, 530, 32, 32, "textures/arrow.png");
         batteryObject = new BatteryObject(11.5f, 6.5f, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 448, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.ROME_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
