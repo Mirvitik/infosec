@@ -27,6 +27,7 @@ public class LocalizationManager {
         add("menu.start", "START", "НАЧАТЬ");
         add("menu.load", "LOAD GAME", "ЗАГРУЗИТЬ ИГРУ");
         add("menu.settings", "SETTINGS", "НАСТРОЙКИ");
+        add("menu.achievements", "ACHIEVEMENTS", "АЧИВКИ");
 
         add("talk.0", "Greetings, most esteemed user!\nIt's quite dusty inside your computer case",
             "Здравствуйте, многоуважаемый пользователь!\nНу и пыльно в корпусе Вашего компьютера");

@@ -40,9 +40,9 @@ public class LoadGameScreen extends ScreenAdapter {
             this.w = w;
             this.h = h;
             bg = new ImageView(x, y, w, h, GameResources.BUTTON_SHORT_BG_IMG_PATH);
-            slotNumText = new TextView(MyGdxGame.arialFont, x + 14, y + h - 16, slotNum);
-            levelText = new TextView(g.commonWhiteFont, x + 14, y + h - 50, levelName);
-            dateText = new TextView(MyGdxGame.arialFont, x + 14, y + 14, date);
+            slotNumText = new TextView(MyGdxGame.arialGreenFont, x + 14, y + h - 20, slotNum);
+            levelText = new TextView(g.commonWhiteFont, x + 14, y + h - 54, levelName);
+            dateText = new TextView(MyGdxGame.arialGreenFont, x + 14, y + 10, date);
         }
 
         void draw(SpriteBatch batch) {
@@ -67,7 +67,7 @@ public class LoadGameScreen extends ScreenAdapter {
             480, 80, 160, 50,
             myGdxGame.commonBlackFont,
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
-            "← RETURN"
+            LocalizationManager.get("settings.return")
         );
 
         slotCards = new ArrayList<>();
@@ -212,7 +212,7 @@ public class LoadGameScreen extends ScreenAdapter {
         for (int level : sortedLevels) {
             long date = latestByLevel.get(level);
             float cx = startX + (cnt % 2) * gapX;
-            float cy = startY - (cnt / 2) * gapY;
+            float cy = startY - ((float) cnt / 2) * gapY;
 
             String levelName = level <= levelNames.length
                 ? levelNames[level - 1] : "Level " + level;

@@ -21,10 +21,14 @@ public class MyGdxGame extends Game {
 
     public World world;
     public BitmapFont largeWhiteFont;
+    public BitmapFont largeRedFont;
+    public BitmapFont largeBlueFont;
     public BitmapFont commonWhiteFont;
     public BitmapFont commonBlackFont;
+    public BitmapFont commonGreenFont;
     public BitmapFont commonBlackFontText;
     public BitmapFont commonHelpFontText;
+    public static BitmapFont arialGreenFont;
     public BitmapFont commonPixelFontText;
     public BitmapFont commonPixelLogFontText;
     public BitmapFont commonPixelFontGreyText;
@@ -80,22 +84,26 @@ public class MyGdxGame extends Game {
     }
 
     private void initFonts() {
-        largeWhiteFont = FontBuilder.generate(60, Color.WHITE, GameResources.FONT_PATH);
+        largeWhiteFont = FontBuilder.generate(60, Color.valueOf("#0bfb9c"), GameResources.FONT_PATH);
+        largeRedFont = FontBuilder.generate(60, Color.valueOf("#821a2e"), GameResources.FONT_PATH);
+        largeBlueFont = FontBuilder.generate(60, Color.valueOf("#196e83"), GameResources.FONT_PATH);
         commonWhiteFont = FontBuilder.generate(36, Color.WHITE, GameResources.FONT_PATH);
-        commonBlackFont = FontBuilder.generate(36, Color.BLACK, GameResources.FONT_PATH_HACKED_CYR);
+        commonBlackFont = FontBuilder.generate(36, Color.valueOf("#89c7b2"), GameResources.FONT_PATH_HACKED_CYR);
+        commonGreenFont = FontBuilder.generate(36, Color.valueOf("#89c7b2"), GameResources.FONT_PATH_HACKED_CYR);
         commonBlackFontText = FontBuilder.generate(36, Color.BLACK, GameResources.FONT_PATH_HACK_TEXT);
         commonHelpFontText = FontBuilder.generate(36, Color.GREEN, GameResources.FONT_PATH_HACK_TEXT);
         commonPixelFontText = FontBuilder.generate(20, Color.GREEN, GameResources.FONT_PATH_PIXEL);
         commonPixelLogFontText = FontBuilder.generate(12, Color.GREEN, GameResources.FONT_PATH_PIXEL);
         commonPixelFontGreyText = FontBuilder.generate(20, Color.GRAY, GameResources.FONT_PATH_PIXEL);
-        xanmonoFont = FontBuilder.generate(20, Color.GRAY, GameResources.XANMONO_FONT_PATH);
-        xanmonoFontBig = FontBuilder.generate(60, Color.WHITE, GameResources.XANMONO_FONT_PATH);
+        xanmonoFont = FontBuilder.generate(20, Color.valueOf("#89c7b2"), GameResources.XANMONO_FONT_PATH);
+        xanmonoFontBig = FontBuilder.generate(60, Color.valueOf("#0bfb9c"), GameResources.XANMONO_FONT_PATH);
         arialFont = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
+        arialGreenFont = FontBuilder.generate(20, Color.valueOf("#89c7b2"), GameResources.ARIAL_FONT_PATH);
         arialFontWhite = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         arialFontGray = FontBuilder.generate(20, Color.GRAY, GameResources.ARIAL_FONT_PATH);
         arialFontGray.setColor(Color.GRAY);
-        arialFontBlue = FontBuilder.generate(40, Color.BLUE, GameResources.ARIAL_FONT_PATH);
-        arialFontBlue.setColor(Color.BLUE);
+        arialFontBlue = FontBuilder.generate(40, Color.valueOf("#89c7b2"), GameResources.ARIAL_FONT_PATH);
+        arialFontBlue.setColor(Color.valueOf("#89c7b2"));
         arialWhiteFont = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         consolasFont = FontBuilder.generate(20, Color.GRAY, GameResources.CONSOLAS_FONT_PATH);
         arialFontRed = FontBuilder.generate(20, Color.RED, GameResources.ARIAL_FONT_PATH);

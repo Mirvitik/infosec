@@ -70,9 +70,18 @@ public class ButtonView extends View {
         texture = new Texture(texturePath);
     }
 
-    public void setText(String text){
+    public void setText(String text) {
         this.text = text;
+        if (bitmapFont != null && text != null) {
+            GlyphLayout glyphLayout = new GlyphLayout(bitmapFont, text);
+            float textWidth = glyphLayout.width;
+            float textHeight = glyphLayout.height;
+
+            textX = x + (width - textWidth) / 2;
+            textY = y + (height + textHeight) / 2;
+        }
     }
+
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(texture, x, y, width, height);
@@ -99,6 +108,7 @@ public class ButtonView extends View {
     public float getHeight() {
         return height;
     }
+
     public String getText() {
         return text;
     }

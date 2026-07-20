@@ -22,26 +22,33 @@ public class MenuScreen extends ScreenAdapter {
 
     MovingBackgroundView backgroundView;
     TextView titleView;
+    TextView titleView2;
+    TextView titleView3;
     ButtonView startButtonView;
     ButtonView loadGameButtonView;
     ButtonView settingsButtonView;
     ButtonView exitButtonView;
+    ButtonView achievementsButtonView;
     ImageView image;
 
     public MenuScreen(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
         backgroundView = new MovingBackgroundView(GameResources.BACKGROUND_IMG_PATH);
         image = new ImageView(800, (float) GameSettings.SCREEN_HEIGHT / 2 - 250f, GameResources.MASK_IMG_PATH);
-        titleView = new TextView(myGdxGame.largeWhiteFont, 210, 560, "3xpl01T");
-        startButtonView = new ButtonView(200, 396, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.start"));
-        loadGameButtonView = new ButtonView(200, 301, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.load"));
-        settingsButtonView = new ButtonView(200, 206, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.settings"));
-        exitButtonView = new ButtonView(200, 111, 340, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.exit"));
+        titleView  = new TextView(myGdxGame.largeWhiteFont, 210, 560, "3xpl01T");
+        titleView2 = new TextView(myGdxGame.largeRedFont,  207, 560, "3xpl01T");
+        titleView3 = new TextView(myGdxGame.largeBlueFont, 213, 560, "3xpl01T");
+        startButtonView = new ButtonView(200, 436, 340, 70, myGdxGame.commonGreenFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.start"));
+        loadGameButtonView = new ButtonView(200, 341, 340, 70, myGdxGame.commonGreenFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.load"));
+        achievementsButtonView = new ButtonView(200, 246, 340, 70, myGdxGame.commonGreenFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.achievements"));
+        settingsButtonView = new ButtonView(200, 151, 340, 70, myGdxGame.commonGreenFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.settings"));
+        exitButtonView = new ButtonView(200, 56, 340, 70, myGdxGame.commonGreenFont, GameResources.BUTTON_LONG_BG_IMG_PATH, LocalizationManager.get("menu.exit"));
+        refreshAllTexts();
     }
 
     @Override
     public void render(float delta) {
-
+        refreshAllTexts();
         handleInput();
 
         myGdxGame.uiCamera.update();
@@ -52,10 +59,13 @@ public class MenuScreen extends ScreenAdapter {
 
         backgroundView.draw(myGdxGame.batch);
         image.draw(myGdxGame.batch);
+        titleView2.draw(myGdxGame.batch);
+        titleView3.draw(myGdxGame.batch);
         titleView.draw(myGdxGame.batch);
         exitButtonView.draw(myGdxGame.batch);
         settingsButtonView.draw(myGdxGame.batch);
         loadGameButtonView.draw(myGdxGame.batch);
+        achievementsButtonView.draw(myGdxGame.batch);
         startButtonView.draw(myGdxGame.batch);
 
         myGdxGame.batch.end();
@@ -149,5 +159,6 @@ public class MenuScreen extends ScreenAdapter {
         loadGameButtonView.setText(LocalizationManager.get("menu.load"));
         settingsButtonView.setText(LocalizationManager.get("menu.settings"));
         exitButtonView.setText(LocalizationManager.get("menu.exit"));
+        achievementsButtonView.setText(LocalizationManager.get("menu.achievements"));
     }
 }
