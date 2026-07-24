@@ -423,6 +423,10 @@ public class LevelFiveScreen extends ScreenAdapter {
                         }
                     }
 
+                    if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        dialog.addCntAndUpdate();
+                    }
+
                     if (questionDialog != null) {
                         if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                             && Gdx.input.justTouched()) {
@@ -497,6 +501,10 @@ public class LevelFiveScreen extends ScreenAdapter {
                                     dialog = null;
                                 }
                             }
+                        }
+
+                        if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.addCntAndUpdate();
                         }
 
                         if (questionDialog != null) {
@@ -752,9 +760,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         float blackoutHeight = 64f;
         topBlackoutView.setPosition(0, uiHeight - blackoutHeight);
         topBlackoutView.draw(myGdxGame.batch);
-        if (!isDesktop) {
-            pauseButton.draw(myGdxGame.batch);
-        }
+        pauseButton.draw(myGdxGame.batch);
         liveView.draw(myGdxGame.batch);
 
         if (dialogNo != null) {

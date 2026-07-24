@@ -1,6 +1,5 @@
 package kgu.game.project.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -68,16 +67,6 @@ public class DialogView extends View {
         }
         this.nextButton.draw(batch);
         exitButton.draw(batch);
-        System.out.println(cnt);
-        if (myGdxGame.touch == null) {
-            return;
-        }
-        if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-            cnt += 1;
-            if (nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && (cnt < talks.size - 1) && Gdx.input.justTouched() && cnt < talks.size) {
-                this.text = talks.get(cnt);
-            }
-        }
         avatar.draw(batch);
         MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
     }
@@ -126,7 +115,7 @@ public class DialogView extends View {
     }
 
     public void addCnt() {
-        cnt += 1;
+        addCntAndUpdate();
     }
 
     public void addCntAndUpdate() {

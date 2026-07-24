@@ -283,7 +283,7 @@ public class LocalizationManager {
 
         add("mail.legitimate",
             "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[LEGITIMATE: official domain,\nno action required]",
-            "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]");
+            "От: noreply@github.com\nТема: Ваш pull request был смёржен\n\nЗдравствуйте,\nВаш pull request #42 был смёржен.\nПосмотреть: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]");
     }
 
     private static void add(String key, String en, String ru) {

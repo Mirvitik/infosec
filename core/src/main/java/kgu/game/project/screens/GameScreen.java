@@ -279,11 +279,21 @@ public class GameScreen extends ScreenAdapter {
     private void handleDesktopAction() {
         boolean isKKeyPressed = Gdx.input.isKeyPressed(com.badlogic.gdx.Input.Keys.K);
 
+        if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+            gameSession.pauseGame();
+        }
+
         if (isKKeyPressed && !wasKKeyPressed && isNearComputer) {
             this.dispose();
             myGdxGame.loginScreen = new LoginScreen(myGdxGame);
             myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
             myGdxGame.setScreen(myGdxGame.loginScreen);
+        } else if (isKKeyPressed && !wasKKeyPressed && isNearBookshelf && dialogPlayer == null) {
+            dialogPlayer = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                GameSettings.SCREEN_HEIGHT / 4f, talks, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
+            isDialogPlayerOn = true;
+            gameSession.pauseGame();
         }
         wasKKeyPressed = isKKeyPressed;
     }
@@ -309,6 +319,12 @@ public class GameScreen extends ScreenAdapter {
                     }
 
                     handleDesktopAction();
+
+                    isTouchingUI = false;
+                    if (isTouched && Gdx.input.justTouched() && !isDialogPlayerOn && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        isTouchingUI = true;
+                        gameSession.pauseGame();
+                    }
 
                     if (isTouched && !isTouchingUI) {
                         touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);

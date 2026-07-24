@@ -461,6 +461,10 @@ public class LevelThreeScreen extends ScreenAdapter {
                         }
                     }
 
+                    if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        dialog.addCntAndUpdate();
+                    }
+
                     if (questionDialog != null) {
                         if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                             && Gdx.input.justTouched()) {
@@ -551,6 +555,10 @@ public class LevelThreeScreen extends ScreenAdapter {
                                     dialogOkNoView = null;
                                 }
                             }
+                        }
+
+                        if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.addCntAndUpdate();
                         }
 
                         if (questionDialog != null) {
@@ -794,9 +802,7 @@ public class LevelThreeScreen extends ScreenAdapter {
             }
         }
         topBlackoutView.draw(myGdxGame.batch);
-        if (!isDesktop) {
-            pauseButton.draw(myGdxGame.batch);
-        }
+        pauseButton.draw(myGdxGame.batch);
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);
         }

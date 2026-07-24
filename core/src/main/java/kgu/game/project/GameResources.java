@@ -48,6 +48,7 @@ public class GameResources {
 
     public static final String BUTTON_SHORT_BG_IMG_PATH = "textures/button_background_short.png";
     public static final String BUTTON_LONG_BG_IMG_PATH = "textures/button_background_long.png";
+    public static final String TRANS_IMG_PATH = "fonts/TranSansShell.ttf";
 
     public static final String PAUSE_IMG_PATH = "textures/pause_icon.png";
     public static final String BOOK_SHELF = "textures/bookshelf.png";
@@ -70,6 +71,8 @@ public class GameResources {
     public static final String TMX_MAP_LEVEL_ONE_PATH = "maps/level1.tmx";
     public static final String TMX_MAP_LEVEL_FIVE_PATH = "maps/level5.tmx";
     public static final String TMX_MAP_LEVEL_THREE_PATH = "maps/france.tmx";
+    public static final String TMX_MAP_LEVEL_SIX_PATH = "maps/asem.tmx";
+    public static final String FON_WITH_OPACITY_PATH = "textures/fonwithopacity.png";
     public static final String TMX_MAP_LEVEL_FOUR_PATH = "maps/class.tmx";
     public static final String TMX_MAP_LEVEL_TWO_PATH = "maps/caeser.tmx";
     public static final String TMX_MAP_LEVEL_END_PATH = "maps/finalmap.tmx";
