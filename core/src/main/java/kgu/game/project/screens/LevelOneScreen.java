@@ -410,6 +410,10 @@ public class LevelOneScreen extends ScreenAdapter {
                         }
                     }
 
+                    if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        dialog.addCntAndUpdate();
+                    }
+
                     if (dialog != null && dialog.getCnt() == 6) {
                         dialogOkNoView = new DialogOkNoView(myGdxGame,
                             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
@@ -459,6 +463,9 @@ public class LevelOneScreen extends ScreenAdapter {
                                     dialogOkNoView = null;
                                 }
                             }
+                        }
+                        if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.addCntAndUpdate();
                         }
                         if (questionDialog != null) {
                             if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
@@ -688,8 +695,8 @@ public class LevelOneScreen extends ScreenAdapter {
 
         if (!isDesktop) {
             actionButton.draw(myGdxGame.batch);
-            pauseButton.draw(myGdxGame.batch);
         }
+        pauseButton.draw(myGdxGame.batch);
 
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);

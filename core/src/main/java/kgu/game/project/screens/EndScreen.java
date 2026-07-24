@@ -372,6 +372,10 @@ public class EndScreen extends ScreenAdapter {
                         }
                     }
 
+                    if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        dialog.addCntAndUpdate();
+                    }
+
                     if (dialog != null && dialog.getCnt() == 6) {
                         dialog.nextButton.hide();
                         dialog.addCnt();
@@ -395,6 +399,11 @@ public class EndScreen extends ScreenAdapter {
                                 dialogNo = null;
                             }
                         }
+
+                        if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog.addCntAndUpdate();
+                        }
+
                         if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;
                             gameSession.pauseGame();
@@ -566,8 +575,8 @@ public class EndScreen extends ScreenAdapter {
             boolean isNearAnything = isNearAntivirus || isNearComputer || isNearBattery
                 || isNearDoor || isNearMail1 || isNearMail2 || isNearMail3;
             (isNearAnything ? actionButtonActive : actionButton).draw(myGdxGame.batch);
-            pauseButton.draw(myGdxGame.batch);
         }
+        pauseButton.draw(myGdxGame.batch);
 
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);
