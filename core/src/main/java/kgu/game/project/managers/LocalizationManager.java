@@ -228,6 +228,7 @@ public class LocalizationManager {
         add("pause", "Pause", "Пауза");
         add("loadgame.title", "LOAD GAME", "ЗАГРУЗКА ИГРЫ");
         add("loadgame.subtitle", "SELECT SAVE SLOT", "ВЫБЕРИТЕ СЛОТ");
+        add("loadgame.empty", "There isn't saved games found", "Сохранений не найдено");
         add("story.intro.0",
             "Not so long ago, there was a boy\nwhose parents bought him a computer.\nHe loved his device very much, protecting it\nfrom his mom's friend's sons and distant cousins.",
             "Не так давно был один мальчик,\nкоторому родители купили компьютер.\nОн очень любил своё устройство, берёг его\nот сыновей маминой подруги и пятиюродных братьев.");

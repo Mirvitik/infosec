@@ -52,9 +52,7 @@ public class LevelOneScreen extends ScreenAdapter {
     GameSession gameSession;
     HeroObject heroObject;
     private int savedDialogCnt = 0;
-    ArrayList<TrashObject> trashArray;
     Integer dialogCnt;
-    ArrayList<BulletObject> bulletArray;
 
     ImageView topBlackoutView;
     LiveView liveView;
@@ -161,8 +159,6 @@ public class LevelOneScreen extends ScreenAdapter {
         int frameHeight = 32;
         heroFrames = TextureRegion.split(heroSpriteSheet, frameWidth, frameHeight);
 
-        trashArray = new ArrayList<>();
-        bulletArray = new ArrayList<>();
 
         tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_ONE_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
@@ -344,8 +340,6 @@ public class LevelOneScreen extends ScreenAdapter {
                 gameSession.endGame();
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
-            updateTrash();
-            updateBullets();
             int x, y;
             x = heroObject.getX();
             y = heroObject.getY();
@@ -720,43 +714,13 @@ public class LevelOneScreen extends ScreenAdapter {
         }
     }
 
-    private void updateTrash() {
-        for (int i = 0; i < trashArray.size(); i++) {
-            boolean hasToBeDestroyed = !trashArray.get(i).isAlive() || !trashArray.get(i).isInFrame();
-            if (!trashArray.get(i).isAlive()) {
-                gameSession.destructionRegistration();
-                if (myGdxGame.audioManager.isSoundOn)
-                    myGdxGame.audioManager.explosionSound.play(0.2f);
-            }
-            if (hasToBeDestroyed) {
-                myGdxGame.world.destroyBody(trashArray.get(i).body);
-                trashArray.remove(i--);
-            }
-        }
-    }
-
-    private void updateBullets() {
-        for (int i = 0; i < bulletArray.size(); i++) {
-            if (bulletArray.get(i).hasToBeDestroyed()) {
-                myGdxGame.world.destroyBody(bulletArray.get(i).body);
-                bulletArray.remove(i--);
-            }
-        }
-    }
-
     private void restartGame() {
-        for (int i = 0; i < trashArray.size(); i++) {
-            myGdxGame.world.destroyBody(trashArray.get(i).body);
-            trashArray.remove(i--);
-        }
-
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
         heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200;
         heroY = (heroY != -1f) ? heroY : 150;
         heroObject = new AnimatedHeroObject((int) heroX + 200, (int) heroY + 200, 128, 128, heroFrames, myGdxGame.world);
-        bulletArray.clear();
         createMapBorders();
         gameSession.startGame();
         wasKKeyPressed = false;
