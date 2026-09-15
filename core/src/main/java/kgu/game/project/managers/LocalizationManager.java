@@ -285,6 +285,70 @@ public class LocalizationManager {
         add("mail.legitimate",
             "From: noreply@github.com\nSubject: Your pull request was merged\n\nHello,\nYour pull request #42 has been merged.\nView it at: https://github.com/your/repo\n\n[LEGITIMATE: official domain,\nno action required]",
             "От: noreply@github.com\nТема: Ваш pull request был смёржен\n\nЗдравствуйте,\nВаш pull request #42 был смёржен.\nПосмотреть: https://github.com/your/repo\n\n[НАСТОЯЩЕЕ: официальный домен,\nне требует действий]");
+        add("level6.argument_1",
+            "Argument №1",
+            "Аргумент №1");
+        add("level6.argument_2",
+            "Argument №2",
+            "Аргумент №2");
+        add("level6.argument_3",
+            "Argument №3",
+            "Аргумент №3");
+        add("level6.function",
+            "Address\nof function",
+            "Адрес\nфункции");
+        add("level6.check",
+            "Check",
+            "Проверить");
+        add("level6.wrong",
+            "Wrong",
+            "Неправильно");
+        add("level7.terminal_hint",
+            "Type 'help' to see the available commands. Esc or 'exit' closes the terminal.",
+            "Введите 'help', чтобы увидеть список команд. Esc или 'exit' закрывают терминал.");
+        add("help.header", "Available commands:", "Доступные команды:");
+        add("help.ls", "  ls [-a] [-l] [PATH]     list directory contents",
+            "  ls [-a] [-l] [PATH]     показать содержимое каталога");
+        add("help.cd", "  cd [DIR]                change directory (cd - goes back)",
+            "  cd [DIR]                сменить каталог (cd - возвращает назад)");
+        add("help.pwd", "  pwd                     print working directory",
+            "  pwd                     вывести текущий каталог");
+        add("help.cat", "  cat FILE...             print files",
+            "  cat FILE...             вывести содержимое файлов");
+        add("help.echo", "  echo TEXT [> FILE]      print text or write it to a file (>> appends)",
+            "  echo TEXT [> FILE]      вывести текст или записать его в файл (>> дописывает)");
+        add("help.touch", "  touch FILE              create an empty file",
+            "  touch FILE              создать пустой файл");
+        add("help.mkdir", "  mkdir [-p] DIR          create a directory",
+            "  mkdir [-p] DIR          создать каталог");
+        add("help.cp", "  cp [-r] SRC DEST        copy files",
+            "  cp [-r] SRC DEST        копировать файлы");
+        add("help.mv", "  mv SRC DEST             move or rename",
+            "  mv SRC DEST             переместить или переименовать");
+        add("help.rm", "  rm [-r] [-f] PATH       remove files",
+            "  rm [-r] [-f] PATH       удалить файлы");
+        add("help.rmdir", "  rmdir DIR               remove an empty directory",
+            "  rmdir DIR               удалить пустой каталог");
+        add("help.grep", "  grep [-i] TEXT FILE...  search text in files",
+            "  grep [-i] TEXT FILE...  искать текст в файлах");
+        add("help.whoami", "  whoami, id, hostname    who and where you are",
+            "  whoami, id, hostname    кто вы и где вы");
+        add("help.uname", "  uname [-a]              system information",
+            "  uname [-a]              информация о системе");
+        add("help.ifconfig", "  ifconfig                network interfaces",
+            "  ifconfig                сетевые интерфейсы");
+        add("help.date", "  date                    current date and time",
+            "  date                    текущая дата и время");
+        add("help.sudo", "  sudo COMMAND            run a command as root",
+            "  sudo COMMAND            выполнить команду от root");
+        add("help.history", "  history                 command history",
+            "  history                 история команд");
+        add("help.clear", "  clear                   clear the screen",
+            "  clear                   очистить экран");
+        add("help.exit", "  exit                    close the terminal",
+            "  exit                    закрыть терминал");
+        add("help.tab", "Tab completes names, Up/Down browse history.",
+            "Tab дополняет имена, Up/Down листают историю.");
     }
 
     private static void add(String key, String en, String ru) {

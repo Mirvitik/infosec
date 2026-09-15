@@ -97,6 +97,7 @@ public class LevelOneScreen extends ScreenAdapter {
     ImageView image;
     BatteryObject batteryObject;
     DoorObject doorDown;
+    float cycleHelloTime = 0;
     SaveView saveView = new SaveView(350, 50, 500, 600);
     boolean isNearDoor;
     Boolean toDrawPassword = false;
@@ -233,6 +234,7 @@ public class LevelOneScreen extends ScreenAdapter {
             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
+        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_1);
     }
 
     public LevelOneScreen(MyGdxGame myGdxGame, float x, float y) {
@@ -339,6 +341,13 @@ public class LevelOneScreen extends ScreenAdapter {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
+            }
+            if (isNearAntivirus) {
+                cycleHelloTime += delta;
+                antiVirus.changeSprite(cycleHelloTime, 1);
+            } else {
+                cycleHelloTime = 0;
+                antiVirus.setDefaultTexture();
             }
             int x, y;
             x = heroObject.getX();

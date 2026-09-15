@@ -96,6 +96,7 @@ public class LevelThreeScreen extends ScreenAdapter {
     ButtonView image;
     BatteryObject batteryObject;
     BatteryObject doorDown;
+    float cycleHelloTime = 0;
     SaveView saveView = new SaveView(350, 50, 500, 600);
     public Integer exitCnt;
     boolean isNearDoor;
@@ -279,6 +280,7 @@ public class LevelThreeScreen extends ScreenAdapter {
             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
+        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_3);
     }
 
 
@@ -369,6 +371,13 @@ public class LevelThreeScreen extends ScreenAdapter {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
+            }
+            if (isNearAntivirus) {
+                cycleHelloTime += delta;
+                antiVirus.changeSprite(cycleHelloTime, 3);
+            } else{
+                cycleHelloTime = 0;
+                antiVirus.setDefaultTexture();
             }
             if (cnt != 2 && cnt != -2) {
                 num -= cnt;

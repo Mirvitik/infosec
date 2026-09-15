@@ -24,14 +24,13 @@ import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
 import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
-import kgu.game.project.components.DragAndDropCardView;
-import kgu.game.project.components.DragAndDropSlotView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
 import kgu.game.project.components.PasswordInputView;
 import kgu.game.project.components.QuestionView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
+import kgu.game.project.components.TerminalView;
 import kgu.game.project.components.TextView;
 import kgu.game.project.components.TouchpadView;
 import kgu.game.project.managers.ContactManager;
@@ -48,7 +47,7 @@ import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
 import kgu.game.project.objects.BulletObject;
 
-public class LevelSixScreen extends ScreenAdapter {
+public class LevelSevenScreen extends ScreenAdapter {
 
     MyGdxGame myGdxGame;
     GameSession gameSession;
@@ -98,6 +97,7 @@ public class LevelSixScreen extends ScreenAdapter {
     boolean isNearBattery;
     float heroX = -1f;
     float heroY = -1f;
+    float cycleHelloTime = 0;
     ImageView image;
     ImageView fon = new ImageView(0, 0, 2000, 2000, GameResources.FON_WITH_OPACITY_PATH);
     BatteryObject batteryObject;
@@ -110,26 +110,13 @@ public class LevelSixScreen extends ScreenAdapter {
     Array talksplayer = new Array<>();
     private boolean wasKKeyPressed = false;
     ImageView pauseBackground;
-    float cycleHelloTime = 0;
-    DragAndDropCardView functionAddressSlot;
-    DragAndDropCardView functionArgumentOne;
-    DragAndDropCardView functionArgumentTwo;
-    DragAndDropCardView functionArgumentThree;
-    DragAndDropSlotView dragSlotRAX;
-    DragAndDropSlotView dragSlotRDI;
-    DragAndDropSlotView dragSlotRSI;
-    DragAndDropSlotView dragSlotRDX;
-    Array<DragAndDropCardView> dragCards = new Array<>();
-    Array<DragAndDropSlotView> dragSlots = new Array<>();
-    ButtonView cancelButton;
-    ButtonView checkButton;
-    TextView resultTextView;
-    private static final String FLAG = "game{reg1sters}";
+    TerminalView terminalView;
+    private boolean wasNearComputer = false;
 
-    public LevelSixScreen(MyGdxGame myGdxGame) {
+    public LevelSevenScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
         myGdxGame.world.getBodies(bodies);
-        cpuRegisters = new ComputerObject(14, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.IMG_CPU, myGdxGame.world);
+        cpuRegisters = new ComputerObject(14.1f, 9, 160, 160, GameResources.LINUX_NOTEBOOK_SPRITE_PATH, myGdxGame.world);
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
             String[] story = {
@@ -151,7 +138,7 @@ public class LevelSixScreen extends ScreenAdapter {
                 }
                 myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
             }));
-        }, FLAG);
+        }, "FROSYA");
         for (Body body : bodies) {
             myGdxGame.world.destroyBody(body);
         }
@@ -182,7 +169,7 @@ public class LevelSixScreen extends ScreenAdapter {
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
 
-        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_SIX_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
+        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_SEVEN_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 64, 64, GameResources.PAUSE_IMG_PATH);
@@ -215,7 +202,7 @@ public class LevelSixScreen extends ScreenAdapter {
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH_6, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
+        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
             if (object instanceof AntivirusObject) {
@@ -256,48 +243,10 @@ public class LevelSixScreen extends ScreenAdapter {
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
 
-        cancelButton = new ButtonView(50, 520, 180, 60, myGdxGame.commonBlackFont, GameResources.CANCEL_BTN_IMG, LocalizationManager.get("save.cancel"));
-        checkButton = new ButtonView(250, 520, 180, 60, myGdxGame.commonBlackFont, GameResources.CHECK_BTN_IMG, LocalizationManager.get("level6.check"));
-        dragSlotRAX = new DragAndDropSlotView(900, 400, 210, 60, myGdxGame.commonPixelFontText, GameResources.INPUT_IMG_PATH, "RAX");
-        dragSlotRDI = new DragAndDropSlotView(900, 240, 210, 60, myGdxGame.commonPixelFontText, GameResources.INPUT_IMG_PATH, "RDI");
-        dragSlotRSI = new DragAndDropSlotView(900, 320, 210, 60, myGdxGame.commonPixelFontText, GameResources.INPUT_IMG_PATH, "RSI");
-        dragSlotRDX = new DragAndDropSlotView(900, 160, 210, 60, myGdxGame.commonPixelFontText, GameResources.INPUT_IMG_PATH, "RDX");
-        functionAddressSlot = new DragAndDropCardView(200, 320, 200, 50,
-            myGdxGame.commonPixelFontText, GameResources.BUTTON_SHORT_BG_IMG_PATH, LocalizationManager.get("level6.function"));
-        functionArgumentOne = new DragAndDropCardView(200, 400, 200, 50,
-            myGdxGame.commonPixelFontText, GameResources.BUTTON_SHORT_BG_IMG_PATH, LocalizationManager.get("level6.argument_1"));
-        functionArgumentTwo = new DragAndDropCardView(200, 160, 200, 50,
-            myGdxGame.commonPixelFontText, GameResources.BUTTON_SHORT_BG_IMG_PATH, LocalizationManager.get("level6.argument_2"));
-        functionArgumentThree = new DragAndDropCardView(200, 240, 200, 50,
-            myGdxGame.commonPixelFontText, GameResources.BUTTON_SHORT_BG_IMG_PATH, LocalizationManager.get("level6.argument_3"));
-
-        dragSlotRAX.setExpectedCard(functionAddressSlot);
-        dragSlotRDI.setExpectedCard(functionArgumentOne);
-        dragSlotRSI.setExpectedCard(functionArgumentTwo);
-        dragSlotRDX.setExpectedCard(functionArgumentThree);
-
-        resultTextView = new TextView(myGdxGame.commonHelpFontText, 500, 540, FLAG);
-        resultTextView.hide();
-
-        dragSlots.add(dragSlotRAX);
-        dragSlots.add(dragSlotRDI);
-        dragSlots.add(dragSlotRSI);
-        dragSlots.add(dragSlotRDX);
-
-        dragCards.add(functionAddressSlot);
-        dragCards.add(functionArgumentOne);
-        dragCards.add(functionArgumentTwo);
-        dragCards.add(functionArgumentThree);
-
-        for (DragAndDropCardView card : dragCards) {
-            for (DragAndDropSlotView slot : dragSlots) {
-                card.addSlot(slot);
-            }
-        }
-        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_6);
+        terminalView = new TerminalView(myGdxGame);
     }
 
-    public LevelSixScreen(MyGdxGame myGdxGame, float x, float y) {
+    public LevelSevenScreen(MyGdxGame myGdxGame, float x, float y) {
         this(myGdxGame);
         heroX = x;
         heroY = y;
@@ -359,7 +308,7 @@ public class LevelSixScreen extends ScreenAdapter {
                     myGdxGame.audioManager.saveSound.play();
                 }
             } else if (isNearComputer && dialog == null && dialogOkNoView == null) {
-                toDraw = !toDraw;
+                terminalView.show();
             }
         }
         wasKKeyPressed = isKKeyPressed;
@@ -404,7 +353,7 @@ public class LevelSixScreen extends ScreenAdapter {
             }
             if (isNearAntivirus) {
                 cycleHelloTime += delta;
-                antiVirus.changeSprite(cycleHelloTime, 6);
+                antiVirus.changeSprite(cycleHelloTime, 7);
             } else{
                 cycleHelloTime = 0;
                 antiVirus.setDefaultTexture();
@@ -442,24 +391,6 @@ public class LevelSixScreen extends ScreenAdapter {
         draw();
     }
 
-    private boolean isEveryCardInItsRegister() {
-        for (DragAndDropSlotView slot : dragSlots) {
-            if (!slot.isFilledCorrectly()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean handleDragAndDrop(boolean isTouched) {
-        for (DragAndDropCardView card : dragCards) {
-            if (card.handleTouch(myGdxGame.touch, isTouched)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void handleInput(float delta) {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
@@ -467,31 +398,20 @@ public class LevelSixScreen extends ScreenAdapter {
             Vector3 touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         }
 
-        if (gameSession.state == GameState.PLAYING && myGdxGame.touch != null) {
-            if (isNearComputer && Gdx.input.justTouched()
-                && cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                for (DragAndDropCardView card : dragCards) {
-                    card.reset();
-                }
-                resultTextView.hide();
-                touchpadView.reset();
-                heroObject.stop();
-                return;
+        if (gameSession.state == GameState.PLAYING) {
+            if (isNearComputer && !wasNearComputer) {
+                terminalView.show();
+            } else if (!isNearComputer && wasNearComputer) {
+                terminalView.hide();
             }
-            if (isNearComputer && Gdx.input.justTouched()
-                && checkButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                if (isEveryCardInItsRegister()) {
-                    resultTextView.setText(FLAG);
-                    System.out.println(FLAG);
-                } else {
-                    resultTextView.setText(LocalizationManager.get("level6.wrong"));
+            wasNearComputer = isNearComputer;
+
+            if (terminalView.isVisible()) {
+                terminalView.update(delta);
+                terminalView.handleTouch();
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    terminalView.hide();
                 }
-                resultTextView.show();
-                touchpadView.reset();
-                heroObject.stop();
-                return;
-            }
-            if (handleDragAndDrop(isTouched && isNearComputer)) {
                 touchpadView.reset();
                 heroObject.stop();
                 return;
@@ -663,12 +583,9 @@ public class LevelSixScreen extends ScreenAdapter {
                             passwordInput.show();
                             gameSession.pauseGame();
                         }
-                        if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched() && toDraw) {
-                            toDraw = false;
-                            actionButton = new ButtonView(1100, 70, 70, 70, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-                        } else if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            toDraw = true;
-                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
+                        if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            terminalView.show();
+                            return;
                         }
                         if (isNearBattery && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawSave = true;
@@ -798,25 +715,6 @@ public class LevelSixScreen extends ScreenAdapter {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
             }
-            if (isNearComputer) {
-                for (DragAndDropSlotView slot : dragSlots) {
-                    slot.draw(myGdxGame.batch);
-                }
-                DragAndDropCardView draggedCard = null;
-                for (DragAndDropCardView card : dragCards) {
-                    if (card.isDragging()) {
-                        draggedCard = card;
-                    } else {
-                        card.draw(myGdxGame.batch);
-                    }
-                }
-                if (draggedCard != null) {
-                    draggedCard.draw(myGdxGame.batch);
-                }
-                cancelButton.draw(myGdxGame.batch);
-                checkButton.draw(myGdxGame.batch);
-                resultTextView.draw(myGdxGame.batch);
-            }
             if (isNearAntivirus && dialog == null && dialogNo == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
             }
@@ -841,6 +739,7 @@ public class LevelSixScreen extends ScreenAdapter {
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
         }
+        terminalView.draw(myGdxGame.batch);
         myGdxGame.batch.end();
         if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             savedDialogCnt = dialog.getCnt();
@@ -901,12 +800,7 @@ public class LevelSixScreen extends ScreenAdapter {
         heroSpriteSheet.dispose();
         touchpadView.dispose();
         tiledMapManager.dispose();
-        for (DragAndDropCardView card : dragCards) {
-            card.dispose();
-        }
-        for (DragAndDropSlotView slot : dragSlots) {
-            slot.dispose();
-        }
+        terminalView.dispose();
     }
 
     private void createMapBorders() {
@@ -914,7 +808,7 @@ public class LevelSixScreen extends ScreenAdapter {
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
         float wallThickness = 1f;
         createWall(mapWidth / 2, -wallThickness / 2 + 4f, mapWidth, wallThickness);
-        createWall(mapWidth / 2, -wallThickness / 2 + 31, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 38, mapWidth, wallThickness);
         createWall(-wallThickness / 2 + 2f, mapHeight / 2, wallThickness, mapHeight);
         createWall(-wallThickness / 2 + 78.5f, mapHeight / 2, wallThickness, mapHeight);
     }

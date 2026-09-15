@@ -42,7 +42,7 @@ public class MyGdxGame extends Game {
     public BitmapFont arialFontRed;
     public BitmapFont transSansShell;
 
-    public Vector3 touch;
+    public Vector3 touch = new Vector3();
     public SpriteBatch batch;
     public OrthographicCamera camera;
     public OrthographicCamera uiCamera;
@@ -82,7 +82,7 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
-        setScreen(new LevelOneScreen(this));
+        setScreen(new LevelSixScreen(this));
     }
 
     private void initFonts() {

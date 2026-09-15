@@ -82,11 +82,12 @@ public class LevelFiveScreen extends ScreenAdapter {
     Texture heroSpriteSheet;
     TextureRegion[][] heroFrames;
 
-    AntivirusObject routerObject;
+    AntivirusObject antiVirus;
     ImageView routerMessage;
     ComputerObject networkComputer;
     BatteryObject batteryObject;
     BatteryObject doorDown;
+    float cycleHelloTime = 0;
 
     private final TiledMapManager tiledMapManager;
 
@@ -105,7 +106,7 @@ public class LevelFiveScreen extends ScreenAdapter {
     Array<String> talks2;
 
     boolean isNearComputer = false;
-    Boolean isNearRouter = false;
+    Boolean isNearAntivirus = false;
     boolean isNearBattery = false;
     boolean isNearDoor = false;
 
@@ -206,7 +207,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             networkHintText = new TextView(myGdxGame.commonPixelFontText, 250, 100, "Найди IP атакующего в логах и введи его у двери!");
         }
 
-        routerObject = new AntivirusObject(
+        antiVirus = new AntivirusObject(
             GameResources.ANTIVIRUS_FIVE_TEXTURE_PATH,
             200, 200, 128, 128,
             GameSettings.ANTIVIRUS_BIT, myGdxGame.world
@@ -255,7 +256,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
         contactManager = new ContactManager(myGdxGame.world,
             (GameObject object) -> {
-                if (object instanceof AntivirusObject) isNearRouter = true;
+                if (object instanceof AntivirusObject) isNearAntivirus = true;
                 else if (object instanceof ComputerObject) isNearComputer = true;
                 else if (object instanceof DoorObject) isNearDoor = true;
                 else if (object instanceof BatteryObject) isNearBattery = true;
@@ -264,7 +265,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                 if (object instanceof AntivirusObject || object instanceof ComputerObject
                     || object instanceof BatteryObject) {
                     isNearComputer = false;
-                    isNearRouter = false;
+                    isNearAntivirus = false;
                     isNearBattery = false;
                     isNearDoor = false;
                 }
@@ -275,6 +276,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
+        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_5);
     }
 
 
@@ -322,7 +324,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         }
 
         if (isKKeyPressed && !wasKKeyPressed) {
-            if (isNearRouter && dialog == null && dialogNo == null && !toDrawQuestion) {
+            if (isNearAntivirus && dialog == null && dialogNo == null && !toDrawQuestion) {
                 dialog = new DialogView(myGdxGame,
                     (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - (GameSettings.SCREEN_WIDTH / 4f) - 200f,
@@ -486,7 +488,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                         toDrawSave = false;
                     }
 
-                    if (!isNearRouter) {
+                    if (!isNearAntivirus) {
                         dialog = null;
                     }
                 } else {
@@ -560,7 +562,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                             gameSession.pauseGame();
                         }
 
-                        if ((isNearRouter || isNearComputer || isNearBattery || isNearDoor) && !toDrawNetworkLogs) {
+                        if ((isNearAntivirus || isNearComputer || isNearBattery || isNearDoor) && !toDrawNetworkLogs) {
                             actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                         } else if (!toDrawNetworkLogs) {
                             actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
@@ -568,7 +570,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
                         if (dialog == null
                             && dialogNo == null
-                            && isNearRouter
+                            && isNearAntivirus
                             && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                             && Gdx.input.justTouched()) {
 
@@ -618,12 +620,12 @@ public class LevelFiveScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
 
-                        if (dialog != null && dialog.getCnt() == 4 && isNearRouter) {
+                        if (dialog != null && dialog.getCnt() == 4 && isNearAntivirus) {
                             // Просто продолжаем диалог без OkNoDialog
                             dialog.addCnt();
                         }
 
-                        if (!isNearRouter) {
+                        if (!isNearAntivirus) {
                             dialog = null;
                         }
 
@@ -690,12 +692,12 @@ public class LevelFiveScreen extends ScreenAdapter {
         tiledMapManager.render();
 
         myGdxGame.batch.begin();
-        routerObject.draw(myGdxGame.batch);
+        antiVirus.draw(myGdxGame.batch);
         if (doorDown != null) {
             doorDown.draw(myGdxGame.batch);
         }
         heroObject.draw(myGdxGame.batch);
-        if (isNearRouter) {
+        if (isNearAntivirus) {
             routerMessage.draw(myGdxGame.batch);
         }
         networkComputer.draw(myGdxGame.batch);
@@ -714,7 +716,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             networkLogView.draw(myGdxGame.batch);
         }
 
-        if (toDrawQuestion && isNearRouter && questionDialog != null) {
+        if (toDrawQuestion && isNearAntivirus && questionDialog != null) {
             questionDialog.draw(myGdxGame.batch);
         }
 
@@ -738,7 +740,7 @@ public class LevelFiveScreen extends ScreenAdapter {
 
             ButtonView currentButton = actionButton;
             if (!isDesktop) {
-                boolean nearSomething = isNearRouter || isNearComputer || isNearBattery || isNearDoor;
+                boolean nearSomething = isNearAntivirus || isNearComputer || isNearBattery || isNearDoor;
                 if (nearSomething && !toDrawNetworkLogs) {
                     currentButton = actionButtonActive;
                 } else if (toDrawNetworkLogs) {
@@ -751,7 +753,7 @@ public class LevelFiveScreen extends ScreenAdapter {
                 networkHintText.draw(myGdxGame.batch);
             }
 
-            if (isNearRouter && dialog == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
+            if (isNearAntivirus && dialog == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 hintText.draw(myGdxGame.batch);
             }
         }
