@@ -202,7 +202,7 @@ public class LevelSevenScreen extends ScreenAdapter {
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
+        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_7, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
             if (object instanceof AntivirusObject) {
@@ -244,6 +244,7 @@ public class LevelSevenScreen extends ScreenAdapter {
             GameSettings.SCREEN_HEIGHT / 4f);
 
         terminalView = new TerminalView(myGdxGame);
+        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_7);
     }
 
     public LevelSevenScreen(MyGdxGame myGdxGame, float x, float y) {

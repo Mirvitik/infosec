@@ -1,14 +1,6 @@
 package kgu.game.project;
 
 public class GameResources {
-    public static final String ANTIVIRUS_HAND_UP = "textures/antivirus_hello.png";
-    public static final String ANTIVIRUS_HAND_UP_2 = "textures/antivirus_hello6.png";
-    public static final String ANTIVIRUS_HAND_CYCLE = "textures/antivirus_hello2.png";
-    public static final String ANTIVIRUS_HAND_CYCLE_2 = "textures/antivirus_hello3.png";
-    public static final String ANTIVIRUS_HAND_CYCLE_3 = "textures/antivirus_hello4.png";
-    public static final String ANTIVIRUS_HAND_CYCLE_4 = "textures/antivirus_hello5.png";
-    public static final String ANTIVIRUS_HAND_CYCLE_6 = "textures/antivirus_hello6.png";
-
     public static final String BACKGROUND_IMG_PATH = "textures/background.png";
     public static final String BACKGROUND_WINDOW_IMG_PATH = "textures/backgroundlog.png";
 
@@ -89,6 +81,8 @@ public class GameResources {
     public static final String ANTIVIRUS_SHEET_LVL_4 = "textures/antivirus_lvl4.png";
     public static final String ANTIVIRUS_SHEET_LVL_5 = "textures/antivirus_lvl5.png";
     public static final String ANTIVIRUS_SHEET_LVL_6 = "textures/antivirus_lvl6.png";
+    public static final String ANTIVIRUS_SHEET_LVL_7 = "textures/antivirus_lvl7.png";
+    public static final String ANTIVIRUS_7 = "textures/antivirus7.png";
 
     public static final String ANTIVIRUS_SHEET = "textures/antivirus_lvl2.png";
     public static final String FON_WITH_OPACITY_PATH = "textures/fonwithopacity.png";
