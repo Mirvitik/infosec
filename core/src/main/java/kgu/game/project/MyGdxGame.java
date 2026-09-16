@@ -52,7 +52,6 @@ public class MyGdxGame extends Game {
     public LoadGameScreen loadScreen;
     public AchieveScreen achieveScreen;
     public MenuScreen menuScreen;
-    public LevelSixScreen levelSixScreen;
     public SettingsScreen settingsScreen;
     public ComputerScreen computerScreen;
     public LoginScreen loginScreen;
@@ -82,7 +81,7 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
-        setScreen(new LevelSixScreen(this));
+        setScreen(menuScreen);
     }
 
     private void initFonts() {

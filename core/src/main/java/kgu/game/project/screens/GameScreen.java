@@ -6,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -121,22 +122,6 @@ public class GameScreen extends ScreenAdapter {
         isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
 
         heroObject = new AnimatedHeroObject(GameSettings.SCREEN_WIDTH / 2 - 400, 150, 428, 128, heroFrames, myGdxGame.world);
-        int x, y;
-        x = heroObject.getX();
-        y = heroObject.getY();
-        if (heroObject.getX() > 600) {
-            x = 600;
-        }
-        if (heroObject.getX() < 565) {
-            x = 565;
-        }
-        System.out.println(y);
-        myGdxGame.camera.position.set(
-            x,
-            y,
-            0
-        );
-        myGdxGame.camera.update();
         tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_PATH, myGdxGame.camera, myGdxGame.batch, 4);
         createMapBorders();
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
@@ -208,26 +193,7 @@ public class GameScreen extends ScreenAdapter {
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
             }
 
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 600) {
-                x = 600;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 380) {
-                y = 380;
-            }
-            System.out.println(x);
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-
-            myGdxGame.camera.update();
+            updateCamera();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
 
@@ -538,6 +504,21 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    // изменяет поицию карты относительно героя, не давая ему выйти за край карты
+    private void updateCamera() {
+        float halfWidth = myGdxGame.camera.viewportWidth / 2f;
+        float halfHeight = myGdxGame.camera.viewportHeight / 2f;
+        float mapWidth = tiledMapManager.getMapWidthPixels();
+        float mapHeight = tiledMapManager.getMapHeightPixels();
+
+        myGdxGame.camera.position.set(
+            MathUtils.clamp(heroObject.getXf(), halfWidth, Math.max(halfWidth, mapWidth - halfWidth)),
+            MathUtils.clamp(heroObject.getYf(), halfHeight, Math.max(halfHeight, mapHeight - halfHeight)),
+            0
+        );
+        myGdxGame.camera.update();
+    }
+
     private void restartGame() {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
@@ -560,12 +541,7 @@ public class GameScreen extends ScreenAdapter {
 
         heroObject = new AnimatedHeroObject(GameSettings.SCREEN_WIDTH / 2 - 400, 450, 128, 128, heroFrames, myGdxGame.world);
         computer = new ComputerObject(10, 5, 128, 128, GameResources.COMPUTER_SPRITE_PATH, myGdxGame.world);
-        myGdxGame.camera.position.set(
-            heroObject.getX(),
-            heroObject.getY(),
-            0
-        );
-        myGdxGame.camera.update();
+        updateCamera();
         createMapBorders();
         gameSession.startGame();
         if (isDialogOn) {
