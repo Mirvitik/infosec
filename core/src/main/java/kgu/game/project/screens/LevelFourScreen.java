@@ -117,6 +117,7 @@ public class LevelFourScreen extends ScreenAdapter {
     float heroY = -1f;
     ImageView image;
     BatteryObject batteryObject;
+    float cycleHelloTime = 0;
     DoorObject doorDown;
     SaveView saveView = new SaveView(350, 50, 500, 600);
     boolean isNearDoor;
@@ -353,6 +354,7 @@ public class LevelFourScreen extends ScreenAdapter {
             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
+        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_4);
     }
 
     public LevelFourScreen(MyGdxGame myGdxGame, float x, float y) {
@@ -445,6 +447,13 @@ public class LevelFourScreen extends ScreenAdapter {
             if (!heroObject.isAlive()) {
                 gameSession.endGame();
                 recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
+            }
+            if (isNearAntivirus) {
+                cycleHelloTime += delta;
+                antiVirus.changeSprite(cycleHelloTime, 4);
+            } else{
+                cycleHelloTime = 0;
+                antiVirus.setDefaultTexture();
             }
             updateTrash();
             updateBullets();

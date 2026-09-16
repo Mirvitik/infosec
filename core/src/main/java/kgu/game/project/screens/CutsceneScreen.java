@@ -11,6 +11,7 @@ import kgu.game.project.GameResources;
 import kgu.game.project.GameSettings;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
+import kgu.game.project.components.CyberFx;
 import kgu.game.project.managers.LocalizationManager;
 
 public class CutsceneScreen extends ScreenAdapter {
@@ -22,6 +23,7 @@ public class CutsceneScreen extends ScreenAdapter {
     private int currentScene = 0;
 
     private Texture currentTexture;
+    private CyberFx fx;
 
     private String fullText;
     private String displayedText = "";
@@ -47,7 +49,7 @@ public class CutsceneScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("dialog.next")
         );
-
+        fx = new CyberFx();
         loadScene(0);
     }
 
@@ -80,6 +82,7 @@ public class CutsceneScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if (fx == null) return;
         if (!textComplete) {
             charTimer += delta;
             float CHAR_DELAY = 0.045f;
@@ -95,6 +98,10 @@ public class CutsceneScreen extends ScreenAdapter {
 
         handleInput();
         draw();
+        fx.update(delta);
+        fx.begin(myGdxGame.uiCamera.combined);
+        fx.drawChrome();
+        fx.end();
     }
 
     private void handleInput() {

@@ -1,6 +1,13 @@
 package kgu.game.project;
 
 public class GameResources {
+    public static final String ANTIVIRUS_HAND_UP = "textures/antivirus_hello.png";
+    public static final String ANTIVIRUS_HAND_UP_2 = "textures/antivirus_hello6.png";
+    public static final String ANTIVIRUS_HAND_CYCLE = "textures/antivirus_hello2.png";
+    public static final String ANTIVIRUS_HAND_CYCLE_2 = "textures/antivirus_hello3.png";
+    public static final String ANTIVIRUS_HAND_CYCLE_3 = "textures/antivirus_hello4.png";
+    public static final String ANTIVIRUS_HAND_CYCLE_4 = "textures/antivirus_hello5.png";
+    public static final String ANTIVIRUS_HAND_CYCLE_6 = "textures/antivirus_hello6.png";
 
     public static final String BACKGROUND_IMG_PATH = "textures/background.png";
     public static final String BACKGROUND_WINDOW_IMG_PATH = "textures/backgroundlog.png";
@@ -25,6 +32,8 @@ public class GameResources {
     public static final String STORY_PEREBOR = "textures/perebor.png";
     public static final String STORY_LOCK = "textures/lock.png";
     public static final String XOR_IMG = "textures/xor.png";
+    public static final String CANCEL_BTN_IMG = "textures/cancelbtn.png";
+    public static final String CHECK_BTN_IMG = "textures/checkbtn.png";
     public static final String MINUS_BUTTON = "textures/minusbutton.png";
     public static final String PLUS_BUTTON = "textures/plusbutton.png";
     public static final String LOGS_IMG = "textures/logs.png";
@@ -56,6 +65,7 @@ public class GameResources {
 
     public static final String SPRITE_SHEET = "textures/hero.png";
     public static final String COMPUTER_SPRITE_PATH = "textures/PC.png";
+    public static final String LINUX_NOTEBOOK_SPRITE_PATH = "textures/linuxnotebook.png";
     public static final String ASCII_SPRITE_PATH = "textures/asciisprite.png";
     public static final String ASCII_PATH = "textures/ascii.png";
     public static final String WINDOW_PATH = "textures/window.png";
@@ -63,6 +73,7 @@ public class GameResources {
     public static final String LOGIN_IMG_PATH = "textures/loginscreen.png";
     public static final String PASSWORD_IMG_PATH = "textures/passwordfield.png";
     public static final String INPUT_IMG_PATH = "textures/inputfield.png";
+    public static final String IMG_CPU = "textures/cpu.png";
     public static final String SHINDOWS_IMG_PATH = "textures/shindows.png";
     public static final String LOGIN_FORM_PATH = "textures/login.png";
     public static final String AVATAR = "textures/avatar.png";
@@ -72,6 +83,14 @@ public class GameResources {
     public static final String TMX_MAP_LEVEL_FIVE_PATH = "maps/level5.tmx";
     public static final String TMX_MAP_LEVEL_THREE_PATH = "maps/france.tmx";
     public static final String TMX_MAP_LEVEL_SIX_PATH = "maps/asem.tmx";
+    public static final String TMX_MAP_LEVEL_SEVEN_PATH = "maps/linux.tmx";
+    public static final String ANTIVIRUS_SHEET_LVL_1 = "textures/antivirus_lvl1.png";
+    public static final String ANTIVIRUS_SHEET_LVL_3 = "textures/antivirus_lvl3.png";
+    public static final String ANTIVIRUS_SHEET_LVL_4 = "textures/antivirus_lvl4.png";
+    public static final String ANTIVIRUS_SHEET_LVL_5 = "textures/antivirus_lvl5.png";
+    public static final String ANTIVIRUS_SHEET_LVL_6 = "textures/antivirus_lvl6.png";
+
+    public static final String ANTIVIRUS_SHEET = "textures/antivirus_lvl2.png";
     public static final String FON_WITH_OPACITY_PATH = "textures/fonwithopacity.png";
     public static final String TMX_MAP_LEVEL_FOUR_PATH = "maps/class.tmx";
     public static final String TMX_MAP_LEVEL_TWO_PATH = "maps/caeser.tmx";
@@ -80,6 +99,7 @@ public class GameResources {
     public static final String FILE_IMG_PATH = "textures/file.png";
     public static final String IMAGE_FON_PATH = "textures/oboyi.png";
     public static final String ANTIVIRUS_TEXTURE_PATH = "textures/antivirus1.png";
+    public static final String ANTIVIRUS_TEXTURE_PATH_6 = "textures/antivirus6.png";
     public static final String VIRUS_TEXTURE_PATH = "textures/virus.png";
     public static final String ANTIVIRUS_FIVE_TEXTURE_PATH = "textures/antivirus5.png";
     public static final String ANTIVIRUS_NAPOLEON_TEXTURE_PATH = "textures/napoleon.png";

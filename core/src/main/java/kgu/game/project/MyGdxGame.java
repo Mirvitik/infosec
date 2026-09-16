@@ -40,8 +40,9 @@ public class MyGdxGame extends Game {
     public BitmapFont consolasFont;
     public BitmapFont arialFontBlue;
     public BitmapFont arialFontRed;
+    public BitmapFont transSansShell;
 
-    public Vector3 touch;
+    public Vector3 touch = new Vector3();
     public SpriteBatch batch;
     public OrthographicCamera camera;
     public OrthographicCamera uiCamera;
@@ -49,7 +50,9 @@ public class MyGdxGame extends Game {
 
     public GameScreen gameScreen;
     public LoadGameScreen loadScreen;
+    public AchieveScreen achieveScreen;
     public MenuScreen menuScreen;
+    public LevelSixScreen levelSixScreen;
     public SettingsScreen settingsScreen;
     public ComputerScreen computerScreen;
     public LoginScreen loginScreen;
@@ -79,8 +82,7 @@ public class MyGdxGame extends Game {
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
         debugRenderer = new Box2DDebugRenderer();
-
-        setScreen(menuScreen);
+        setScreen(new LevelSixScreen(this));
     }
 
     private void initFonts() {
@@ -107,6 +109,7 @@ public class MyGdxGame extends Game {
         arialWhiteFont = FontBuilder.generate(20, Color.WHITE, GameResources.ARIAL_FONT_PATH);
         consolasFont = FontBuilder.generate(20, Color.GRAY, GameResources.CONSOLAS_FONT_PATH);
         arialFontRed = FontBuilder.generate(20, Color.RED, GameResources.ARIAL_FONT_PATH);
+        transSansShell = FontBuilder.generate(16, Color.valueOf("#1e5c3d"), GameResources.TRANS_IMG_PATH);
         MyGdxGame.arialFont.setColor(Color.BLACK);
     }
 
