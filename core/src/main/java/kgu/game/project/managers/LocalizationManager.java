@@ -303,6 +303,12 @@ public class LocalizationManager {
         add("level6.wrong",
             "Wrong",
             "Неправильно");
+        add("level7.task",
+            "Objective: read the file /flag",
+            "Задание: прочитать файл /flag");
+        add("level7.done",
+            "Objective complete: flag captured",
+            "Задание выполнено: флаг получен");
         add("level7.terminal_hint",
             "Type 'help' to see the available commands. Esc or 'exit' closes the terminal.",
             "Введите 'help', чтобы увидеть список команд. Esc или 'exit' закрывают терминал.");
@@ -349,7 +355,54 @@ public class LocalizationManager {
             "  exit                    закрыть терминал");
         add("help.tab", "Tab completes names, Up/Down browse history.",
             "Tab дополняет имена, Up/Down листают историю.");
+
+        add("linux.talk.0", "Hello, my friend.",
+            "Привет, мой друг.");
+        add("linux.talk.1", "In this room we will talk with you about an OS\nwhose mascot is a penguin.",
+            "В этой комнате мы поговрим с тобой об ОС,\nмаскотом которой является пингвин.");
+        add("linux.talk.2", "Of course, it's Linux!",
+            "Конечно же это ОС Linux!");
+        add("linux.talk.3", "Linux is an operating system\ndeveloped by Linus Torvalds in 1991.",
+            "Linux-операционная система,\nразработанная Линусом Торвальдсом в 1991 году.");
+        add("linux.talk.4", "This OS is free,\nand almost all servers of major companies\nuse it.",
+            "Данная ОС является бесплатной,\nпрактически все серверы крупных компаний\nиспользуют её.");
+        add("linux.talk.5", "In Linux, files are stored in directories (folders).\nThe path to a file named flag located in the home folder\nwill look like this: /home/flag",
+            "В Linux файлы хранятся в каталогах (папках).\nПуть до файла flag, находящегося в папке home,\nбудет имет такой вид /home/flag");
+        add("linux.talk.6", "In Linux there is a command ls,\nwhich displays the names of files in the current directory.",
+            "В Linux есть команда ls,\nкоторая выводит названия файлов в текущей директории.");
+        add("linux.talk.7", "There is also the cd command, which\nallows the user to move between directories.",
+            "Также есть команда cd, которая\nпозволяет пользователю перемещаться по каталогам.");
+        add("linux.talk.8", "By entering cd /home, the user goes to the home directory.",
+            "Введя cd /home, пользователь попадает в каталог home.");
+        add("linux.talk.9", "To read the contents of a specific file,\nyou need to enter a command like cat <path to file>.",
+            "Чтобы прочитать содержимае конкретного файла\nнадо ввести команду типа cat <путь до файла>.");
+        add("linux.talk.10", "Find out the contents of the file /flag and enter the flag at the door.",
+            "Узнай содержимое файла /flag и введи флаг у двери.");
+        add("hint.7", "cat /flag",
+            "cat /flag");
+
+        add("registers.talk.0", "Hello again. Here we will touch on the topic of processor registers.",
+            "Привет снова. Здесь мы затронем тему регистров процессора.");
+        add("registers.talk.1", "A register is a device for reading and writing data,\nlocated inside the processor.",
+            "Регистр-это устройство для считывания и записи данных,\nнаходящееся в процессоре.");
+        add("registers.talk.2", "The processor couldn’t operate with\nthe data without them!",
+            "Процессор не мог бы оперировать\nданными без них!");
+        add("registers.talk.3", "In registers of processors with the x86-64 architecture,\ninformation is stored as 64-bit numbers.",
+            "В регситрах процессоров с архитерктурой x86-64\nхранится информация в виде 64 битных чисел.");
+        add("registers.talk.4", "Each register was created to store specific information.",
+            "Каждый регистр был создан для хранения определённой информации.");
+        add("registers.talk.5", "We will discuss several registers: rsi, rdi, rdx, and rax",
+            "Мы обсудим несколько регистров: rsi, rdi, rdx и rax");
+        add("registers.talk.6", "The data needed for a program to run is stored in specific memory sections.\nRegisters mainly store addresses pointing to the data section where the data is kept.",
+            "Данные, которые нужны для работы программы, хранятся\nв определённых секциях памяти.\nРегистры же в основном хранят адреса на данные секции,\nгде хранятся данные.");
+        add("registers.talk.7", "When a programmer who knows assembly wants to call a specific function,\nthey write the address of the function to be executed into rax\nand write call rax, thus the function is executed.",
+            "Когда программист, знающий ассмеблер, хочет вызвать\nопределённую функцию,\nон записывает в rax адрес выполняемой функции\nи пишет call rax, таким образом функция выполняется.");
+        add("registers.talk.8", "If a function needs some arguments (input data),\nthe programmer writes the 1st argument into rdi,\nthe 2nd argument into rsi, the 3rd argument into rdx.",
+            "Если функции нужны какие-нибудь аргументы (входные данные),\nто программист записывает в rdi 1 аргумент,\nв rsi 2 аргумент, в rdx 3 аргумент.");
+        add("registers.talk.9", "Match the assembly registers with their purposes",
+            "Сопоставьте регистры ассмеблера с их предназначениями");
     }
+
 
     private static void add(String key, String en, String ru) {
         Map<Language, String> map = new HashMap<>();

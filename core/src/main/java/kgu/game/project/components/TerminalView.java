@@ -48,6 +48,7 @@ public class TerminalView extends View implements InputProcessor {
     private static final Color TEXT_COLOR = Color.valueOf("#D8DEE9");
     private static final String CURSOR_COLOR = "#D8DEE9";
     private static final String HINT_COLOR = "#7F8792";
+    private static final String MISSION_COLOR = "#5FD75F";
 
     private final MyGdxGame myGdxGame;
     private final KaliShell shell = new KaliShell();
@@ -66,6 +67,7 @@ public class TerminalView extends View implements InputProcessor {
     private final float closeButtonX;
     private final float closeButtonY;
 
+    private String missionText;
     private boolean isVisible = false;
     private boolean suppressTyping = false;
     private boolean showCursor = true;
@@ -117,6 +119,15 @@ public class TerminalView extends View implements InputProcessor {
 
     public boolean isVisible() {
         return isVisible;
+    }
+
+    /** Задание уровня: печатается при открытии терминала и после команды exit. */
+    public void setMission(String missionText) {
+        this.missionText = missionText;
+        resetScreen();
+    }
+    public boolean isFlagRead() {
+        return shell.isFlagRead();
     }
 
     public void update(float delta) {
@@ -233,6 +244,9 @@ public class TerminalView extends View implements InputProcessor {
     private void resetScreen() {
         lines.clear();
         addLine(KaliShell.color(HINT_COLOR, LocalizationManager.get("level7.terminal_hint")));
+        if (missionText != null) {
+            addLine(KaliShell.color(MISSION_COLOR, missionText));
+        }
         addLine("");
     }
 

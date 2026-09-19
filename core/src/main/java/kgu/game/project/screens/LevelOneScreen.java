@@ -685,6 +685,7 @@ public class LevelOneScreen extends ScreenAdapter {
         } else if (gameSession.state == GameState.PLAYING) {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
+                actionButton.draw(myGdxGame.batch);
             }
             if (isNearAntivirus && dialog == null && dialogNo == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
@@ -696,9 +697,6 @@ public class LevelOneScreen extends ScreenAdapter {
         topBlackoutView.setPosition(0, uiHeight - blackoutHeight);
         topBlackoutView.draw(myGdxGame.batch);
 
-        if (!isDesktop) {
-            actionButton.draw(myGdxGame.batch);
-        }
         pauseButton.draw(myGdxGame.batch);
 
         if (dialogNo != null) {

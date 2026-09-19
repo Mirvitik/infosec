@@ -20,7 +20,7 @@ public class DialogOkNoView extends View {
     String text;
     ImageView avatar;
     String image_path = GameResources.ANTIVIRUS_AVATAR_IMG_PATH;
-    String name = "Antivirus";
+    String name = "Antivirus"; // вопросы всегда задаёт лишь npc
 
     public DialogOkNoView(MyGdxGame myGdxGame, float x, float y, float width, float height, String text) {
         super(x, y, width, height);
@@ -29,7 +29,7 @@ public class DialogOkNoView extends View {
         this.height = height;
         this.text = text;
         this.okButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.yes"));
-        this.noButton = new ButtonView(x + 20, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
+        this.noButton = new ButtonView(x + 30, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.no"));
         this.bitmapFont = FontBuilder.generate(20, Color.BLACK, "fonts/arialmt.ttf");
         this.myGdxGame = myGdxGame;
         avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);

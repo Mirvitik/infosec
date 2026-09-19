@@ -15,6 +15,8 @@ import kgu.game.project.managers.LocalizationManager;
 
 public class KaliShell {
 
+    public static final String FLAG = "game{sud0_c4t_fl4g}";
+
     public static final String USER = "kali";
     public static final String HOST = "kali";
 
@@ -126,12 +128,14 @@ public class KaliShell {
     private Node rootDirectory;
     private Node home;
     private Node tmp;
+    private Node flagFile;
     private Node cwd;
     private Node previousDirectory;
 
     private final ArrayList<String> history = new ArrayList<>();
     private ArrayList<Line> output = new ArrayList<>();
     private boolean asRoot;
+    private boolean flagRead;
     private boolean clearRequested;
     private boolean exitRequested;
     private int columns = 80;
@@ -158,6 +162,10 @@ public class KaliShell {
             result.add(line.markup);
         }
         return result;
+    }
+
+    public boolean isFlagRead() {
+        return flagRead;
     }
 
     public boolean consumeClearRequest() {
@@ -579,8 +587,15 @@ public class KaliShell {
             } else if (!canRead(node)) {
                 error("cat: " + path + ": Permission denied");
             } else {
+                markIfFlag(node);
                 for (String line : linesOf(node.content)) print(line);
             }
+        }
+    }
+
+    private void markIfFlag(Node node) {
+        if (node == flagFile) {
+            flagRead = true;
         }
     }
 
@@ -840,6 +855,7 @@ public class KaliShell {
             } else if (!canRead(node)) {
                 error("grep: " + path + ": Permission denied");
             } else {
+                markIfFlag(node);
                 String prefix = files.size() > 1
                     ? color(COLOR_GREP_FILE, path) + color(COLOR_GREP_SEPARATOR, ":")
                     : "";
@@ -1135,6 +1151,9 @@ public class KaliShell {
         rootHome.rootOnly = true;
         file(rootHome, ".zshrc", "root", "# ~/.zshrc file for zsh interactive shells.\n");
 
+        flagFile = file(rootDirectory, "flag", "root", FLAG + "\n");
+        flagFile.rootOnly = true;
+
         tmp = directory(rootDirectory, "tmp", "root");
         Node var = directory(rootDirectory, "var", "root");
         directory(var, "log", "root");
@@ -1156,7 +1175,10 @@ public class KaliShell {
                 + "cd DIR    change directory\n"
                 + "cat FILE  print a file\n"
                 + "grep      search text in files\n"
-                + "sudo      run a command as root\n");
+                + "sudo      run a command as root\n"
+                + "\n"
+                + "Task: read the file /flag\n"
+                + "Only root may read it.\n");
     }
 
     private static Node directory(Node parent, String name, String owner) {

@@ -3,27 +3,15 @@ package kgu.game.project.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,6 +22,7 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
+import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
@@ -41,6 +30,7 @@ import kgu.game.project.components.PasswordInputView;
 import kgu.game.project.components.QuestionView;
 import kgu.game.project.components.RecordsListView;
 import kgu.game.project.components.SaveView;
+import kgu.game.project.components.TerminalView;
 import kgu.game.project.components.TextView;
 import kgu.game.project.components.TouchpadView;
 import kgu.game.project.managers.ContactManager;
@@ -48,43 +38,29 @@ import kgu.game.project.managers.LocalizationManager;
 import kgu.game.project.objects.AnimatedHeroObject;
 import kgu.game.project.objects.BatteryObject;
 import kgu.game.project.objects.ComputerObject;
+import kgu.game.project.objects.DoorObject;
 import kgu.game.project.objects.GameObject;
 import kgu.game.project.objects.HeroObject;
 import kgu.game.project.objects.TrashObject;
 import kgu.game.project.objects.AntivirusObject;
-import kgu.game.project.objects.DoorObject;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
 import kgu.game.project.objects.BulletObject;
 
-public class LevelFourScreen extends ScreenAdapter {
+public class LevelEightScreen extends ScreenAdapter {
 
     MyGdxGame myGdxGame;
     GameSession gameSession;
     HeroObject heroObject;
-    QuestionView questionDialog;
-    boolean toDrawQuestion = false;
     private int savedDialogCnt = 0;
-    private int antivirusApproachCount = 0;
-    Array<String> hint;
-
     ArrayList<TrashObject> trashArray;
+    Integer dialogCnt;
     ArrayList<BulletObject> bulletArray;
 
-    private final TextView encryptedCodeView;
-    private final TextView currentKeyView;
-    private final TextView hintView;
-    private final ButtonView keyIncreaseButton;
-    private final ButtonView keyDecreaseButton;
-    private final ButtonView submitCodeButton;
-    private final ButtonView nextChallengeButton;
-    private final boolean isCipherGameActive = false;
-    public Integer exitCnt;
     ImageView topBlackoutView;
     LiveView liveView;
     ButtonView pauseButton;
     TouchpadView touchpadView;
-    ImageView pauseBackground;
     TextView pauseTextView;
     ButtonView homeButton;
     ButtonView continueButton;
@@ -93,21 +69,27 @@ public class LevelFourScreen extends ScreenAdapter {
     RecordsListView recordsListView;
     ButtonView homeButton2;
     ButtonView actionButton;
-    ButtonView actionButtonActive;
-    ButtonView actionButtonRed;
     Texture heroSpriteSheet;
     TextureRegion[][] heroFrames;
     AntivirusObject antiVirus;
     ImageView message;
-    ComputerObject asciiTable;
+    ComputerObject cpuRegisters;
     private final TiledMapManager tiledMapManager;
     DialogView dialog;
+    QuestionView questionDialog;
+    private int antivirusApproachCount = 0;
     DialogView dialogNo;
     public boolean isNearComputer = false;
 
+    private boolean isTouchingUI = false;
+    public Integer exitCnt = 0;
+    boolean toDrawQuestion = false;
+    DialogOkNoView dialogOkNoView;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
+    Array<String> hint;
+
     Array<String> talks2;
     Boolean isNearAntivirus = false;
     boolean toDraw = false;
@@ -115,37 +97,35 @@ public class LevelFourScreen extends ScreenAdapter {
     boolean isNearBattery;
     float heroX = -1f;
     float heroY = -1f;
-    ImageView image;
-    BatteryObject batteryObject;
     float cycleHelloTime = 0;
+    ImageView image;
+    ImageView fon = new ImageView(0, 0, 2000, 2000, GameResources.FON_WITH_OPACITY_PATH);
+    BatteryObject batteryObject;
     DoorObject doorDown;
     SaveView saveView = new SaveView(350, 50, 500, 600);
     boolean isNearDoor;
     Boolean toDrawPassword = false;
     PasswordInputView passwordInput;
-    ImageView cipherGamePanel;
-    TextView challengeTitle;
-    TextView ct;
-    Stage stage;
-    Table table;
-    ImageView fon_image;
-    Slider slider;
     boolean isDesktop;
+    Array talksplayer = new Array<>();
     private boolean wasKKeyPressed = false;
+    ImageView pauseBackground;
+    TerminalView terminalView;
+    private boolean wasNearComputer = false;
 
-    public LevelFourScreen(MyGdxGame myGdxGame) {
+    public LevelEightScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
         myGdxGame.world.getBodies(bodies);
-        asciiTable = new ComputerObject(12, 5, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.XOR_IMG, myGdxGame.world);
+        cpuRegisters = new ComputerObject(14.1f, 9, 160, 160, GameResources.LINUX_NOTEBOOK_SPRITE_PATH, myGdxGame.world);
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
             String[] story = {
-                GameResources.STORY_TELLING_WI_FI,
-                GameResources.STORY_TELLING_LOGS
+                GameResources.STORY_TELLING_ANCIENT,
+                GameResources.STORY_TELLING_SPQR
             };
             String[] texts = {
-                LocalizationManager.get("networks.history.0"),
-                LocalizationManager.get("networks.history.1")
+                LocalizationManager.get("caesar.history.0"),
+                LocalizationManager.get("caesar.history.1")
             };
             myGdxGame.audioManager.backgroundMusic.stop();
             if (MemoryManager.loadIsMusicOn()) {
@@ -156,32 +136,27 @@ public class LevelFourScreen extends ScreenAdapter {
                 if (MemoryManager.loadIsMusicOn()) {
                     myGdxGame.audioManager.backgroundMusic.play();
                 }
-                myGdxGame.setScreen(new LevelFiveScreen(myGdxGame));
+                myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
             }));
-        }, "123");
-
+        }, "FROSYA");
         for (Body body : bodies) {
             myGdxGame.world.destroyBody(body);
         }
 
-        String[] initialValues = {
-            LocalizationManager.get("xor.talk.0"),
-            LocalizationManager.get("xor.talk.1"),
-            LocalizationManager.get("xor.talk.2"),
-            LocalizationManager.get("xor.talk.3"),
-            LocalizationManager.get("xor.talk.4"),
-            LocalizationManager.get("xor.talk.5"),
-            LocalizationManager.get("xor.talk.6"),
-            LocalizationManager.get("xor.talk.7")
-        };
-        talks = new Array<>(initialValues);
+        isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
+
+        talks = new Array<>();
+        hint = new Array<>();
+        for (int i = 0; i <= 17; i++) {
+            talks.add(LocalizationManager.get("talk." + i));
+        }
+        System.out.println(LocalizationManager.get("hint.1"));
+        hint.add(LocalizationManager.get("hint.1"));
 
         talks2 = new Array<>();
-        talks2.add(LocalizationManager.get("xor.talk2.0"));
-        talks2.add(LocalizationManager.get("xor.talk2.1"));
-
-        hint = new Array<>();
-        hint.add(LocalizationManager.get("hint.4"));
+        for (int i = 0; i <= 1; i++) {
+            talks2.add(LocalizationManager.get("talk2." + i));
+        }
 
         bodies.clear();
         this.myGdxGame = myGdxGame;
@@ -194,11 +169,10 @@ public class LevelFourScreen extends ScreenAdapter {
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
 
-        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_FOUR_PATH, myGdxGame.camera, myGdxGame.batch, 3.5f);
-        topBlackoutView = new ImageView(0, 0, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
+        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_SEVEN_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
+        topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
-
-        pauseButton = new ButtonView(1200, 742, 64, 64, GameResources.PAUSE_IMG_PATH);
+        pauseButton = new ButtonView(1200, 658, 64, 64, GameResources.PAUSE_IMG_PATH);
 
         touchpadView = new TouchpadView(140, 140);
         pauseBackground = new ImageView(480, 180, 300, 300, GameResources.PAUSE_BACKGROUND);
@@ -211,6 +185,12 @@ public class LevelFourScreen extends ScreenAdapter {
             GameResources.BUTTON_SHORT_BG_IMG_PATH,
             LocalizationManager.get("game.home")
         );
+        if (isDesktop) {
+            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
+        } else {
+            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
+        }
+
         continueButton = new ButtonView(
             GameSettings.SCREEN_WIDTH - 750, 250,
             200, 35,
@@ -219,38 +199,20 @@ public class LevelFourScreen extends ScreenAdapter {
             LocalizationManager.get("game.continue")
         );
         actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
-        actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
-        actionButtonRed = new ButtonView(1100, 70, 140, 140, GameResources.RED_ACTION_BUTTON_IMG_PATH);
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEACHER_IMG_PATH, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
-
-        cipherGamePanel = new ImageView(200, 300, 880, 400, GameResources.DIALOG_FON_IMG_PATH);
-        encryptedCodeView = new TextView(myGdxGame.consolasFont, 350, 550,
-            LocalizationManager.get("xor.text.example"));
-        currentKeyView = new TextView(myGdxGame.consolasFont, 350, 520,
-            LocalizationManager.get("xor.key.example"));
-        ct = new TextView(myGdxGame.consolasFont, 350, 480,
-            LocalizationManager.get("xor.cipher.example"));
-        hintView = new TextView(myGdxGame.commonPixelFontText, 350, 420, "Use +/- to adjust key (0-25)");
-        challengeTitle = new TextView(myGdxGame.commonWhiteFont, 350, 600, "Decrypt the code!");
-
-        keyIncreaseButton = new ButtonView(600, 460, 100, 50, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "+");
-        keyDecreaseButton = new ButtonView(350, 460, 100, 50, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "-");
-        submitCodeButton = new ButtonView(500, 350, 200, 50, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Submit");
-        nextChallengeButton = new ButtonView(500, 350, 250, 50, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Next Challenge");
-        nextChallengeButton.hide();
+        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
             if (object instanceof AntivirusObject) {
                 isNearAntivirus = true;
-            } else if (object instanceof ComputerObject) {
-                isNearComputer = true;
             } else if (object instanceof DoorObject) {
                 isNearDoor = true;
             } else if (object instanceof BatteryObject) {
                 isNearBattery = true;
+            } else if (object instanceof ComputerObject) {
+                isNearComputer = true;
             }
         },
             (GameObject object) -> {
@@ -266,106 +228,28 @@ public class LevelFourScreen extends ScreenAdapter {
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
         image = new ImageView(180, 0, 1028, 720, GameResources.ASCII_PATH);
-        batteryObject = new BatteryObject(9, 5, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
-        doorDown = new DoorObject(1032, 400, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.FRENCH_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
-        fon_image = new ImageView(300, 200, 600, 400, GameResources.DIALOG_FON_IMG_PATH);
-
-        Skin skin = new Skin();
-        BitmapFont font = new BitmapFont();
-        skin.add("default-font", font);
-        skin.add("white", Color.WHITE);
-
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = font;
-        skin.add("default", labelStyle);
-
-        Pixmap bgPixmap = new Pixmap(200, 10, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(Color.GRAY);
-        bgPixmap.fill();
-        skin.add("slider-bg", new Texture(bgPixmap));
-        bgPixmap.dispose();
-
-        Pixmap knobPixmap = new Pixmap(20, 20, Pixmap.Format.RGBA8888);
-        knobPixmap.setColor(Color.WHITE);
-        knobPixmap.fillCircle(10, 10, 10);
-        skin.add("slider-knob", new Texture(knobPixmap));
-        knobPixmap.dispose();
-
-        Slider.SliderStyle sliderStyle = new Slider.SliderStyle();
-        sliderStyle.background = skin.newDrawable("slider-bg");
-        sliderStyle.knob = skin.newDrawable("slider-knob");
-
-        skin.add("default-horizontal", sliderStyle);
-
-        slider = new Slider(33f, 126f, 1f, false, skin);
-
-        Table sliderContainer = new Table();
-        sliderContainer.add(slider).width(300);
-        sliderContainer.pack();
-        sliderContainer.setPosition(400, 300);
-
-        sliderContainer.addListener(new DragListener() {
-            @Override
-            public void dragStart(InputEvent event, float x, float y, int pointer) {
-                if (event.getTarget() == slider) cancel();
-            }
-
-            @Override
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                sliderContainer.moveBy(
-                    x - sliderContainer.getWidth() / 2,
-                    y - sliderContainer.getHeight() / 2
-                );
-            }
-        });
-
-        stage = new Stage(new ExtendViewport(
-            GameSettings.SCREEN_WIDTH,
-            GameSettings.SCREEN_HEIGHT,
-            myGdxGame.uiCamera
-        ));
-        stage.addActor(sliderContainer);
-
-        Gdx.input.setInputProcessor(stage);
-        slider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                float value = slider.getValue();
-                if (myGdxGame.audioManager.isSoundOn) {
-                    myGdxGame.audioManager.shootSound.play();
-                }
-                String binary = Integer.toBinaryString((int) value);
-                if (binary.length() < 7) {
-                    binary = "0" + binary;
-                }
-                currentKeyView.setText("Key:    " + binary + " (" + ((int) value) + ") " + (char) value);
-            }
-        });
-
-        isDesktop = Gdx.app.getType() == com.badlogic.gdx.Application.ApplicationType.Desktop;
-
-        if (isDesktop) {
-            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressK"));
-        } else {
-            text = new TextView(myGdxGame.commonPixelFontText, 250, 150, LocalizationManager.get("pressGreen"));
-        }
-
+        batteryObject = new BatteryObject(10, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
+        doorDown = new DoorObject(994, 576, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
+        talksplayer.add(LocalizationManager.get("player.talk.0"));
+        talksplayer.add(LocalizationManager.get("player.talk.1"));
+        talksplayer.add(LocalizationManager.get("player.talk.2"));
+        talksplayer.add(LocalizationManager.get("player.talk.3"));
+        talksplayer.add(LocalizationManager.get("player.talk.4"));
+        dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+            GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+            GameSettings.SCREEN_HEIGHT / 4f, talksplayer, GameResources.PLAYER_AVATAR_IMG_PATH, LocalizationManager.get("player.name"));
         questionDialog = new QuestionView(myGdxGame,
             (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
-        antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_4);
+
+        terminalView = new TerminalView(myGdxGame);
     }
 
-    public LevelFourScreen(MyGdxGame myGdxGame, float x, float y) {
+    public LevelEightScreen(MyGdxGame myGdxGame, float x, float y) {
         this(myGdxGame);
         heroX = x;
         heroY = y;
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
     }
 
     private void handleKeyboardInput() {
@@ -409,54 +293,33 @@ public class LevelFourScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
             gameSession.pauseGame();
         }
-
         if (isKKeyPressed && !wasKKeyPressed) {
-            if (isNearAntivirus && dialog == null && dialogNo == null && !toDrawQuestion) {
+            if (isNearAntivirus && dialog == null && dialogOkNoView == null && dialogNo == null) {
                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
                     GameSettings.SCREEN_HEIGHT / 4f, talks);
-            } else if (isNearComputer && dialog == null && dialogNo == null) {
-                toDraw = !toDraw;
-            } else if (isNearDoor && !toDrawPassword && dialog == null && dialogNo == null) {
+            } else if (isNearDoor && !toDrawPassword && dialog == null && dialogOkNoView == null) {
                 toDrawPassword = true;
                 passwordInput.show();
                 gameSession.pauseGame();
-            } else if (isNearBattery && !toDrawSave && dialog == null && dialogNo == null) {
+            } else if (isNearBattery && !toDrawSave && dialog == null && dialogOkNoView == null) {
                 toDrawSave = true;
                 if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
                     myGdxGame.audioManager.saveSound.play();
                 }
-            } else if (isNearBattery && toDrawSave && dialog == null && dialogNo == null) {
-                toDrawSave = false;
+            } else if (isNearComputer && dialog == null && dialogOkNoView == null) {
+                terminalView.show();
             }
         }
-
         wasKKeyPressed = isKKeyPressed;
     }
 
     @Override
     public void show() {
-        restartGame();
-        Gdx.input.setInputProcessor(stage);
-    }
+        myGdxGame.resetCameras();
 
-    @Override
-    public void render(float delta) {
-        stage.act(delta);
-        if (gameSession.state == GameState.PLAYING) {
-            if (!heroObject.isAlive()) {
-                gameSession.endGame();
-                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
-            }
-            if (isNearAntivirus) {
-                cycleHelloTime += delta;
-                antiVirus.changeSprite(cycleHelloTime, 4);
-            } else{
-                cycleHelloTime = 0;
-                antiVirus.setDefaultTexture();
-            }
-            updateTrash();
-            updateBullets();
+        restartGame();
+        if (heroObject != null) {
             int x, y;
             x = heroObject.getX();
             y = heroObject.getY();
@@ -476,10 +339,49 @@ public class LevelFourScreen extends ScreenAdapter {
                 0
             );
             myGdxGame.camera.update();
+        }
+
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
+    public void render(float delta) {
+        if (gameSession.state == GameState.PLAYING) {
+            if (!heroObject.isAlive()) {
+                gameSession.endGame();
+                recordsListView.setRecords(Objects.requireNonNull(MemoryManager.loadRecordsTable()));
+            }
+            if (isNearAntivirus) {
+                cycleHelloTime += delta;
+                antiVirus.changeSprite(cycleHelloTime, 7);
+            } else{
+                cycleHelloTime = 0;
+                antiVirus.setDefaultTexture();
+            }
+            updateTrash();
+            updateBullets();
+            int x, y;
+            x = heroObject.getX();
+            y = heroObject.getY();
+            if (heroObject.getX() > 920) {
+                x = 920;
+            }
+            if (heroObject.getX() < 565) {
+                x = 565;
+            }
+            if (heroObject.getY() < 420) {
+                y = 420;
+            }
+            System.out.println(x);
+            myGdxGame.camera.position.set(
+                x,
+                y,
+                0
+            );
+            myGdxGame.camera.update();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
             myGdxGame.stepWorld();
-
             if (dialog != null && dialog.isToDispose()) {
                 dialog.dispose();
                 dialog = null;
@@ -493,27 +395,51 @@ public class LevelFourScreen extends ScreenAdapter {
         boolean isTouched = Gdx.input.isTouched();
         if (isTouched) {
             myGdxGame.touch = myGdxGame.uiCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            Vector3 touch2 = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        }
+
+        if (gameSession.state == GameState.PLAYING) {
+            if (isNearComputer && !wasNearComputer) {
+                terminalView.show();
+            } else if (!isNearComputer && wasNearComputer) {
+                terminalView.hide();
+            }
+            wasNearComputer = isNearComputer;
+
+            if (terminalView.isVisible()) {
+                terminalView.update(delta);
+                terminalView.handleTouch();
+                if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    terminalView.hide();
+                }
+                touchpadView.reset();
+                heroObject.stop();
+                return;
+            }
         }
 
         switch (gameSession.state) {
             case PLAYING:
                 if (isDesktop) {
                     handleKeyboardInput();
+                    handleDesktopAction();
                     if (isTouched) {
                         myGdxGame.touch = myGdxGame.uiCamera.unproject(
                             new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)
                         );
-                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        if (!toDrawSave && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            isTouchingUI = true;
                             gameSession.pauseGame();
                         }
                     }
 
                     if (dialogNo != null) {
                         if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            dialog = null;
+                            dialogOkNoView = null;
                             dialogNo.addCnt();
                             if (dialogNo.getCnt() >= talks2.size) {
                                 dialogNo = null;
-                                dialog = null;
                             }
                         }
                     }
@@ -522,86 +448,59 @@ public class LevelFourScreen extends ScreenAdapter {
                         dialog.addCntAndUpdate();
                     }
 
-                    if (questionDialog != null) {
-                        if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            savedDialogCnt = 0;
-                            dialog = new DialogView(myGdxGame,
-                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, talks);
-                            questionDialog = null;
-                            toDrawQuestion = false;
+                    if (dialog != null && dialog.getCnt() == 6) {
+                        dialogOkNoView = new DialogOkNoView(myGdxGame,
+                            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                            GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                            GameSettings.SCREEN_HEIGHT / 4f,
+                            LocalizationManager.get("talk2.6"));
+                        dialog.nextButton.hide();
+                        dialog.addCnt();
+                        dialogCnt = dialog.getCnt();
+                    }
 
-                        } else if (questionDialog.continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            dialog = new DialogView(myGdxGame,
-                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, talks);
-                            for (int i = 0; i < savedDialogCnt; i++) {
-                                dialog.addCntAndUpdate();
-                            }
-                            questionDialog = null;
-                            toDrawQuestion = false;
-
-                        } else if (questionDialog.hintButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            if (dialog != null) {
-                                savedDialogCnt = 0;
-                                dialog.dispose();
-                                dialog = null;
-                            }
-                            dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f, hint);
-                            questionDialog = null;
-                            toDrawQuestion = false;
-
-                        } else if (questionDialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
-                            && Gdx.input.justTouched()) {
-                            if (dialog != null) {
-                                savedDialogCnt = dialog.getCnt();
-                                dialog.dispose();
-                                dialog = null;
-                            }
-                            questionDialog = null;
-                            toDrawQuestion = false;
+                    if (toDrawSave && isTouched && Gdx.input.justTouched()) {
+                        if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            toDrawSave = false;
+                        } else if (saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            toDrawSave = false;
                         }
-                    }
-
-                    handleDesktopAction();
-
-                    if (toDrawSave && isTouched && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                        MemoryManager.saveGameState(4, heroObject.getX(), heroObject.getY());
-                        toDrawSave = false;
-                    }
-
-                    if (toDrawSave && isTouched && saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                        toDrawSave = false;
-                    }
-
-                    if (!isNearAntivirus) {
-                        dialog = null;
                     }
                 } else {
                     if (isTouched) {
-                        boolean isTouchingUI = false;
-
+                        isTouchingUI = false;
+                        if (dialogOkNoView != null) {
+                            if (dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                                dialogOkNoView.dispose();
+                                dialogOkNoView = null;
+                                if (dialog != null) {
+                                    dialog.nextButton.show();
+                                }
+                            } else if (dialogOkNoView.noButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                                dialogNo = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                    GameSettings.SCREEN_HEIGHT / 4f, talks2);
+                                if (dialogOkNoView != null) dialogOkNoView.dispose();
+                                if (dialog != null) dialog.dispose();
+                                dialogOkNoView = null;
+                                dialog = null;
+                                return;
+                            }
+                        }
                         if (dialogNo != null) {
-                            if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                                 dialogNo.addCnt();
                                 if (dialogNo.getCnt() >= talks2.size) {
                                     dialogNo = null;
                                     dialog = null;
+                                    dialogOkNoView = null;
                                 }
                             }
                         }
-
-                        if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             dialog.addCntAndUpdate();
                         }
-
                         if (questionDialog != null) {
                             if (questionDialog.restartButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                                 && Gdx.input.justTouched()) {
@@ -649,22 +548,21 @@ public class LevelFourScreen extends ScreenAdapter {
                                 toDrawQuestion = false;
                             }
                         }
-
-                        if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        if (!toDrawSave && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             isTouchingUI = true;
                             gameSession.pauseGame();
                         }
 
                         if ((isNearAntivirus || isNearComputer || isNearBattery || isNearDoor) && !toDraw) {
-                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
+                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_ACTIVE_IMG_PATH);
                         } else if (!toDraw) {
-                            actionButtonActive = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
+                            actionButton = new ButtonView(1100, 70, 140, 140, GameResources.ACTION_BUTTON_IMG_PATH);
                         }
-
                         if (dialog == null
                             && dialogNo == null
+                            && dialogOkNoView == null
                             && isNearAntivirus
-                            && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
+                            && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                             && Gdx.input.justTouched()) {
 
                             antivirusApproachCount++;
@@ -678,26 +576,18 @@ public class LevelFourScreen extends ScreenAdapter {
                                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
                                     GameSettings.SCREEN_HEIGHT / 4f);
                                 toDrawQuestion = true;
-                            } else {
-                                dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                    GameSettings.SCREEN_HEIGHT / 4f, talks);
                             }
                         }
-
-                        if (isNearDoor && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        if (isNearDoor && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawPassword = true;
                             passwordInput.show();
                             gameSession.pauseGame();
                         }
-
-                        if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched() && toDraw) {
-                            toDraw = false;
-                        } else if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            toDraw = true;
+                        if (isNearComputer && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                            terminalView.show();
+                            return;
                         }
-
-                        if (isNearBattery && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
+                        if (isNearBattery && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawSave = true;
                             if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
                                 myGdxGame.audioManager.saveSound.play();
@@ -705,22 +595,23 @@ public class LevelFourScreen extends ScreenAdapter {
                         } else if (!isNearBattery || saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
                         }
-
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            if (MemoryManager.loadIsSoundOn()) {
-                                myGdxGame.audioManager.saveSound.play();
-                            }
-                            MemoryManager.saveGameState(4, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
-
-                        if (!isNearAntivirus) {
-                            dialog = null;
+                        if (dialog != null && dialog.getCnt() == 6) {
+                            dialogOkNoView = new DialogOkNoView(myGdxGame,
+                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
+                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
+                                GameSettings.SCREEN_HEIGHT / 4f,
+                                LocalizationManager.get("talk2.6"));
+                            dialog.nextButton.hide();
+                            dialog.addCnt();
                         }
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogNo == null) {
+                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogOkNoView == null && dialogNo == null) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(), touchpadView.getStrength());
                             }
                         } else {
@@ -779,15 +670,18 @@ public class LevelFourScreen extends ScreenAdapter {
         myGdxGame.batch.setProjectionMatrix(myGdxGame.camera.combined);
         ScreenUtils.clear(Color.CLEAR);
         tiledMapManager.render();
+
         myGdxGame.batch.begin();
-        asciiTable.draw(myGdxGame.batch);
-        batteryObject.draw(myGdxGame.batch);
         antiVirus.draw(myGdxGame.batch);
-        doorDown.draw(myGdxGame.batch);
+        if (doorDown != null) {
+            doorDown.draw(myGdxGame.batch);
+        }
         heroObject.draw(myGdxGame.batch);
         if (isNearAntivirus) {
             message.draw(myGdxGame.batch);
         }
+        cpuRegisters.draw(myGdxGame.batch);
+        batteryObject.draw(myGdxGame.batch);
         myGdxGame.batch.end();
 
         myGdxGame.uiCamera.update();
@@ -797,26 +691,15 @@ public class LevelFourScreen extends ScreenAdapter {
         if (dialog != null) {
             dialog.draw(myGdxGame.batch);
         }
-
+        if (toDraw) {
+            image.draw(myGdxGame.batch);
+        }
         if (toDrawQuestion && isNearAntivirus && questionDialog != null) {
             questionDialog.draw(myGdxGame.batch);
         }
-
-        if (isCipherGameActive) {
-            cipherGamePanel.draw(myGdxGame.batch);
-            challengeTitle.draw(myGdxGame.batch);
-            encryptedCodeView.draw(myGdxGame.batch);
-            keyDecreaseButton.draw(myGdxGame.batch);
-            keyIncreaseButton.draw(myGdxGame.batch);
-            submitCodeButton.draw(myGdxGame.batch);
-            if (nextChallengeButton != null) {
-                nextChallengeButton.draw(myGdxGame.batch);
-            }
-            hintView.draw(myGdxGame.batch);
-        }
-
         if (gameSession.state == GameState.PAUSED) {
             if (!toDrawPassword) {
+                fon.draw(myGdxGame.batch);
                 pauseBackground.draw(myGdxGame.batch);
                 pauseTextView.draw(myGdxGame.batch);
                 homeButton.draw(myGdxGame.batch);
@@ -831,32 +714,13 @@ public class LevelFourScreen extends ScreenAdapter {
         } else if (gameSession.state == GameState.PLAYING) {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
+                actionButton.draw(myGdxGame.batch);
             }
-
-            if (!isDesktop) {
-                ButtonView currentButton = actionButton;
-                boolean nearSomething = isNearAntivirus || isNearComputer || isNearBattery || isNearDoor;
-                if (nearSomething && !toDraw) {
-                    currentButton = actionButtonActive;
-                } else if (toDraw) {
-                    currentButton = actionButtonRed;
-                }
-                currentButton.draw(myGdxGame.batch);
-            }
-
-            if (isNearAntivirus && dialog == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
+            if (isNearAntivirus && dialog == null && dialogNo == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
             }
         }
-        if (toDraw && isNearComputer) {
-            fon_image.draw(myGdxGame.batch);
-            currentKeyView.draw(myGdxGame.batch);
-            encryptedCodeView.draw(myGdxGame.batch);
-            ct.draw(myGdxGame.batch);
-            myGdxGame.batch.end();
-            stage.draw();
-            myGdxGame.batch.begin();
-        }
+
         float uiHeight = myGdxGame.uiCamera.viewportHeight;
         float blackoutHeight = 64f;
         topBlackoutView.setPosition(0, uiHeight - blackoutHeight);
@@ -867,11 +731,14 @@ public class LevelFourScreen extends ScreenAdapter {
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);
         }
+        if (dialogOkNoView != null) {
+            dialogOkNoView.draw(myGdxGame.batch);
+        }
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
         }
+        terminalView.draw(myGdxGame.batch);
         myGdxGame.batch.end();
-
         if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
@@ -919,17 +786,11 @@ public class LevelFourScreen extends ScreenAdapter {
         }
         heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200;
         heroY = (heroY != -1f) ? heroY : 150;
-        heroObject = new AnimatedHeroObject((int) heroX, (int) heroY, 128, 128, heroFrames, myGdxGame.world);
+        heroObject = new AnimatedHeroObject((int) heroX + 200, (int) heroY + 200, 128, 128, heroFrames, myGdxGame.world);
         bulletArray.clear();
         createMapBorders();
         gameSession.startGame();
         wasKKeyPressed = false;
-        antivirusApproachCount = 0;
-        savedDialogCnt = 0;
-        toDrawQuestion = false;
-        questionDialog = null;
-        dialog = null;
-        dialogNo = null;
     }
 
     @Override
@@ -937,26 +798,17 @@ public class LevelFourScreen extends ScreenAdapter {
         heroSpriteSheet.dispose();
         touchpadView.dispose();
         tiledMapManager.dispose();
-        stage.dispose();
-        if (actionButton != null) actionButton.dispose();
-        if (actionButtonActive != null) actionButtonActive.dispose();
-        if (actionButtonRed != null) actionButtonRed.dispose();
+        terminalView.dispose();
     }
 
     private void createMapBorders() {
         float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
         float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
         float wallThickness = 1f;
-        createWall(mapWidth / 2, -wallThickness / 2 + 3.5f, mapWidth, wallThickness);
-        createWall(mapWidth / 2, -wallThickness / 2 + 23.4f, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 4f, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 38, mapWidth, wallThickness);
         createWall(-wallThickness / 2 + 2f, mapHeight / 2, wallThickness, mapHeight);
-        createWall(-wallThickness / 2 + 55f, mapHeight / 2, wallThickness, mapHeight);
-    }
-
-    @Override
-    public void hide() {
-        myGdxGame.uiCamera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
-        myGdxGame.uiCamera.update();
+        createWall(-wallThickness / 2 + 78.5f, mapHeight / 2, wallThickness, mapHeight);
     }
 
     private void createWall(float x, float y, float width, float height) {
@@ -969,4 +821,5 @@ public class LevelFourScreen extends ScreenAdapter {
         body.createFixture(shape, 0);
         shape.dispose();
     }
+
 }

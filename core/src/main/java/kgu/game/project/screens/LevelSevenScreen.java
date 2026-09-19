@@ -45,6 +45,7 @@ import kgu.game.project.objects.TrashObject;
 import kgu.game.project.objects.AntivirusObject;
 import kgu.game.project.managers.MemoryManager;
 import kgu.game.project.managers.TiledMapManager;
+import kgu.game.project.terminal.KaliShell;
 import kgu.game.project.objects.BulletObject;
 
 public class LevelSevenScreen extends ScreenAdapter {
@@ -84,13 +85,11 @@ public class LevelSevenScreen extends ScreenAdapter {
     private boolean isTouchingUI = false;
     public Integer exitCnt = 0;
     boolean toDrawQuestion = false;
-    DialogOkNoView dialogOkNoView;
     ContactManager contactManager;
     TextView text;
     Array<String> talks;
     Array<String> hint;
 
-    Array<String> talks2;
     Boolean isNearAntivirus = false;
     boolean toDraw = false;
     boolean toDrawSave = false;
@@ -111,6 +110,9 @@ public class LevelSevenScreen extends ScreenAdapter {
     private boolean wasKKeyPressed = false;
     ImageView pauseBackground;
     TerminalView terminalView;
+    TextView taskTextView;
+    TextView doneTextView;
+    boolean isFlagFound = false;
     private boolean wasNearComputer = false;
 
     public LevelSevenScreen(MyGdxGame myGdxGame) {
@@ -124,8 +126,18 @@ public class LevelSevenScreen extends ScreenAdapter {
                 GameResources.STORY_TELLING_SPQR
             };
             String[] texts = {
-                LocalizationManager.get("caesar.history.0"),
-                LocalizationManager.get("caesar.history.1")
+                LocalizationManager.get("linux.talk.0"),
+                LocalizationManager.get("linux.talk.1"),
+                LocalizationManager.get("linux.talk.2"),
+                LocalizationManager.get("linux.talk.3"),
+                LocalizationManager.get("linux.talk.4"),
+                LocalizationManager.get("linux.talk.5"),
+                LocalizationManager.get("linux.talk.6"),
+                LocalizationManager.get("linux.talk.7"),
+                LocalizationManager.get("linux.talk.8"),
+                LocalizationManager.get("linux.talk.9"),
+                LocalizationManager.get("linux.talk.10"),
+                LocalizationManager.get("linux.talk.help"),
             };
             myGdxGame.audioManager.backgroundMusic.stop();
             if (MemoryManager.loadIsMusicOn()) {
@@ -147,16 +159,11 @@ public class LevelSevenScreen extends ScreenAdapter {
 
         talks = new Array<>();
         hint = new Array<>();
-        for (int i = 0; i <= 17; i++) {
-            talks.add(LocalizationManager.get("talk." + i));
+        for (int i = 0; i <= 10; i++) {
+            talks.add(LocalizationManager.get("linux.talk." + i));
         }
-        System.out.println(LocalizationManager.get("hint.1"));
-        hint.add(LocalizationManager.get("hint.1"));
-
-        talks2 = new Array<>();
-        for (int i = 0; i <= 1; i++) {
-            talks2.add(LocalizationManager.get("talk2." + i));
-        }
+        System.out.println(LocalizationManager.get("hint.7"));
+        hint.add(LocalizationManager.get("hint.7"));
 
         bodies.clear();
         this.myGdxGame = myGdxGame;
@@ -244,6 +251,11 @@ public class LevelSevenScreen extends ScreenAdapter {
             GameSettings.SCREEN_HEIGHT / 4f);
 
         terminalView = new TerminalView(myGdxGame);
+        terminalView.setMission(LocalizationManager.get("level7.task"));
+        taskTextView = new TextView(myGdxGame.commonPixelFontText, 150, 16,
+            LocalizationManager.get("level7.task"));
+        doneTextView = new TextView(myGdxGame.commonHelpFontText, 150, 12,
+            LocalizationManager.get("level7.done"));
         antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_7);
     }
 
@@ -295,20 +307,20 @@ public class LevelSevenScreen extends ScreenAdapter {
             gameSession.pauseGame();
         }
         if (isKKeyPressed && !wasKKeyPressed) {
-            if (isNearAntivirus && dialog == null && dialogOkNoView == null && dialogNo == null) {
+            if (isNearAntivirus && dialog == null && dialogNo == null) {
                 dialog = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                     GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
                     GameSettings.SCREEN_HEIGHT / 4f, talks);
-            } else if (isNearDoor && !toDrawPassword && dialog == null && dialogOkNoView == null) {
+            } else if (isNearDoor && !toDrawPassword && dialog == null) {
                 toDrawPassword = true;
                 passwordInput.show();
                 gameSession.pauseGame();
-            } else if (isNearBattery && !toDrawSave && dialog == null && dialogOkNoView == null) {
+            } else if (isNearBattery && !toDrawSave && dialog == null) {
                 toDrawSave = true;
                 if (myGdxGame.audioManager.isSoundOn && myGdxGame.audioManager.saveSound != null) {
                     myGdxGame.audioManager.saveSound.play();
                 }
-            } else if (isNearComputer && dialog == null && dialogOkNoView == null) {
+            } else if (isNearComputer && dialog == null) {
                 terminalView.show();
             }
         }
@@ -400,6 +412,10 @@ public class LevelSevenScreen extends ScreenAdapter {
         }
 
         if (gameSession.state == GameState.PLAYING) {
+            if (!isFlagFound && terminalView.isFlagRead()) {
+                isFlagFound = true;
+                System.out.println(KaliShell.FLAG);
+            }
             if (isNearComputer && !wasNearComputer) {
                 terminalView.show();
             } else if (!isNearComputer && wasNearComputer) {
@@ -437,27 +453,12 @@ public class LevelSevenScreen extends ScreenAdapter {
                     if (dialogNo != null) {
                         if (isTouched && dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             dialog = null;
-                            dialogOkNoView = null;
                             dialogNo.addCnt();
-                            if (dialogNo.getCnt() >= talks2.size) {
-                                dialogNo = null;
-                            }
                         }
                     }
 
                     if (dialog != null && isTouched && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                         dialog.addCntAndUpdate();
-                    }
-
-                    if (dialog != null && dialog.getCnt() == 6) {
-                        dialogOkNoView = new DialogOkNoView(myGdxGame,
-                            (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                            GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                            GameSettings.SCREEN_HEIGHT / 4f,
-                            LocalizationManager.get("talk2.6"));
-                        dialog.nextButton.hide();
-                        dialog.addCnt();
-                        dialogCnt = dialog.getCnt();
                     }
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
@@ -471,32 +472,9 @@ public class LevelSevenScreen extends ScreenAdapter {
                 } else {
                     if (isTouched) {
                         isTouchingUI = false;
-                        if (dialogOkNoView != null) {
-                            if (dialogOkNoView.okButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                                dialogOkNoView.dispose();
-                                dialogOkNoView = null;
-                                if (dialog != null) {
-                                    dialog.nextButton.show();
-                                }
-                            } else if (dialogOkNoView.noButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                                dialogNo = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                    GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                    GameSettings.SCREEN_HEIGHT / 4f, talks2);
-                                if (dialogOkNoView != null) dialogOkNoView.dispose();
-                                if (dialog != null) dialog.dispose();
-                                dialogOkNoView = null;
-                                dialog = null;
-                                return;
-                            }
-                        }
                         if (dialogNo != null) {
                             if (dialogNo.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                                 dialogNo.addCnt();
-                                if (dialogNo.getCnt() >= talks2.size) {
-                                    dialogNo = null;
-                                    dialog = null;
-                                    dialogOkNoView = null;
-                                }
                             }
                         }
                         if (dialog != null && dialog.nextButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
@@ -561,7 +539,6 @@ public class LevelSevenScreen extends ScreenAdapter {
                         }
                         if (dialog == null
                             && dialogNo == null
-                            && dialogOkNoView == null
                             && isNearAntivirus
                             && actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)
                             && Gdx.input.justTouched()) {
@@ -600,19 +577,10 @@ public class LevelSevenScreen extends ScreenAdapter {
                             MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
-                        if (dialog != null && dialog.getCnt() == 6) {
-                            dialogOkNoView = new DialogOkNoView(myGdxGame,
-                                (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
-                                GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
-                                GameSettings.SCREEN_HEIGHT / 4f,
-                                LocalizationManager.get("talk2.6"));
-                            dialog.nextButton.hide();
-                            dialog.addCnt();
-                        }
 
                         if (!isTouchingUI) {
                             touchpadView.update(myGdxGame.touch.x, myGdxGame.touch.y, true);
-                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogOkNoView == null && dialogNo == null) {
+                            if (touchpadView.isActive() && !toDraw && !toDrawSave && dialog == null && dialogNo == null) {
                                 heroObject.moveWithTouchpad(touchpadView.getDirection(), touchpadView.getStrength());
                             }
                         } else {
@@ -715,6 +683,7 @@ public class LevelSevenScreen extends ScreenAdapter {
         } else if (gameSession.state == GameState.PLAYING) {
             if (!isDesktop) {
                 touchpadView.draw(myGdxGame.batch);
+                actionButton.draw(myGdxGame.batch);
             }
             if (isNearAntivirus && dialog == null && dialogNo == null && questionDialog == null && MemoryManager.loadAreSubtitlesOn()) {
                 text.draw(myGdxGame.batch);
@@ -726,19 +695,20 @@ public class LevelSevenScreen extends ScreenAdapter {
         topBlackoutView.setPosition(0, uiHeight - blackoutHeight);
         topBlackoutView.draw(myGdxGame.batch);
 
-        if (!isDesktop) {
-            actionButton.draw(myGdxGame.batch);
-        }
         pauseButton.draw(myGdxGame.batch);
 
         if (dialogNo != null) {
             dialogNo.draw(myGdxGame.batch);
         }
-        if (dialogOkNoView != null) {
-            dialogOkNoView.draw(myGdxGame.batch);
-        }
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
+        }
+        if (gameSession.state == GameState.PLAYING) {
+            if (isFlagFound) {
+                doneTextView.draw(myGdxGame.batch);
+            } else {
+                taskTextView.draw(myGdxGame.batch);
+            }
         }
         terminalView.draw(myGdxGame.batch);
         myGdxGame.batch.end();

@@ -248,7 +248,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             ATTACKER_IP,
             () -> {
                 gameSession.resumeGame();
-                myGdxGame.setScreen(new EndScreen(myGdxGame));
+                myGdxGame.setScreen(new LevelSixScreen(myGdxGame));
             },
             () -> {
             }

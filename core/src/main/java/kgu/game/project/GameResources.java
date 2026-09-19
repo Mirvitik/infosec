@@ -16,6 +16,8 @@ public class GameResources {
     public static final String MENU_SOUND = "sounds/menusound.wav";
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
     public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
+    public static final String LINUX_MASCOT = "textures/linuxmascot.png";
+    public static final String DISTRIBUTIONS = "textures/distributions.png";
     public static final String STORY_TELLING_AND_OR = "textures/storytellingandor.png";
     public static final String STORY_TELLING_XOR = "textures/storytellingxor.png";
     public static final String STORY_TELLING_WI_FI = "textures/storytellingwifi.png";
