@@ -22,7 +22,6 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.DragAndDropCardView;
 import kgu.game.project.components.DragAndDropSlotView;
@@ -129,11 +128,13 @@ public class LevelSixScreen extends ScreenAdapter {
             gameSession.resumeGame();
             String[] story = {
                 GameResources.LINUX_MASCOT,
-                GameResources.DISTRIBUTIONS
+                GameResources.DISTRIBUTIONS,
+                GameResources.BIN_BASH_IMG
             };
             String[] texts = {
-                LocalizationManager.get("caesar.history.0"),
-                LocalizationManager.get("caesar.history.1")
+                LocalizationManager.get("Linux.history.1"),
+                LocalizationManager.get("Linux.history.2"),
+                LocalizationManager.get("Linux.history.3")
             };
             myGdxGame.audioManager.backgroundMusic.stop();
             if (MemoryManager.loadIsMusicOn()) {
@@ -158,7 +159,6 @@ public class LevelSixScreen extends ScreenAdapter {
         for (int i = 0; i <= 9; i++) {
             talks.add(LocalizationManager.get("registers.talk." + i));
         }
-        System.out.println(LocalizationManager.get("hint.1"));
         hint.add(LocalizationManager.get("hint.1"));
 
         bodies.clear();
@@ -373,7 +373,6 @@ public class LevelSixScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -395,7 +394,7 @@ public class LevelSixScreen extends ScreenAdapter {
             if (isNearAntivirus) {
                 cycleHelloTime += delta;
                 antiVirus.changeSprite(cycleHelloTime, 6);
-            } else{
+            } else {
                 cycleHelloTime = 0;
                 antiVirus.setDefaultTexture();
             }
@@ -413,7 +412,6 @@ public class LevelSixScreen extends ScreenAdapter {
             if (heroObject.getY() < 420) {
                 y = 420;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -472,7 +470,6 @@ public class LevelSixScreen extends ScreenAdapter {
                 && checkButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 if (isEveryCardInItsRegister()) {
                     resultTextView.setText(FLAG);
-                    System.out.println(FLAG);
                 } else {
                     resultTextView.setText(LocalizationManager.get("level6.wrong"));
                 }
@@ -510,7 +507,7 @@ public class LevelSixScreen extends ScreenAdapter {
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
                         if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(6, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         } else if (saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
@@ -618,7 +615,7 @@ public class LevelSixScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(6, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 
@@ -768,7 +765,6 @@ public class LevelSixScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
 
         if (myGdxGame.debugMode) {

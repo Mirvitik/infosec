@@ -38,9 +38,10 @@ public class TextView extends View {
         }
     }
 
+    // Шрифт принадлежит MyGdxGame и переиспользуется другими View,
+    // поэтому здесь его уничтожать нельзя.
     @Override
     public void dispose() {
-        font.dispose();
     }
 
     public void show() {

@@ -2,7 +2,7 @@ package kgu.game.project;
 
 public class GameResources {
     public static final String BACKGROUND_IMG_PATH = "textures/background.png";
-    public static final String BACKGROUND_WINDOW_IMG_PATH = "textures/backgroundlog.png";
+    public static final String BACKGROUND_LOGS_PATH = "textures/logsbackground.png";
 
     public static final String ACTION_BUTTON_IMG_PATH = "textures/actionbutton.png";
     public static final String RED_ACTION_BUTTON_IMG_PATH = "textures/redactionbuttonactive.png";
@@ -17,6 +17,7 @@ public class GameResources {
     public static final String SERVER_DOOR_IMG_PATH = "textures/serverdoor.png";
     public static final String STORY_TELLING_ANCIENT = "textures/storytellingancient.png";
     public static final String LINUX_MASCOT = "textures/linuxmascot.png";
+    public static final String BIN_BASH_IMG = "textures/binbash.png";
     public static final String DISTRIBUTIONS = "textures/distributions.png";
     public static final String STORY_TELLING_AND_OR = "textures/storytellingandor.png";
     public static final String STORY_TELLING_XOR = "textures/storytellingxor.png";
@@ -66,6 +67,8 @@ public class GameResources {
     public static final String CLOSE_BUTTON_PATH = "textures/close.png";
     public static final String LOGIN_IMG_PATH = "textures/loginscreen.png";
     public static final String PASSWORD_IMG_PATH = "textures/passwordfield.png";
+    public static final String NEXT_BUTTON_IMG_PATH = "textures/nextbutton.png";
+    public static final String CLOSE_BUTTON_IMG_PATH = "textures/exitbutton.png";
     public static final String INPUT_IMG_PATH = "textures/inputfield.png";
     public static final String IMG_CPU = "textures/cpu.png";
     public static final String SHINDOWS_IMG_PATH = "textures/shindows.png";
@@ -78,6 +81,7 @@ public class GameResources {
     public static final String TMX_MAP_LEVEL_THREE_PATH = "maps/france.tmx";
     public static final String TMX_MAP_LEVEL_SIX_PATH = "maps/asem.tmx";
     public static final String TMX_MAP_LEVEL_SEVEN_PATH = "maps/linux.tmx";
+    public static final String TMX_MAP_LEVEL_EIGHT_PATH = "maps/hashlvl.tmx";
     public static final String ANTIVIRUS_SHEET_LVL_1 = "textures/antivirus_lvl1.png";
     public static final String ANTIVIRUS_SHEET_LVL_3 = "textures/antivirus_lvl3.png";
     public static final String ANTIVIRUS_SHEET_LVL_4 = "textures/antivirus_lvl4.png";
@@ -124,4 +128,9 @@ public class GameResources {
     public static final String TOUCHPAD_KNOB_IMG_PATH = "textures/stick.png";
     public static final String PRIZE_IMG_PATH = "textures/prize.png";
     public static final String PRIZE_RUS_IMG_PATH = "textures/prizerus.png";
+    public static final String BOF_BTN_RUN_IMG_PATH = "textures/btn_run.png";
+    public static final String BOF_BTN_DEFAULT_IMG_PATH = "textures/btn_default.png";
+    public static final String BOF_BTN_OFF_IMG_PATH = "textures/btn_off.png";
+    public static final String BOF_BTN_CHIP_IMG_PATH = "textures/btn_chip.png";
+    public static final String BOF_BTN_CLOSE_IMG_PATH = "textures/btn_close.png";
 }

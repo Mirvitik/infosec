@@ -57,7 +57,9 @@ public class CutsceneScreen extends ScreenAdapter {
         if (currentTexture != null) {
             currentTexture.dispose();
         }
-        currentTexture = new Texture(Gdx.files.internal(images[index]));
+        // Картинок обычно меньше, чем реплик: держим последнюю, пока текст не кончится.
+        String image = images[Math.min(index, images.length - 1)];
+        currentTexture = new Texture(Gdx.files.internal(image));
         fullText = texts[index];
         displayedText = "";
         charIndex = 0;
@@ -73,7 +75,9 @@ public class CutsceneScreen extends ScreenAdapter {
 
     private void goNext() {
         currentScene++;
-        if (currentScene >= images.length) {
+        // Длину сцены задаёт текст, а не количество картинок,
+        // иначе часть реплик просто не показывается.
+        if (currentScene >= texts.length) {
             if (onFinished != null) onFinished.run();
         } else {
             loadScene(currentScene);
@@ -167,6 +171,12 @@ public class CutsceneScreen extends ScreenAdapter {
     public void dispose() {
         if (currentTexture != null) {
             currentTexture.dispose();
+            currentTexture = null;
+        }
+        nextButton.dispose();
+        if (fx != null) {
+            fx.dispose();
+            fx = null;
         }
     }
 }

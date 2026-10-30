@@ -182,8 +182,6 @@ public class LocalizationManager {
         add("caesar.talk2.7", "You can see how the cipher works on the screen.\nUse the floor plates to see\nhow the cipher works", "Ты можешь посмотреть, как работает шифр на экране.\nИспользуй плиты на полу чтобы посмотреть,\nкак работает шифр");
         add("caesar.talk2.8", "The virus has infected the computer, decrypt the important system file", "Вирус заразил компьютер, расшифруй важный системный файл");
 
-        add("pressK", "Press K to talk", "Нажми K для разговора");
-        add("pressGreen", "Press green button to talk", "Нажми зелёную кнопку, чтобы поговорить");
         add("player.name", "Player", "Игрок");
         add("caesar.question", "Do you know Gaius Julius Caesar?", "Ты знаешь Гая Юлия Цезаря?");
         add("caesar.history.0", "In ancient times, people needed a secure\nway to exchange information\nso that enemies wouldn't find out about it", "В древние времена люди нуждались в безопасном\nспособе обмена информацией,\nчтобы её не узнали враги");
@@ -379,7 +377,26 @@ public class LocalizationManager {
         add("linux.talk.10", "Find out the contents of the file /flag and enter the flag at the door.",
             "Узнай содержимое файла /flag и введи флаг у двери.");
         add("hint.7", "cat /flag",
-            "cat /flag");
+            "sudo cat /flag");
+
+        add("linux.talk.help",
+            "Walk up to the laptop and press K (or the green button)\\nto open the terminal.",
+            "Подойди к ноутбуку и нажми K (или зелёную кнопку),\nчтобы открыть терминал.");
+
+        add("vigenere.talk2.0", "Remember: the key sets a separate shift for every letter.",
+            "Помни: ключ задаёт свой сдвиг для каждой буквы.");
+        add("vigenere.talk2.1", "The key and the text are next to the battery. ENCRYPT the text.",
+            "Ключ и текст лежат рядом с батарейкой. ЗАШИФРУЙ текст.");
+
+        add("xor.talk2.0", "Remember: A XOR B = C, and C XOR B = A.",
+            "Помни: A XOR B = C, а C XOR B = A.");
+        add("xor.talk2.1", "Find the key for the computer labeled XOR. XOR works bit by bit.",
+            "Подбери ключ для компьютера с надписью XOR. XOR работает побитово.");
+
+        add("network.talk2.0", "The traffic dump is on the computer with the logs.",
+            "Дамп трафика лежит на компьютере с логами.");
+        add("network.talk2.1", "Look for TLS_HANDSHAKE flood, PORT_SCAN or brute-force\\nand enter the IP of the attacker at the door.",
+            "Ищи TLS_HANDSHAKE flood, PORT_SCAN или brute-force\nи введи IP атакующего у двери.");
 
         add("registers.talk.0", "Hello again. Here we will touch on the topic of processor registers.",
             "Привет снова. Здесь мы затронем тему регистров процессора.");
@@ -401,6 +418,187 @@ public class LocalizationManager {
             "Если функции нужны какие-нибудь аргументы (входные данные),\nто программист записывает в rdi 1 аргумент,\nв rsi 2 аргумент, в rdx 3 аргумент.");
         add("registers.talk.9", "Match the assembly registers with their purposes",
             "Сопоставьте регистры ассмеблера с их предназначениями");
+
+        add("Linux.history.1", "Linux is the OS that the world is built on.\n" +
+                "This is the OS that most servers run on.",
+            "Линукс-ОС, на которой держится мир.\nЭто ОС, на которой работает  большинство серверов.");
+        add("Linux.history.2", "Although there are many versions of Linux (distributions),\nalmost all of them share common commands.",
+            "Хоть и есть множество версий Линукс (дистрибутивов),\nпрактически все из них имеют общие команды");
+        add("Linux.history.3", "Knowing the basic /bin/bash (command line) commands\nare essential for any cybersecurity specialist.",
+            "Знание основных команд /bin/bash (командной строки)\nочень важно для любого специалиста по кибербезопасности");
+
+        // --- уровень 9: переполнение буфера
+        add("bof.title",
+            "vuln.c  ->  ./vuln",
+            "vuln.c  ->  ./vuln");
+        add("bof.task",
+            "task %d/%d",
+            "задача %d/%d");
+        add("bof.source",
+            "source of the vulnerable function",
+            "исходник уязвимой функции");
+        add("bof.symbols",
+            "symbol table",
+            "таблица символов");
+        add("bof.output",
+            "program output",
+            "вывод программы");
+        add("bof.stack",
+            "STACK FRAME (write goes up)",
+            "КАДР СТЕКА (запись идёт вверх)");
+        add("bof.ret_addr",
+            "return address",
+            "адрес возврата");
+        add("bof.saved_rbp",
+            "saved rbp",
+            "сохранённый rbp");
+        add("bof.payload",
+            "payload",
+            "payload");
+        add("bof.payload_empty",
+            "(empty)",
+            "(пусто)");
+        add("bof.tap_address",
+            "tap an address to put it into the payload",
+            "нажми на адрес, чтобы дописать его в payload");
+        add("bof.bytes",
+            "bytes: %d",
+            "байт: %d");
+        add("bof.beyond",
+            "%d bytes went past the frame",
+            "за кадр улетело байт: %d");
+        add("bof.run",
+            "RUN",
+            "ЗАПУСК");
+        add("bof.add1",
+            "+ 1 byte 'A'",
+            "+ 1 байт 'A'");
+        add("bof.add8",
+            "+ 8 bytes 'A'",
+            "+ 8 байт 'A'");
+        add("bof.erase",
+            "erase",
+            "стереть");
+        add("bof.reset",
+            "reset",
+            "сброс");
+        add("bof.hint_btn",
+            "hint",
+            "подсказка");
+        add("bof.close",
+            "close",
+            "выход");
+        add("bof.out.ready",
+            "$ ./vuln   waiting for input...",
+            "$ ./vuln   жду ввода...");
+        add("bof.out.fits",
+            "read %d bytes, the buffer holds %d - nothing overflowed",
+            "прочитано %d байт, в буфере %d - ничего не переполнилось");
+        add("bof.out.returned",
+            "login() returned to main(), access denied",
+            "login() вернулась в main(), доступ запрещён");
+        add("bof.out.segv",
+            "Segmentation fault (core dumped)",
+            "Segmentation fault (core dumped)");
+        add("bof.out.segv_garbage",
+            "return address = 0x41414141, and 'A' is no address",
+            "адрес возврата стал 0x41414141 - 'A' это не адрес");
+        add("bof.out.in_buffer",
+            "the address sits inside %s[], it is only data there",
+            "адрес остался внутри %s[], там он просто данные");
+        add("bof.out.in_rbp",
+            "the address landed on saved rbp, one cell short",
+            "адрес лёг на сохранённый rbp, не добрал одну ячейку");
+        add("bof.out.need_more",
+            "add %d more filler bytes",
+            "добавь ещё %d байт-заполнителей");
+        add("bof.out.overshoot",
+            "the address overshot the return address by %d bytes",
+            "адрес перелетел адрес возврата на %d байт");
+        add("bof.out.hijacked",
+            "execution hijacked -> %s()",
+            "управление перехвачено -> %s()");
+        add("bof.out.solved",
+            "[task solved]",
+            "[задача решена]");
+        add("bof.out.wrong_target",
+            "the jump worked, but the task needs another function",
+            "переход сработал, но для задачи нужна другая функция");
+        add("bof.out.too_long",
+            "the input buffer of the program is over",
+            "входной буфер программы закончился");
+        add("bof.out.win",
+            "[+] ok, you are in",
+            "[+] ок, ты внутри");
+        add("bof.out.lose",
+            "[-] nope. access denied.",
+            "[-] не-а. доступ запрещён.");
+        add("bof.out.admin",
+            "[+] ACL: root, kali",
+            "[+] список доступа: root, kali");
+        add("bof.out.flag",
+            "[+] opening /flag as root...",
+            "[+] открываю /flag от root...");
+        add("bof.out.all_done",
+            "all three functions are under your control",
+            "все три функции под твоим контролем");
+        add("bof.out.flag_line",
+            "/flag: %s",
+            "/flag: %s");
+        add("bof.hint.1",
+            "name[] takes 8 bytes, saved rbp takes 8 more",
+            "name[] занимает 8 байт, сохранённый rbp - ещё 8");
+        add("bof.hint.2",
+            "buf[] is 24 bytes, plus 8 bytes of saved rbp",
+            "buf[] это 24 байта, плюс 8 байт сохранённого rbp");
+        add("bof.hint.3",
+            "offset = buffer size + 8 bytes of saved rbp",
+            "смещение = размер буфера + 8 байт сохранённого rbp");
+        add("bof.talk.0",
+            "So, the last lesson. Look at this laptop.",
+            "Итак, последний урок. Посмотри на этот ноутбук.");
+        add("bof.talk.1",
+            "On it there is a compiled program, ./vuln.\nThere is no source code next to it, only the binary.",
+            "На нём лежит скомпилированная программа ./vuln.\nИсходников рядом нет, только бинарник.");
+        add("bof.talk.2",
+            "When a function is called, the processor puts\non the stack the address it has to return to.",
+            "Когда вызывается функция, процессор кладёт\nна стек адрес, куда ему потом возвращаться.");
+        add("bof.talk.3",
+            "Local variables of the function live on the same stack,\nright below that address.",
+            "Локальные переменные функции живут на том же стеке,\nсразу под этим адресом.");
+        add("bof.talk.4",
+            "A buffer is filled from its beginning upwards.\nIf nobody checks the length, the data keeps going.",
+            "Буфер заполняется от своего начала вверх.\nЕсли длину никто не проверяет, данные идут дальше.");
+        add("bof.talk.5",
+            "First it eats the saved rbp, and then\nthe return address itself. That is a buffer overflow.",
+            "Сначала они съедают сохранённый rbp, а потом\nи сам адрес возврата. Это и есть переполнение буфера.");
+        add("bof.talk.6",
+            "And whatever lies on the return address\nis where the processor jumps when the function ends.",
+            "А куда указывает адрес возврата, туда процессор\nи прыгнет, когда функция закончится.");
+        add("bof.talk.7",
+            "So the address of the needed function has to land\nexactly on that cell: not earlier, not later.",
+            "Значит адрес нужной функции должен лечь\nровно на эту ячейку: не раньше и не позже.");
+        add("bof.talk.8",
+            "Count how much the buffer takes, add 8 bytes\nof saved rbp - that is your offset.",
+            "Посчитай, сколько занимает буфер, прибавь 8 байт\nсохранённого rbp - это и есть смещение.");
+        add("bof.talk.9",
+            "Three functions on the laptop, three overflows.\nThe third one will print the flag for the door.",
+            "Три функции на ноутбуке, три переполнения.\nТретья напечатает флаг для двери.");
+        add("bof.hint",
+            "offset = buffer + 8, then the address of print_flag",
+            "смещение = буфер + 8, потом адрес print_flag");
+        add("bof.history.1",
+            "A program is just bytes in memory.\nData and addresses lie side by side there.",
+            "Программа - это просто байты в памяти.\nДанные и адреса лежат там рядом друг с другом.");
+        add("bof.history.2",
+            "If a program writes more than it reserved,\nthe extra bytes do not disappear anywhere.",
+            "Если программа пишет больше, чем зарезервировала,\nлишние байты никуда не исчезают.");
+        add("bof.history.3",
+            "They overwrite what was next - and the one\nwho controls those bytes controls the program.",
+            "Они перезаписывают то, что лежало дальше, - и тот,\nкто управляет этими байтами, управляет программой.");
+        add("level9.task",
+            "Objective: hijack print_flag()",
+            "Задание: перехватить print_flag()");
     }
 
 

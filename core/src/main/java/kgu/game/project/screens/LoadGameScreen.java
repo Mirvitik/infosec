@@ -378,10 +378,22 @@ public class LoadGameScreen extends ScreenAdapter {
                     myGdxGame.setScreen(new LevelFiveScreen(myGdxGame));
                     break;
                 case 6:
+                    myGdxGame.setScreen(new LevelSixScreen(myGdxGame));
+                    break;
+                case 7:
+                    myGdxGame.setScreen(new LevelSevenScreen(myGdxGame));
+                    break;
+                case 8:
+                    myGdxGame.setScreen(new LevelEightScreen(myGdxGame));
+                    break;
+                case 9:
+                    myGdxGame.setScreen(new LevelNineScreen(myGdxGame));
+                    break;
+                case 10:
                     myGdxGame.setScreen(new EndScreen(myGdxGame));
                     break;
                 default:
-                    myGdxGame.setScreen(new LevelFiveScreen(myGdxGame));
+                    myGdxGame.setScreen(new LevelOneScreen(myGdxGame));
                     break;
             }
             return;

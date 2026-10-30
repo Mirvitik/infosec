@@ -28,13 +28,31 @@ public class AudioManager {
         hacked = Gdx.audio.newMusic(Gdx.files.internal(GameResources.HACKED_PATH));
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal(GameResources.MENU_SOUND));
 
-        storyMusic.setVolume(0.5f);
         storyMusic.setLooping(true);
-        backgroundMusic.setVolume(0.2f);
         backgroundMusic.setLooping(true);
 
         updateSoundFlag();
         updateMusicFlag();
+        applyVolumes();
+    }
+
+    public void applyVolumes() {
+        float musicVolume = MemoryManager.loadMusicVolume();
+        backgroundMusic.setVolume(musicVolume);
+        storyMusic.setVolume(musicVolume);
+        hacked.setVolume(musicVolume);
+        menuMusic.setVolume(musicVolume);
+    }
+
+
+    public void dispose() {
+        backgroundMusic.dispose();
+        storyMusic.dispose();
+        hacked.dispose();
+        menuMusic.dispose();
+        shootSound.dispose();
+        explosionSound.dispose();
+        saveSound.dispose();
     }
 
     public void updateSoundFlag() {
@@ -44,6 +62,7 @@ public class AudioManager {
     public void updateMusicFlag() {
         isMusicOn = MemoryManager.loadIsMusicOn();
 
+        applyVolumes();
         if (isMusicOn) backgroundMusic.play();
         else backgroundMusic.stop();
     }

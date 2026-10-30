@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import kgu.game.project.GameResources;
@@ -144,7 +143,6 @@ public class LevelOneScreen extends ScreenAdapter {
         for (int i = 0; i <= 17; i++) {
             talks.add(LocalizationManager.get("talk." + i));
         }
-        System.out.println(LocalizationManager.get("hint.1"));
         hint.add(LocalizationManager.get("hint.1"));
 
         talks2 = new Array<>();
@@ -323,7 +321,6 @@ public class LevelOneScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -361,7 +358,6 @@ public class LevelOneScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -713,7 +709,6 @@ public class LevelOneScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
 
         if (myGdxGame.debugMode) {

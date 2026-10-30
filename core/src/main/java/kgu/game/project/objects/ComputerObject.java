@@ -63,6 +63,5 @@ public class ComputerObject extends GameObject {
     }
 
     public void onClick() {
-        System.out.println("Computer clicked");
     }
 }

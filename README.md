@@ -30,6 +30,18 @@ git clone https://github.com/Mirvitik/infosec
 </details>
 <details>
   <summary>Уровень 6</summary>
-  3
+  reg1st3rs
+</details>
+<details>
+  <summary>Уровень 7</summary>
+  c4tfl4g
+</details>
+<details>
+  <summary>Уровень 8</summary>
+  flag
+</details>
+<details>
+  <summary>Уровень 9</summary>
+  0v3rfl0w
 </details>
 

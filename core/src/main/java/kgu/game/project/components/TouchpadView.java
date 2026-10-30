@@ -15,6 +15,7 @@ public class TouchpadView {
     private boolean active;
     private final Vector2 direction;
     private float strength;
+    private boolean isHidden;
 
     public TouchpadView(float x, float y) {
         this.touchpadPosition = new Vector2(x, y);
@@ -99,8 +100,10 @@ public class TouchpadView {
 
 
     public void draw(SpriteBatch batch) {
-        background.draw(batch);
-        knob.draw(batch);
+        if (!isHidden) {
+            background.draw(batch);
+            knob.draw(batch);
+        }
     }
 
     public void dispose() {
@@ -112,5 +115,12 @@ public class TouchpadView {
         return active;
     }
 
+    public void hide() {
+        isHidden = true;
+    }
+
+    public void show() {
+        isHidden = false;
+    }
 
 }

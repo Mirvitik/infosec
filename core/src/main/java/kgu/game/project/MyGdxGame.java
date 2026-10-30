@@ -114,21 +114,52 @@ public class MyGdxGame extends Game {
 
     @Override
     public void dispose() {
+        if (screen != null) {
+            screen.dispose();
+        }
         batch.dispose();
+        if (debugRenderer != null) {
+            debugRenderer.dispose();
+        }
+        if (audioManager != null) {
+            audioManager.dispose();
+        }
 
-        if (largeWhiteFont != null) largeWhiteFont.dispose();
-        if (commonWhiteFont != null) commonWhiteFont.dispose();
-        if (commonBlackFont != null) commonBlackFont.dispose();
-        if (commonBlackFontText != null) commonBlackFontText.dispose();
-        if (commonHelpFontText != null) commonHelpFontText.dispose();
-        if (commonPixelFontText != null) commonPixelFontText.dispose();
-        if (commonPixelLogFontText != null) commonPixelLogFontText.dispose();
-        if (commonPixelFontGreyText != null) commonPixelFontGreyText.dispose();
-        if (xanmonoFont != null) xanmonoFont.dispose();
-        if (xanmonoFontBig != null) xanmonoFontBig.dispose();
-        if (arialFont != null) arialFont.dispose();
-        if (consolasFont != null) consolasFont.dispose();
-        if (arialFontRed != null) arialFontRed.dispose();
+        disposeFont(largeWhiteFont);
+        disposeFont(largeRedFont);
+        disposeFont(largeBlueFont);
+        disposeFont(commonWhiteFont);
+        disposeFont(commonBlackFont);
+        disposeFont(commonGreenFont);
+        disposeFont(commonBlackFontText);
+        disposeFont(commonHelpFontText);
+        disposeFont(commonPixelFontText);
+        disposeFont(commonPixelLogFontText);
+        disposeFont(commonPixelFontGreyText);
+        disposeFont(xanmonoFont);
+        disposeFont(xanmonoFontBig);
+        disposeFont(consolasFont);
+        disposeFont(arialFontBlue);
+        disposeFont(arialFontRed);
+        disposeFont(transSansShell);
+        disposeFont(arialFont);
+        disposeFont(arialGreenFont);
+        disposeFont(arialFontWhite);
+        disposeFont(arialFontGray);
+        disposeFont(arialWhiteFont);
+        arialFont = null;
+        arialGreenFont = null;
+        arialFontWhite = null;
+        arialFontGray = null;
+        arialWhiteFont = null;
+
+        if (world != null) world.dispose();
+    }
+
+    private static void disposeFont(BitmapFont font) {
+        if (font != null) {
+            font.dispose();
+        }
     }
 
     public void stepWorld() {

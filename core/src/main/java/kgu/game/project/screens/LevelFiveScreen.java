@@ -87,7 +87,6 @@ public class LevelFiveScreen extends ScreenAdapter {
     ComputerObject networkComputer;
     BatteryObject batteryObject;
     BatteryObject doorDown;
-    float cycleHelloTime = 0;
 
     private final TiledMapManager tiledMapManager;
 
@@ -213,7 +212,7 @@ public class LevelFiveScreen extends ScreenAdapter {
             GameSettings.ANTIVIRUS_BIT, myGdxGame.world
         );
         networkComputer = new ComputerObject(
-            14, 6,
+            13.5f, 5.5f,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.LOGS_IMG,
             myGdxGame.world
@@ -222,7 +221,7 @@ public class LevelFiveScreen extends ScreenAdapter {
         routerMessage = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         routerMessage.setSize(routerMessage.getTextureWidth() + 30, routerMessage.getTextureHeight() + 30);
         batteryObject = new BatteryObject(
-            10, 6,
+            9.5f, 5.5f,
             GameSettings.TILE_SIZE, GameSettings.TILE_SIZE,
             GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world
         );
@@ -331,6 +330,11 @@ public class LevelFiveScreen extends ScreenAdapter {
                     GameSettings.SCREEN_HEIGHT / 4f, talks);
             } else if (isNearComputer && dialog == null && dialogNo == null) {
                 toDrawNetworkLogs = !toDrawNetworkLogs;
+                if (toDrawNetworkLogs) {
+                    touchpadView.hide();
+                } else {
+                    touchpadView.show();
+                }
             } else if (isNearDoor && !ipInputActive && dialog == null && dialogNo == null) {
                 ipInputActive = true;
                 ipInputView.show();
@@ -374,7 +378,6 @@ public class LevelFiveScreen extends ScreenAdapter {
             if (heroObject.getY() < 280) {
                 y = 280;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -595,6 +598,11 @@ public class LevelFiveScreen extends ScreenAdapter {
 
                         if (isNearComputer && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
                             toDrawNetworkLogs = !toDrawNetworkLogs;
+                            if (toDrawNetworkLogs) {
+                                touchpadView.hide();
+                            } else {
+                                touchpadView.show();
+                            }
                         }
 
                         if (isNearDoor && actionButtonActive.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
@@ -777,7 +785,6 @@ public class LevelFiveScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);

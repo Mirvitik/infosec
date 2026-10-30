@@ -24,6 +24,7 @@ import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
 import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
+import kgu.game.project.components.HashInputView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
 import kgu.game.project.components.PasswordInputView;
@@ -110,7 +111,7 @@ public class LevelEightScreen extends ScreenAdapter {
     Array talksplayer = new Array<>();
     private boolean wasKKeyPressed = false;
     ImageView pauseBackground;
-    TerminalView terminalView;
+    HashInputView terminalView;
     private boolean wasNearComputer = false;
 
     public LevelEightScreen(MyGdxGame myGdxGame) {
@@ -120,12 +121,14 @@ public class LevelEightScreen extends ScreenAdapter {
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
             String[] story = {
-                GameResources.STORY_TELLING_ANCIENT,
-                GameResources.STORY_TELLING_SPQR
+                GameResources.BIN_BASH_IMG,
+                GameResources.STORY_PEREBOR,
+                GameResources.STORY_LOCK
             };
             String[] texts = {
-                LocalizationManager.get("caesar.history.0"),
-                LocalizationManager.get("caesar.history.1")
+                LocalizationManager.get("bof.history.1"),
+                LocalizationManager.get("bof.history.2"),
+                LocalizationManager.get("bof.history.3")
             };
             myGdxGame.audioManager.backgroundMusic.stop();
             if (MemoryManager.loadIsMusicOn()) {
@@ -136,7 +139,7 @@ public class LevelEightScreen extends ScreenAdapter {
                 if (MemoryManager.loadIsMusicOn()) {
                     myGdxGame.audioManager.backgroundMusic.play();
                 }
-                myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
+                myGdxGame.setScreen(new LevelNineScreen(myGdxGame));
             }));
         }, "FROSYA");
         for (Body body : bodies) {
@@ -150,7 +153,6 @@ public class LevelEightScreen extends ScreenAdapter {
         for (int i = 0; i <= 17; i++) {
             talks.add(LocalizationManager.get("talk." + i));
         }
-        System.out.println(LocalizationManager.get("hint.1"));
         hint.add(LocalizationManager.get("hint.1"));
 
         talks2 = new Array<>();
@@ -169,7 +171,7 @@ public class LevelEightScreen extends ScreenAdapter {
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
 
-        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_SEVEN_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
+        tiledMapManager = new TiledMapManager(GameResources.TMX_MAP_LEVEL_EIGHT_PATH, myGdxGame.camera, myGdxGame.batch, 4f);
         topBlackoutView = new ImageView(0, 656, 1280, 64, GameResources.BLACKOUT_TOP_IMG_PATH);
         liveView = new LiveView(305, 1215);
         pauseButton = new ButtonView(1200, 658, 64, 64, GameResources.PAUSE_IMG_PATH);
@@ -243,7 +245,11 @@ public class LevelEightScreen extends ScreenAdapter {
             GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
             GameSettings.SCREEN_HEIGHT / 4f);
 
-        terminalView = new TerminalView(myGdxGame);
+        terminalView = new HashInputView(myGdxGame, () -> {
+            System.out.println("fsdfa");
+        }, () -> {
+            System.out.println("kfsad");
+        });
     }
 
     public LevelEightScreen(MyGdxGame myGdxGame, float x, float y) {
@@ -332,7 +338,6 @@ public class LevelEightScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -354,7 +359,7 @@ public class LevelEightScreen extends ScreenAdapter {
             if (isNearAntivirus) {
                 cycleHelloTime += delta;
                 antiVirus.changeSprite(cycleHelloTime, 7);
-            } else{
+            } else {
                 cycleHelloTime = 0;
                 antiVirus.setDefaultTexture();
             }
@@ -372,7 +377,6 @@ public class LevelEightScreen extends ScreenAdapter {
             if (heroObject.getY() < 420) {
                 y = 420;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -461,7 +465,7 @@ public class LevelEightScreen extends ScreenAdapter {
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
                         if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(8, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         } else if (saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
@@ -596,7 +600,7 @@ public class LevelEightScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(8, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
                         if (dialog != null && dialog.getCnt() == 6) {
@@ -743,7 +747,6 @@ public class LevelEightScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
 
         if (myGdxGame.debugMode) {

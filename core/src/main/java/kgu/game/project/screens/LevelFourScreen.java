@@ -469,7 +469,6 @@ public class LevelFourScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -876,7 +875,6 @@ public class LevelFourScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
 
         if (myGdxGame.debugMode) {

@@ -28,8 +28,8 @@ public class DialogView extends View {
         this.width = width;
         this.height = height;
         this.text = talks.get(cnt);
-        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
-        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.exit"));
+        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.NEXT_BUTTON_IMG_PATH, LocalizationManager.get("dialog.next"));
+        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.CLOSE_BUTTON_IMG_PATH, LocalizationManager.get("dialog.exit"));
 
         this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;
@@ -43,8 +43,8 @@ public class DialogView extends View {
         this.width = width;
         this.height = height;
         this.text = talks.get(cnt);
-        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.next"));
-        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.PASSWORD_IMG_PATH, LocalizationManager.get("dialog.exit"));
+        this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.NEXT_BUTTON_IMG_PATH, LocalizationManager.get("dialog.next"));
+        this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.CLOSE_BUTTON_IMG_PATH, LocalizationManager.get("dialog.exit"));
 
         this.bitmapFont = MyGdxGame.arialFont;
         this.myGdxGame = myGdxGame;

@@ -402,7 +402,6 @@ public class LevelThreeScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -826,7 +825,6 @@ public class LevelThreeScreen extends ScreenAdapter {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);

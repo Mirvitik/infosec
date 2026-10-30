@@ -22,7 +22,6 @@ import kgu.game.project.GameSettings;
 import kgu.game.project.GameState;
 import kgu.game.project.MyGdxGame;
 import kgu.game.project.components.ButtonView;
-import kgu.game.project.components.DialogOkNoView;
 import kgu.game.project.components.DialogView;
 import kgu.game.project.components.ImageView;
 import kgu.game.project.components.LiveView;
@@ -55,7 +54,6 @@ public class LevelSevenScreen extends ScreenAdapter {
     HeroObject heroObject;
     private int savedDialogCnt = 0;
     ArrayList<TrashObject> trashArray;
-    Integer dialogCnt;
     ArrayList<BulletObject> bulletArray;
 
     ImageView topBlackoutView;
@@ -110,8 +108,7 @@ public class LevelSevenScreen extends ScreenAdapter {
     private boolean wasKKeyPressed = false;
     ImageView pauseBackground;
     TerminalView terminalView;
-    TextView taskTextView;
-    TextView doneTextView;
+
     boolean isFlagFound = false;
     private boolean wasNearComputer = false;
 
@@ -148,9 +145,9 @@ public class LevelSevenScreen extends ScreenAdapter {
                 if (MemoryManager.loadIsMusicOn()) {
                     myGdxGame.audioManager.backgroundMusic.play();
                 }
-                myGdxGame.setScreen(new LevelTwoScreen(myGdxGame));
+                myGdxGame.setScreen(new LevelEightScreen(myGdxGame));
             }));
-        }, "FROSYA");
+        }, "c4tfl4g");
         for (Body body : bodies) {
             myGdxGame.world.destroyBody(body);
         }
@@ -162,7 +159,6 @@ public class LevelSevenScreen extends ScreenAdapter {
         for (int i = 0; i <= 10; i++) {
             talks.add(LocalizationManager.get("linux.talk." + i));
         }
-        System.out.println(LocalizationManager.get("hint.7"));
         hint.add(LocalizationManager.get("hint.7"));
 
         bodies.clear();
@@ -252,10 +248,6 @@ public class LevelSevenScreen extends ScreenAdapter {
 
         terminalView = new TerminalView(myGdxGame);
         terminalView.setMission(LocalizationManager.get("level7.task"));
-        taskTextView = new TextView(myGdxGame.commonPixelFontText, 150, 16,
-            LocalizationManager.get("level7.task"));
-        doneTextView = new TextView(myGdxGame.commonHelpFontText, 150, 12,
-            LocalizationManager.get("level7.done"));
         antiVirus.setSheet(GameResources.ANTIVIRUS_SHEET_LVL_7);
     }
 
@@ -345,7 +337,6 @@ public class LevelSevenScreen extends ScreenAdapter {
             if (heroObject.getY() < 380) {
                 y = 380;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -385,7 +376,6 @@ public class LevelSevenScreen extends ScreenAdapter {
             if (heroObject.getY() < 420) {
                 y = 420;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -414,7 +404,6 @@ public class LevelSevenScreen extends ScreenAdapter {
         if (gameSession.state == GameState.PLAYING) {
             if (!isFlagFound && terminalView.isFlagRead()) {
                 isFlagFound = true;
-                System.out.println(KaliShell.FLAG);
             }
             if (isNearComputer && !wasNearComputer) {
                 terminalView.show();
@@ -463,7 +452,7 @@ public class LevelSevenScreen extends ScreenAdapter {
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
                         if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(7, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         } else if (saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
@@ -574,7 +563,7 @@ public class LevelSevenScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(1, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(7, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
 
@@ -703,20 +692,12 @@ public class LevelSevenScreen extends ScreenAdapter {
         if (toDrawSave) {
             saveView.draw(myGdxGame.batch);
         }
-        if (gameSession.state == GameState.PLAYING) {
-            if (isFlagFound) {
-                doneTextView.draw(myGdxGame.batch);
-            } else {
-                taskTextView.draw(myGdxGame.batch);
-            }
-        }
         terminalView.draw(myGdxGame.batch);
         myGdxGame.batch.end();
         if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             savedDialogCnt = dialog.getCnt();
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
 
         if (myGdxGame.debugMode) {

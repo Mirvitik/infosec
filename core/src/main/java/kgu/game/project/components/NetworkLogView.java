@@ -40,7 +40,7 @@ public class NetworkLogView {
     public NetworkLogView(MyGdxGame myGdxGame, float x, float y, float width, float height,
                           String attackerIp, Runnable onSubmitPressed) {
 
-        background = new ImageView(5, 60, 1200, 650, GameResources.BACKGROUND_WINDOW_IMG_PATH);
+        background = new ImageView(5, 60, 1200, 650, GameResources.BACKGROUND_LOGS_PATH);
 
         logLines = new TextView[LOG_TEMPLATE.length];
         float lineY = y + height - 120f;

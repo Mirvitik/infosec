@@ -320,7 +320,6 @@ public class EndScreen extends ScreenAdapter {
             if (heroObject.getY() < 280) {
                 y = 280;
             }
-            System.out.println(x);
             myGdxGame.camera.position.set(
                 x,
                 y,
@@ -383,7 +382,7 @@ public class EndScreen extends ScreenAdapter {
 
                     if (toDrawSave && isTouched && Gdx.input.justTouched()) {
                         if (saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
-                            MemoryManager.saveGameState(6, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(10, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         } else if (saveView.cancelButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                             toDrawSave = false;
@@ -450,7 +449,7 @@ public class EndScreen extends ScreenAdapter {
                             toDrawSave = false;
                         }
                         if (isNearBattery && saveView.saveButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
-                            MemoryManager.saveGameState(6, heroObject.getX(), heroObject.getY());
+                            MemoryManager.saveGameState(10, heroObject.getX(), heroObject.getY());
                             toDrawSave = false;
                         }
                         if (dialog != null && dialog.getCnt() == 6) {
@@ -593,7 +592,6 @@ public class EndScreen extends ScreenAdapter {
         if (dialog != null && dialog.exitButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && Gdx.input.justTouched()) {
             dialog.exitCnt();
             exitCnt = dialog.getCnt();
-            System.out.println(exitCnt);
         }
         if (myGdxGame.debugMode) {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);

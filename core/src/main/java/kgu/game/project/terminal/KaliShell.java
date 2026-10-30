@@ -15,7 +15,7 @@ import kgu.game.project.managers.LocalizationManager;
 
 public class KaliShell {
 
-    public static final String FLAG = "game{sud0_c4t_fl4g}";
+    public static final String FLAG = "c4tfl4g";
 
     public static final String USER = "kali";
     public static final String HOST = "kali";

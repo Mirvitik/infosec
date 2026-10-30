@@ -69,8 +69,6 @@ public class LoginScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        int bodyCount = myGdxGame.world.getBodyCount();
-        System.out.println(bodyCount);
         handleTouchInput();
         updateCursorBlink(delta);
 
