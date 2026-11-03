@@ -121,6 +121,7 @@ public class GameResources {
     public static final String ARIAL_FONT_PATH = "fonts/arialmt.ttf";
     public static final String CONSOLAS_FONT_PATH = "fonts/consolas.ttf";
     public static final String XANMONO_FONT_PATH = "fonts/xanmono.ttf";
+    public static final String PIXEL_FONT_PATH = "fonts/itcha.ttf";
     public static final String ANTIVIRUS_TEACHER_IMG_PATH = "textures/teacher.png";
     public static final String FONT_PATH_HACKED_CYR = "fonts/Hacked-Cyr.ttf";
     public static final String FONT_PATH_HACK_TEXT = "fonts/Hack-Italic.ttf";

@@ -46,10 +46,10 @@ public class DialogView extends View {
         this.nextButton = new ButtonView(width + 160, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.NEXT_BUTTON_IMG_PATH, LocalizationManager.get("dialog.next"));
         this.exitButton = new ButtonView(width + 65, y + 110, 90, 40, MyGdxGame.arialFont, GameResources.CLOSE_BUTTON_IMG_PATH, LocalizationManager.get("dialog.exit"));
 
-        this.bitmapFont = MyGdxGame.arialFont;
+        this.bitmapFont = MyGdxGame.pixelFont;
         this.myGdxGame = myGdxGame;
         this.talks = talks;
-        avatar = new ImageView(x + 50, y + 180, 64, 64, image_path);
+        avatar = new ImageView(x + 70, y + 160, 64, 64, image_path);
         this.name = name;
     }
 
@@ -61,14 +61,14 @@ public class DialogView extends View {
 
         float textWidth = bitmapFont.getRegion().getRegionWidth() * bitmapFont.getData().scaleX;
         float textX = x + (width - textWidth) / 2 + 20;
-        float textY = y + height + 50;
+        float textY = y + height + 40;
         if (bitmapFont != null) {
             bitmapFont.draw(batch, text, textX, textY);
         }
         this.nextButton.draw(batch);
         exitButton.draw(batch);
         avatar.draw(batch);
-        MyGdxGame.arialFontGray.draw(myGdxGame.batch, name, x + 40, y + 170);
+        MyGdxGame.pixelFont.draw(myGdxGame.batch, name, x + 60, y + 260);
     }
 
     public void setText(String newText) {

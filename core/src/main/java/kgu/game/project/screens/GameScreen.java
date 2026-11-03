@@ -64,6 +64,7 @@ public class GameScreen extends ScreenAdapter {
     ButtonView actionButton;
     ButtonView actionButtonActive;
     private boolean isActionButtonActive = false;
+    private boolean isLeavingScreen = false;
     Texture heroSpriteSheet;
     boolean isDialogOn = true;
     boolean isDialogPlayerOn = false;
@@ -203,6 +204,9 @@ public class GameScreen extends ScreenAdapter {
             myGdxGame.debugRenderer.render(myGdxGame.world, myGdxGame.camera.combined);
         }
         handleInput();
+        if (isLeavingScreen) {
+            return;
+        }
         draw();
     }
 
@@ -250,10 +254,9 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (isKKeyPressed && !wasKKeyPressed && isNearComputer) {
-            this.dispose();
-            myGdxGame.loginScreen = new LoginScreen(myGdxGame);
-            myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
-            myGdxGame.setScreen(myGdxGame.loginScreen);
+            wasKKeyPressed = true;
+            switchToLoginScreen();
+            return;
         } else if (isKKeyPressed && !wasKKeyPressed && isNearBookshelf && dialogPlayer == null) {
             dialogPlayer = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
                 GameSettings.SCREEN_WIDTH - ((GameSettings.SCREEN_WIDTH) / 4f) - 200f,
@@ -262,6 +265,14 @@ public class GameScreen extends ScreenAdapter {
             gameSession.pauseGame();
         }
         wasKKeyPressed = isKKeyPressed;
+    }
+
+    private void switchToLoginScreen() {
+        isLeavingScreen = true;
+        myGdxGame.loginScreen = new LoginScreen(myGdxGame);
+        myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+        myGdxGame.setScreen(myGdxGame.loginScreen);
+        this.dispose();
     }
 
     private void handleInput() {
@@ -308,10 +319,8 @@ public class GameScreen extends ScreenAdapter {
                             gameSession.pauseGame();
                         }
                         if (actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && isNearComputer) {
-                            this.dispose();
-                            myGdxGame.loginScreen = new LoginScreen(myGdxGame);
-                            myGdxGame.camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
-                            myGdxGame.setScreen(myGdxGame.loginScreen);
+                            switchToLoginScreen();
+                            return;
                         }
                         if (actionButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y) && isNearBookshelf) {
                             dialogPlayer = new DialogView(myGdxGame, (GameSettings.SCREEN_WIDTH - 180f) / 4f, 0,
@@ -397,7 +406,9 @@ public class GameScreen extends ScreenAdapter {
                             gameSession.resumeGame();
                         }
                         if (homeButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                            isLeavingScreen = true;
                             myGdxGame.setScreen(myGdxGame.menuScreen);
+                            return;
                         }
                     }
                 }
@@ -411,11 +422,15 @@ public class GameScreen extends ScreenAdapter {
             case ENDED:
                 if (isTouched) {
                     if (homeButton2.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                        isLeavingScreen = true;
                         myGdxGame.setScreen(myGdxGame.menuScreen);
+                        return;
                     }
                 }
                 if (isDesktop && Gdx.input.isKeyJustPressed(com.badlogic.gdx.Input.Keys.ESCAPE)) {
+                    isLeavingScreen = true;
                     myGdxGame.setScreen(myGdxGame.menuScreen);
+                    return;
                 }
                 break;
         }
@@ -508,6 +523,7 @@ public class GameScreen extends ScreenAdapter {
             gameSession.pauseGame();
         }
         wasKKeyPressed = false;
+        isLeavingScreen = false;
     }
 
     @Override

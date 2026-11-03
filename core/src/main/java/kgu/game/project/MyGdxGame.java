@@ -30,6 +30,7 @@ public class MyGdxGame extends Game {
     public BitmapFont commonHelpFontText;
     public static BitmapFont arialGreenFont;
     public BitmapFont commonPixelFontText;
+    public static BitmapFont pixelFont;
     public BitmapFont commonPixelLogFontText;
     public BitmapFont commonPixelFontGreyText;
     public BitmapFont xanmonoFont;
@@ -109,6 +110,7 @@ public class MyGdxGame extends Game {
         consolasFont = FontBuilder.generate(20, Color.GRAY, GameResources.CONSOLAS_FONT_PATH);
         arialFontRed = FontBuilder.generate(20, Color.RED, GameResources.ARIAL_FONT_PATH);
         transSansShell = FontBuilder.generate(16, Color.valueOf("#1e5c3d"), GameResources.TRANS_IMG_PATH);
+        pixelFont = FontBuilder.generate(20, Color.WHITE, GameResources.PIXEL_FONT_PATH);
         MyGdxGame.arialFont.setColor(Color.BLACK);
     }
 
