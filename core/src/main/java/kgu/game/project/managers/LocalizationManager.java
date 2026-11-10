@@ -599,6 +599,28 @@ public class LocalizationManager {
         add("level9.task",
             "Objective: hijack print_flag()",
             "Задание: перехватить print_flag()");
+        add("hash.history.1",
+            "Websites don't store passwords in clear text.\n" +
+                "Instead of the password, the database contains its hash, \n" +
+                "the converted fingerprint.",
+            "Сайты не хранят пароли в открытом виде.\n" +
+                "Вместо пароля в базе данных лежит его хэш, \n" +
+                "преобразованный отпечаток.");
+        add("hash.history.2",
+            "Websites don't store passwords in clear text.\n" +
+                "The hash is easy to calculate, but you can't turn\n"+
+                " back into a password. Change one letter,\n"+
+                " and the print will become completely different.",
+            "Хэш легко вычислить, но нельзя превратить\n" +
+                "обратно в пароль. Измени одну букву,\n" +
+                "и отпечаток станет совсем другим.");
+        add("hash.history.3",
+            "There are many hashing algorithms.\n"+
+                "You can find out what you need by the length of the\n" +
+                " hash and by the characters at its beginning.",
+            "Алгоритмов хэширования много.\n" +
+                "Узнать нужный можно по длине хэша\n" +
+                "и по символам в его начале.");
     }
 
 

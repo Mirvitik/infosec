@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -46,6 +47,10 @@ import kgu.game.project.managers.TiledMapManager;
 import kgu.game.project.objects.BulletObject;
 
 public class LevelOneScreen extends ScreenAdapter {
+    private static final int MAP_OFFSET_TILES_X = 3;
+    private static final int MAP_OFFSET_TILES_Y = 1;
+    private static final float MAP_OFFSET_X = MAP_OFFSET_TILES_X * GameSettings.TILE_SIZE;
+    private static final float MAP_OFFSET_Y = MAP_OFFSET_TILES_Y * GameSettings.TILE_SIZE;
 
     MyGdxGame myGdxGame;
     GameSession gameSession;
@@ -109,7 +114,7 @@ public class LevelOneScreen extends ScreenAdapter {
     public LevelOneScreen(MyGdxGame myGdxGame) {
         Array<Body> bodies = new Array<>();
         myGdxGame.world.getBodies(bodies);
-        asciiTable = new ComputerObject(14, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.ASCII_SPRITE_PATH, myGdxGame.world);
+        asciiTable = new ComputerObject(14 + MAP_OFFSET_TILES_X, 9 + MAP_OFFSET_TILES_Y, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.ASCII_SPRITE_PATH, myGdxGame.world);
         passwordInput = new PasswordInputView(myGdxGame, () -> {
             gameSession.resumeGame();
             String[] story = {
@@ -192,7 +197,7 @@ public class LevelOneScreen extends ScreenAdapter {
         recordsListView = new RecordsListView(myGdxGame.commonWhiteFont, 690);
         recordsTextView = new TextView(myGdxGame.largeWhiteFont, 206, 842, "Last records");
         homeButton2 = new ButtonView(280, 365, 160, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_SHORT_BG_IMG_PATH, "Home");
-        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, 200, 200, 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
+        antiVirus = new AntivirusObject(GameResources.ANTIVIRUS_TEXTURE_PATH, (int) (200 + MAP_OFFSET_X), (int) (200 + MAP_OFFSET_Y), 128, 128, GameSettings.ANTIVIRUS_BIT, myGdxGame.world);
 
         contactManager = new ContactManager(myGdxGame.world, (GameObject object) -> {
             if (object instanceof AntivirusObject) {
@@ -215,11 +220,11 @@ public class LevelOneScreen extends ScreenAdapter {
                 }
             });
 
-        message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
+        message = new ImageView(210 + MAP_OFFSET_X, 210 + MAP_OFFSET_Y, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
         image = new ImageView(180, 0, 1028, 720, GameResources.ASCII_PATH);
-        batteryObject = new BatteryObject(10, 9, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
-        doorDown = new DoorObject(1186, 576, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
+        batteryObject = new BatteryObject(10 + MAP_OFFSET_TILES_X, 9 + MAP_OFFSET_TILES_Y, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
+        doorDown = new DoorObject((int) (1186 + MAP_OFFSET_X), (int) (576 + MAP_OFFSET_Y), GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);
         talksplayer.add(LocalizationManager.get("player.talk.0"));
         talksplayer.add(LocalizationManager.get("player.talk.1"));
         talksplayer.add(LocalizationManager.get("player.talk.2"));
@@ -308,28 +313,40 @@ public class LevelOneScreen extends ScreenAdapter {
         myGdxGame.resetCameras();
 
         restartGame();
-        if (heroObject != null) {
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 600) {
-                x = 600;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 380) {
-                y = 380;
-            }
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-            myGdxGame.camera.update();
-        }
+        updateCamera();
 
         Gdx.input.setInputProcessor(null);
+    }
+
+    // камера не выходит за границы карты, чтобы не показывать пустоту
+    private void updateCamera() {
+        if (heroObject == null) {
+            return;
+        }
+        float halfWidth = myGdxGame.camera.viewportWidth / 2f;
+        float halfHeight = myGdxGame.camera.viewportHeight / 2f;
+        float mapWidth = tiledMapManager.getMapWidthPixels();
+        float mapHeight = tiledMapManager.getMapHeightPixels();
+
+        float x;
+        if (mapWidth <= myGdxGame.camera.viewportWidth) {
+            x = mapWidth / 2f;
+        } else {
+            float maxX = Math.max(halfWidth, Math.min(920f, mapWidth - halfWidth));
+            x = MathUtils.clamp(heroObject.getX(), halfWidth, maxX);
+        }
+
+        float y;
+        if (mapHeight <= myGdxGame.camera.viewportHeight) {
+            y = mapHeight / 2f;
+        } else {
+            float maxY = mapHeight - halfHeight;
+            float minY = MathUtils.clamp(380f + MAP_OFFSET_Y, halfHeight, maxY);
+            y = MathUtils.clamp(heroObject.getY(), minY, maxY);
+        }
+
+        myGdxGame.camera.position.set(x, y, 0);
+        myGdxGame.camera.update();
     }
 
     @Override
@@ -346,24 +363,7 @@ public class LevelOneScreen extends ScreenAdapter {
                 cycleHelloTime = 0;
                 antiVirus.setDefaultTexture();
             }
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 600) {
-                x = 600;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 380) {
-                y = 380;
-            }
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-            myGdxGame.camera.update();
+            updateCamera();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
             myGdxGame.stepWorld();
@@ -720,8 +720,8 @@ public class LevelOneScreen extends ScreenAdapter {
         if (heroObject != null) {
             myGdxGame.world.destroyBody(heroObject.body);
         }
-        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200;
-        heroY = (heroY != -1f) ? heroY : 150;
+        heroX = (heroX != -1f) ? heroX : (float) GameSettings.SCREEN_WIDTH / 2 - 200 + MAP_OFFSET_X;
+        heroY = (heroY != -1f) ? heroY : 150 + MAP_OFFSET_Y;
         heroObject = new AnimatedHeroObject((int) heroX + 200, (int) heroY + 200, 128, 128, heroFrames, myGdxGame.world);
         createMapBorders();
         gameSession.startGame();
@@ -736,13 +736,15 @@ public class LevelOneScreen extends ScreenAdapter {
     }
 
     private void createMapBorders() {
-        float mapWidth = tiledMapManager.getMapWidthPixels() * tiledMapManager.getUnitScale();
-        float mapHeight = tiledMapManager.getMapHeightPixels() * tiledMapManager.getUnitScale();
+        float mapWidth = tiledMapManager.getMapWidthPixels() * GameSettings.SCALE;
+        float mapHeight = tiledMapManager.getMapHeightPixels() * GameSettings.SCALE;
+        float offsetX = MAP_OFFSET_X * GameSettings.SCALE;
+        float offsetY = MAP_OFFSET_Y * GameSettings.SCALE;
         float wallThickness = 1f;
-        createWall(mapWidth / 2, -wallThickness / 2 + 4f, mapWidth, wallThickness);
-        createWall(mapWidth / 2, -wallThickness / 2 + 31, mapWidth, wallThickness);
-        createWall(-wallThickness / 2 + 2f, mapHeight / 2, wallThickness, mapHeight);
-        createWall(-wallThickness / 2 + 63f, mapHeight / 2, wallThickness, mapHeight);
+        createWall(mapWidth / 2, -wallThickness / 2 + 4f + offsetY, mapWidth, wallThickness);
+        createWall(mapWidth / 2, -wallThickness / 2 + 31f + offsetY, mapWidth, wallThickness);
+        createWall(-wallThickness / 2 + 2f + offsetX, mapHeight / 2, wallThickness, mapHeight);
+        createWall(-wallThickness / 2 + 63f + offsetX, mapHeight / 2, wallThickness, mapHeight);
     }
 
     private void createWall(float x, float y, float width, float height) {

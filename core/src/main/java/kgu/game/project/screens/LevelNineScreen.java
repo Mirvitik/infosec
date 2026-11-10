@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -47,6 +48,8 @@ import kgu.game.project.managers.TiledMapManager;
 import kgu.game.project.objects.BulletObject;
 
 public class LevelNineScreen extends ScreenAdapter {
+
+    // Кадрирование уровня: дальше камера не едет, даже если карта это позволяет.
 
     MyGdxGame myGdxGame;
     GameSession gameSession;
@@ -309,24 +312,7 @@ public class LevelNineScreen extends ScreenAdapter {
 
         restartGame();
         if (heroObject != null) {
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 600) {
-                x = 600;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 380) {
-                y = 380;
-            }
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-            myGdxGame.camera.update();
+            updateCamera();
         }
 
         Gdx.input.setInputProcessor(null);
@@ -348,24 +334,7 @@ public class LevelNineScreen extends ScreenAdapter {
             }
             updateTrash();
             updateBullets();
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 920) {
-                x = 920;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 420) {
-                y = 420;
-            }
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-            myGdxGame.camera.update();
+            updateCamera();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
             myGdxGame.stepWorld();
@@ -741,6 +710,37 @@ public class LevelNineScreen extends ScreenAdapter {
         touchpadView.dispose();
         tiledMapManager.dispose();
         stackView.dispose();
+    }
+
+    // камера не выходит за границы карты, чтобы не показывать пустоту
+    private void updateCamera() {
+        if (heroObject == null) {
+            return;
+        }
+        float halfWidth = myGdxGame.camera.viewportWidth / 2f;
+        float halfHeight = myGdxGame.camera.viewportHeight / 2f;
+        float mapWidth = tiledMapManager.getMapWidthPixels();
+        float mapHeight = tiledMapManager.getMapHeightPixels();
+
+        float x;
+        if (mapWidth <= myGdxGame.camera.viewportWidth) {
+            x = mapWidth / 2f;
+        } else {
+            float maxX = Math.max(halfWidth, Math.min(920f, mapWidth - halfWidth));
+            x = MathUtils.clamp(heroObject.getX(), halfWidth, maxX);
+        }
+
+        float y;
+        if (mapHeight <= myGdxGame.camera.viewportHeight) {
+            y = mapHeight / 2f;
+        } else {
+            float maxY = mapHeight - halfHeight;
+            float minY = MathUtils.clamp(420f, halfHeight, maxY);
+            y = MathUtils.clamp(heroObject.getY(), minY, maxY);
+        }
+
+        myGdxGame.camera.position.set(x, y, 0);
+        myGdxGame.camera.update();
     }
 
     private void createMapBorders() {

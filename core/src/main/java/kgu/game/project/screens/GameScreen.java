@@ -495,11 +495,21 @@ public class GameScreen extends ScreenAdapter {
         float mapWidth = tiledMapManager.getMapWidthPixels();
         float mapHeight = tiledMapManager.getMapHeightPixels();
 
-        myGdxGame.camera.position.set(
-            MathUtils.clamp(heroObject.getXf(), halfWidth, Math.max(halfWidth, mapWidth - halfWidth)),
-            MathUtils.clamp(heroObject.getYf(), halfHeight, Math.max(halfHeight, mapHeight - halfHeight)),
-            0
-        );
+        float x;
+        if (mapWidth <= myGdxGame.camera.viewportWidth) {
+            x = mapWidth / 2f;
+        } else {
+            x = MathUtils.clamp(heroObject.getXf(), halfWidth, mapWidth - halfWidth);
+        }
+
+        float y;
+        if (mapHeight <= myGdxGame.camera.viewportHeight) {
+            y = mapHeight / 2f;
+        } else {
+            y = MathUtils.clamp(heroObject.getYf(), halfHeight, mapHeight - halfHeight);
+        }
+
+        myGdxGame.camera.position.set(x, y, 0);
         myGdxGame.camera.update();
     }
 

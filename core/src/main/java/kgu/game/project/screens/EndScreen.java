@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -46,6 +47,8 @@ import kgu.game.project.objects.BulletObject;
 
 public class EndScreen extends ScreenAdapter {
 
+    private static final float CAMERA_MAX_X = 650f;
+    private static final float CAMERA_MIN_Y = 280f;
     MyGdxGame myGdxGame;
     GameSession gameSession;
     HeroObject heroObject;
@@ -296,6 +299,7 @@ public class EndScreen extends ScreenAdapter {
     @Override
     public void show() {
         restartGame();
+        updateCamera();
         Gdx.input.setInputProcessor(null);
     }
 
@@ -308,24 +312,7 @@ public class EndScreen extends ScreenAdapter {
             }
             updateTrash();
             updateBullets();
-            int x, y;
-            x = heroObject.getX();
-            y = heroObject.getY();
-            if (heroObject.getX() > 650) {
-                x = 650;
-            }
-            if (heroObject.getX() < 565) {
-                x = 565;
-            }
-            if (heroObject.getY() < 280) {
-                y = 280;
-            }
-            myGdxGame.camera.position.set(
-                x,
-                y,
-                0
-            );
-            myGdxGame.camera.update();
+            updateCamera();
             gameSession.updateScore();
             liveView.setLeftLives(heroObject.getLiveLeft());
             myGdxGame.stepWorld();
@@ -645,6 +632,37 @@ public class EndScreen extends ScreenAdapter {
         heroSpriteSheet.dispose();
         touchpadView.dispose();
         tiledMapManager.dispose();
+    }
+
+    // камера не выходит за границы карты, чтобы не показывать пустоту
+    private void updateCamera() {
+        if (heroObject == null) {
+            return;
+        }
+        float halfWidth = myGdxGame.camera.viewportWidth / 2f;
+        float halfHeight = myGdxGame.camera.viewportHeight / 2f;
+        float mapWidth = tiledMapManager.getMapWidthPixels();
+        float mapHeight = tiledMapManager.getMapHeightPixels();
+
+        float x;
+        if (mapWidth <= myGdxGame.camera.viewportWidth) {
+            x = mapWidth / 2f;
+        } else {
+            float maxX = Math.max(halfWidth, Math.min(CAMERA_MAX_X, mapWidth - halfWidth));
+            x = MathUtils.clamp(heroObject.getX(), halfWidth, maxX);
+        }
+
+        float y;
+        if (mapHeight <= myGdxGame.camera.viewportHeight) {
+            y = mapHeight / 2f;
+        } else {
+            float maxY = mapHeight - halfHeight;
+            float minY = MathUtils.clamp(CAMERA_MIN_Y, halfHeight, maxY);
+            y = MathUtils.clamp(heroObject.getY(), minY, maxY);
+        }
+
+        myGdxGame.camera.position.set(x, y, 0);
+        myGdxGame.camera.update();
     }
 
     private void createMapBorders() {
