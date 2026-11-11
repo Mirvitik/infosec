@@ -273,7 +273,7 @@ public class LevelTwoScreen extends ScreenAdapter {
         alphabet.setText(alpha);
         message = new ImageView(210, 210, GameResources.HI_MESSAGE_IMG_PATH);
         message.setSize(message.getTextureWidth() + 30, message.getTextureHeight() + 30);
-        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.DIALOG_FON_IMG_PATH, "XKXGNCHTCPEG\nСдвиг = 2");
+        image = new ButtonView(180, 80, 1028, 360, MyGdxGame.arialFont, GameResources.NOTE_FON_IMG_PATH, "XKXGNCHTCPEG\nСдвиг = 2");
         arrow = new ImageView(220, 530, 32, 32, GameResources.ARROW_IMG);
         batteryObject = new BatteryObject(10, 6, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameResources.BATTERY_BUTTON_IMG_PATH, myGdxGame.world);
         doorDown = new DoorObject(1186, 510, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE * 2, GameResources.ROME_DOOR_IMG_PATH, myGdxGame.world, GameSettings.DOOR_BIT);

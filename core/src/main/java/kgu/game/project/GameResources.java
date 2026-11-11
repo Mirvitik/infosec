@@ -42,6 +42,7 @@ public class GameResources {
     public static final String TURN_OFF_IMG_PATH = "textures/turnoffbutton.png";
     public static final String HI_MESSAGE_IMG_PATH = "textures/himessage.png";
     public static final String DIALOG_FON_IMG_PATH = "textures/dialogfon.png";
+    public static final String NOTE_FON_IMG_PATH = "textures/notefon.png";
     public static final String VIRUS_AVATAR_IMG_PATH = "textures/virusavatar.png";
     public static final String PLAYER_AVATAR_IMG_PATH = "textures/playeravatar.png";
     public static final String ANTIVIRUS_AVATAR_IMG_PATH = "textures/antivirusavatar.png";
